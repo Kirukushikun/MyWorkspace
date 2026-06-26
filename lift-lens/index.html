@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiftLens</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=League+Gothic&family=League+Spartan:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#1A1A1D;
+    --panel:#161617;
+    --panel-alt:#222226;
+    --border:rgba(255,255,255,0.08);
+    --text:#ffffff;
+    --text-dim:rgba(255,255,255,0.45);
+    --accent:#C3073F;
+    --accent-soft:rgba(195,7,63,0.15);
+    --gold:#C3073F;
+    --radius:10px;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    background:var(--bg);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='1' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E");
+    background-size:28px 28px;
+    color:var(--text);
+    font-family:'Roboto',system-ui,sans-serif;
+    min-height:100vh;
+    padding:32px 24px 64px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+
+  .app{ max-width:1100px; margin:0 auto; }
+
+  header{ margin-bottom:28px; }
+  header h1{
+    font-family:'League Gothic',sans-serif;
+    font-weight:400;
+    font-size:38px;
+    letter-spacing:2px;
+    margin:0 0 4px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  header h1 span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    font-weight:400;
+    color:var(--text-dim);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    border:1px solid var(--border);
+    padding:3px 8px;
+    border-radius:20px;
+  }
+  header p{
+    margin:0;
+    color:var(--text-dim);
+    font-size:14.5px;
+    max-width:560px;
+    line-height:1.5;
+  }
+
+  main{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+  }
+  @media (max-width:860px){
+    main{ flex-direction:column; }
+  }
+
+  .stage{
+    flex:1;
+    min-width:0;
+    background:radial-gradient(circle at 50% 35%, #252528 0%, var(--panel) 70%);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+    position:relative;
+  }
+
+  .canvas-wrap{
+    position:relative;
+    border-radius:6px;
+    overflow:hidden;
+    min-height:340px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background-color:#161617;
+    background-image:
+      linear-gradient(45deg, #222226 25%, transparent 25%),
+      linear-gradient(-45deg, #222226 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #222226 75%),
+      linear-gradient(-45deg, transparent 75%, #222226 75%);
+    background-size:22px 22px;
+    background-position:0 0, 0 11px, 11px -11px, -11px 0px;
+  }
+
+  #dropZone{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    cursor:pointer;
+    border:1.5px dashed var(--border);
+    border-radius:6px;
+    color:var(--text-dim);
+    text-align:center;
+    padding:30px;
+  }
+  #dropZone:hover{ border-color:var(--accent); color:var(--text); }
+  #dropZone.drag-over{ border-color:var(--accent); background:rgba(226,84,47,0.07); }
+  #dropZone svg{ width:34px; height:34px; opacity:0.7; }
+  #dropZone strong{ font-size:14.5px; font-weight:500; color:var(--text); }
+  #dropZone small{ font-size:12.5px; }
+
+  canvas#stage{
+    display:none;
+    max-width:100%;
+    max-height:70vh;
+    cursor:crosshair;
+  }
+
+  #loupe{
+    position:fixed;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    border:3px solid var(--accent);
+    box-shadow:0 6px 18px rgba(0,0,0,0.5);
+    overflow:hidden;
+    pointer-events:none;
+    display:none;
+    z-index:50;
+    background-color:#161617;
+    background-image:
+      linear-gradient(45deg, #222226 25%, transparent 25%),
+      linear-gradient(-45deg, #222226 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #222226 75%),
+      linear-gradient(-45deg, transparent 75%, #222226 75%);
+    background-size:14px 14px;
+    background-position:0 0, 0 7px, 7px -7px, -7px 0px;
+  }
+  #loupe canvas{ width:100%; height:100%; image-rendering:pixelated; }
+  #loupe .cross{
+    position:absolute; top:50%; left:50%;
+    width:14px; height:14px;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  #loupe .cross::before,#loupe .cross::after{
+    content:""; position:absolute; background:var(--accent);
+  }
+  #loupe .cross::before{ top:50%; left:0; width:100%; height:1px; }
+  #loupe .cross::after{ left:50%; top:0; height:100%; width:1px; }
+
+  .stage-foot{
+    margin-top:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--text-dim);
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .panel{
+    width:300px;
+    flex-shrink:0;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+  }
+  @media (max-width:860px){ .panel{ width:100%; } }
+
+  .group{ margin-bottom:20px; }
+  .group:last-child{ margin-bottom:0; }
+  .group h2{
+    font-size:11.5px;
+    font-weight:500;
+    text-transform:uppercase;
+    letter-spacing:0.07em;
+    color:var(--text-dim);
+    margin:0 0 10px;
+  }
+
+  .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
+  .row label{ font-size:13.5px; }
+  .row .val{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold); min-width:30px; text-align:right; }
+
+  input[type="range"]{
+    width:100%;
+    -webkit-appearance:none;
+    appearance:none;
+    height:4px;
+    border-radius:2px;
+    background:var(--border);
+    outline:none;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:15px; height:15px;
+    border-radius:50%;
+    background:var(--gold);
+    cursor:pointer;
+    border:none;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:15px; height:15px;
+    border-radius:50%;
+    background:var(--gold);
+    cursor:pointer;
+    border:none;
+  }
+  input[type="range"]:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  label.switch{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:13.5px; cursor:pointer; gap:10px;
+  }
+  label.switch input{ accent-color:var(--accent); width:16px; height:16px; }
+
+  .hint{ font-size:12px; color:var(--text-dim); line-height:1.5; margin-top:8px; }
+
+  #seedList{ display:flex; flex-wrap:wrap; gap:7px; min-height:30px; }
+  .seed-empty{ font-size:12.5px; color:var(--text-dim); padding:5px 0; }
+  .chip{
+    display:flex; align-items:center; gap:6px;
+    background:var(--panel-alt);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:4px 6px 4px 4px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+  }
+  .chip .swatch{ width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); }
+  .chip button{
+    background:none; border:none; color:var(--text-dim);
+    cursor:pointer; font-size:13px; line-height:1; padding:0 2px;
+  }
+  .chip button:hover{ color:var(--accent); }
+
+  .btn{
+    width:100%;
+    padding:10px 14px;
+    border-radius:7px;
+    border:1px solid var(--border);
+    background:var(--panel-alt);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    text-align:center;
+    margin-bottom:8px;
+  }
+  .btn:hover{ border-color:var(--gold); }
+  .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .btn.primary:hover{ filter:brightness(1.08); }
+  .btn.ghost{ background:transparent; }
+
+  .btn-row{ display:flex; gap:8px; }
+  .btn-row .btn{ margin-bottom:0; }
+
+  #fileInput{ display:none; }
+  .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <h1>LiftLens <span>background remover</span></h1>
+    <p>Click on the background to sample it. Lift handles spread outward from that spot and fade out cleanly — all in your browser, nothing is uploaded anywhere.</p>
+  </header>
+
+  <main>
+    <div class="stage">
+      <div class="canvas-wrap" id="canvasWrap">
+        <div id="dropZone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4m0 0L7 9m5-5l5 5M5 20h14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <strong>Drop an image, or click to choose one</strong>
+          <small>PNG or JPG · processed locally, never uploaded</small>
+        </div>
+        <canvas id="stage"></canvas>
+      </div>
+      <div class="stage-foot">
+        <span id="dims">no image loaded</span>
+        <span id="seedCount">0 spots selected</span>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="group">
+        <h2>Image</h2>
+        <input type="file" id="fileInput" accept="image/*">
+        <button class="btn" id="chooseBtn">Choose image</button>
+      </div>
+
+      <div class="group">
+        <h2>Color tolerance</h2>
+        <div class="row"><label for="tolerance">How similar a pixel must be to lift</label></div>
+        <div class="row"><input type="range" id="tolerance" min="0" max="100" value="32" step="1"><span class="val" id="toleranceVal">32</span></div>
+      </div>
+
+      <div class="group">
+        <h2>Edge softness</h2>
+        <div class="row"><input type="range" id="feather" min="0" max="20" value="3" step="1"><span class="val" id="featherVal">3</span></div>
+        <p class="hint">Higher values blend the cut edge instead of leaving a hard line.</p>
+      </div>
+
+      <div class="group">
+        <label class="switch">
+          <span>Only lift the connected area</span>
+          <input type="checkbox" id="connected" checked>
+        </label>
+        <p class="hint">On: only background touching your click point is removed. Off: every matching pixel anywhere in the photo is removed too.</p>
+      </div>
+
+      <div class="group">
+        <h2>Sampled spots</h2>
+        <div id="seedList"><span class="seed-empty">No spots yet — click the image to begin.</span></div>
+      </div>
+
+      <div class="group">
+        <button class="btn ghost" id="undoBtn" disabled>Undo last spot</button>
+        <button class="btn ghost" id="clearBtn" disabled>Clear all spots</button>
+      </div>
+
+      <div class="group">
+        <div class="btn-row">
+          <button class="btn ghost" id="compareBtn" disabled style="flex:1">Hold to compare</button>
+        </div>
+        <button class="btn primary" id="downloadBtn" disabled>Download PNG</button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div id="loupe"><canvas id="loupeCanvas" width="120" height="120"></canvas><div class="cross"></div></div>
+
+<script>
+(function(){
+  const MAX_DIM = 1100;
+  const ZOOM = 7;
+
+  const canvasWrap = document.getElementById('canvasWrap');
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const chooseBtn = document.getElementById('chooseBtn');
+  const stage = document.getElementById('stage');
+  const ctx = stage.getContext('2d', { willReadFrequently:true });
+  const dims = document.getElementById('dims');
+  const seedCountEl = document.getElementById('seedCount');
+
+  const toleranceInput = document.getElementById('tolerance');
+  const toleranceVal = document.getElementById('toleranceVal');
+  const featherInput = document.getElementById('feather');
+  const featherVal = document.getElementById('featherVal');
+  const connectedInput = document.getElementById('connected');
+  const seedListEl = document.getElementById('seedList');
+  const undoBtn = document.getElementById('undoBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const compareBtn = document.getElementById('compareBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  const loupe = document.getElementById('loupe');
+  const loupeCanvas = document.getElementById('loupeCanvas');
+  const loupeCtx = loupeCanvas.getContext('2d');
+  loupeCtx.imageSmoothingEnabled = false;
+
+  let workW = 0, workH = 0;
+  let origPixels = null;
+  let lastOutput = null;
+  let seeds = [];
+  let loaded = false;
+  let rafPending = false;
+
+  function openFileDialog(){ fileInput.click(); }
+  chooseBtn.addEventListener('click', openFileDialog);
+  dropZone.addEventListener('click', openFileDialog);
+
+  ['dragover','dragenter'].forEach(evt=>{
+    canvasWrap.addEventListener(evt, e=>{ e.preventDefault(); dropZone.classList.add('drag-over'); });
+  });
+  ['dragleave','drop'].forEach(evt=>{
+    canvasWrap.addEventListener(evt, e=>{ e.preventDefault(); dropZone.classList.remove('drag-over'); });
+  });
+  canvasWrap.addEventListener('drop', e=>{
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(file) handleFile(file);
+  });
+  fileInput.addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if(file) handleFile(file);
+  });
+
+  function handleFile(file){
+    if(!file.type.startsWith('image/')){ return; }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      const scale = Math.min(1, MAX_DIM / Math.max(img.naturalWidth, img.naturalHeight));
+      workW = Math.max(1, Math.round(img.naturalWidth * scale));
+      workH = Math.max(1, Math.round(img.naturalHeight * scale));
+      stage.width = workW;
+      stage.height = workH;
+      ctx.drawImage(img, 0, 0, workW, workH);
+      origPixels = new Uint8ClampedArray(ctx.getImageData(0,0,workW,workH).data);
+      seeds = [];
+      loaded = true;
+      dropZone.style.display = 'none';
+      stage.style.display = 'block';
+      dims.textContent = workW + ' × ' + workH + ' px';
+      renderSeedList();
+      recompute();
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = ()=>{ dims.textContent = 'could not read that image'; };
+    img.src = url;
+  }
+
+  function canvasCoords(clientX, clientY){
+    const rect = stage.getBoundingClientRect();
+    const scaleX = stage.width / rect.width;
+    const scaleY = stage.height / rect.height;
+    let x = Math.floor((clientX - rect.left) * scaleX);
+    let y = Math.floor((clientY - rect.top) * scaleY);
+    x = Math.max(0, Math.min(workW - 1, x));
+    y = Math.max(0, Math.min(workH - 1, y));
+    return [x, y];
+  }
+
+  stage.addEventListener('mousemove', e=>{
+    if(!loaded) return;
+    const [x,y] = canvasCoords(e.clientX, e.clientY);
+    showLoupe(e.clientX, e.clientY, x, y);
+  });
+  stage.addEventListener('mouseleave', ()=>{ loupe.style.display = 'none'; });
+
+  function showLoupe(clientX, clientY, px, py){
+    loupe.style.display = 'block';
+    let left = clientX - 60;
+    let top = clientY - 144;
+    if(top < 8) top = clientY + 24;
+    loupe.style.left = left + 'px';
+    loupe.style.top = top + 'px';
+    const srcSize = 120 / ZOOM;
+    loupeCtx.clearRect(0,0,120,120);
+    loupeCtx.drawImage(stage, px - srcSize/2, py - srcSize/2, srcSize, srcSize, 0, 0, 120, 120);
+  }
+
+  stage.addEventListener('click', e=>{
+    if(!loaded) return;
+    const [x,y] = canvasCoords(e.clientX, e.clientY);
+    const idx = (y * workW + x) * 4;
+    const color = [origPixels[idx], origPixels[idx+1], origPixels[idx+2]];
+    seeds.push({ x, y, color });
+    renderSeedList();
+    recompute();
+  });
+
+  function renderSeedList(){
+    seedListEl.innerHTML = '';
+    if(seeds.length === 0){
+      seedListEl.innerHTML = '<span class="seed-empty">No spots yet — click the image to begin.</span>';
+    } else {
+      seeds.forEach((s, i)=>{
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        const hex = '#' + s.color.map(c=>c.toString(16).padStart(2,'0')).join('');
+        chip.innerHTML = '<span class="swatch" style="background:'+hex+'"></span><span>'+hex+'</span>';
+        const btn = document.createElement('button');
+        btn.textContent = '×';
+        btn.setAttribute('aria-label','Remove this spot');
+        btn.addEventListener('click', ()=>{
+          seeds.splice(i,1);
+          renderSeedList();
+          recompute();
+        });
+        chip.appendChild(btn);
+        seedListEl.appendChild(chip);
+      });
+    }
+    seedCountEl.textContent = seeds.length + (seeds.length === 1 ? ' spot selected' : ' spots selected');
+    undoBtn.disabled = seeds.length === 0;
+    clearBtn.disabled = seeds.length === 0;
+  }
+
+  undoBtn.addEventListener('click', ()=>{
+    seeds.pop();
+    renderSeedList();
+    recompute();
+  });
+  clearBtn.addEventListener('click', ()=>{
+    seeds = [];
+    renderSeedList();
+    recompute();
+  });
+
+  toleranceInput.addEventListener('input', ()=>{
+    toleranceVal.textContent = toleranceInput.value;
+    scheduleRecompute();
+  });
+  featherInput.addEventListener('input', ()=>{
+    featherVal.textContent = featherInput.value;
+    scheduleRecompute();
+  });
+  connectedInput.addEventListener('change', scheduleRecompute);
+
+  function scheduleRecompute(){
+    if(rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(()=>{ rafPending = false; recompute(); });
+  }
+
+  const NEIGHBORS = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+
+  function floodFill(seed, threshold, removeArr, w, h){
+    const startIdx = seed.y * w + seed.x;
+    const visited = new Uint8Array(w * h);
+    const stack = [startIdx];
+    visited[startIdx] = 1;
+    const [tr, tg, tb] = seed.color;
+    while(stack.length){
+      const idx = stack.pop();
+      removeArr[idx] = 255;
+      const x = idx % w;
+      const y = (idx - x) / w;
+      for(let n=0; n<NEIGHBORS.length; n++){
+        const nx = x + NEIGHBORS[n][0];
+        const ny = y + NEIGHBORS[n][1];
+        if(nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const nIdx = ny * w + nx;
+        if(visited[nIdx]) continue;
+        visited[nIdx] = 1;
+        const p = nIdx * 4;
+        const dr = origPixels[p] - tr, dg = origPixels[p+1] - tg, db = origPixels[p+2] - tb;
+        if(Math.sqrt(dr*dr + dg*dg + db*db) <= threshold){
+          stack.push(nIdx);
+        }
+      }
+    }
+  }
+
+  function globalMatch(seed, threshold, removeArr, w, h){
+    const [tr, tg, tb] = seed.color;
+    const total = w * h;
+    for(let i=0; i<total; i++){
+      const p = i * 4;
+      const dr = origPixels[p] - tr, dg = origPixels[p+1] - tg, db = origPixels[p+2] - tb;
+      if(Math.sqrt(dr*dr + dg*dg + db*db) <= threshold) removeArr[i] = 255;
+    }
+  }
+
+  function boxBlur(src, w, h, radius){
+    const tmp = new Float32Array(w * h);
+    const out = new Uint8ClampedArray(w * h);
+    const span = radius * 2 + 1;
+    for(let y=0; y<h; y++){
+      const rowOff = y * w;
+      let sum = 0;
+      for(let x=-radius; x<=radius; x++){
+        const xx = Math.min(w-1, Math.max(0, x));
+        sum += src[rowOff + xx];
+      }
+      for(let x=0; x<w; x++){
+        tmp[rowOff + x] = sum / span;
+        const xAdd = Math.min(w-1, x + radius + 1);
+        const xRem = Math.max(0, x - radius);
+        sum += src[rowOff + xAdd] - src[rowOff + xRem];
+      }
+    }
+    for(let x=0; x<w; x++){
+      let sum = 0;
+      for(let y=-radius; y<=radius; y++){
+        const yy = Math.min(h-1, Math.max(0, y));
+        sum += tmp[yy * w + x];
+      }
+      for(let y=0; y<h; y++){
+        out[y * w + x] = Math.round(sum / span);
+        const yAdd = Math.min(h-1, y + radius + 1);
+        const yRem = Math.max(0, y - radius);
+        sum += tmp[yAdd * w + x] - tmp[yRem * w + x];
+      }
+    }
+    return out;
+  }
+
+  function recompute(){
+    if(!loaded) return;
+    const w = workW, h = workH;
+    const total = w * h;
+    let removeArr = new Uint8Array(total);
+    const threshold = (parseInt(toleranceInput.value, 10) / 100) * 300;
+    const connected = connectedInput.checked;
+
+    for(const seed of seeds){
+      if(connected) floodFill(seed, threshold, removeArr, w, h);
+      else globalMatch(seed, threshold, removeArr, w, h);
+    }
+
+    const featherPx = parseInt(featherInput.value, 10);
+    const alphaRemove = featherPx > 0 ? boxBlur(removeArr, w, h, featherPx) : removeArr;
+
+    const out = new Uint8ClampedArray(origPixels);
+    for(let i=0; i<total; i++){
+      const removeAmount = alphaRemove[i];
+      if(removeAmount === 0) continue;
+      const keepFactor = 1 - removeAmount / 255;
+      const aIdx = i * 4 + 3;
+      out[aIdx] = Math.round(out[aIdx] * keepFactor);
+    }
+
+    const imgData = new ImageData(out, w, h);
+    ctx.putImageData(imgData, 0, 0);
+    lastOutput = imgData;
+
+    const hasImage = true;
+    downloadBtn.disabled = !hasImage;
+    compareBtn.disabled = seeds.length === 0;
+  }
+
+  compareBtn.addEventListener('mousedown', ()=>{
+    if(!loaded) return;
+    ctx.putImageData(new ImageData(new Uint8ClampedArray(origPixels), workW, workH), 0, 0);
+  });
+  function restoreProcessed(){
+    if(!loaded || !lastOutput) return;
+    ctx.putImageData(lastOutput, 0, 0);
+  }
+  compareBtn.addEventListener('mouseup', restoreProcessed);
+  compareBtn.addEventListener('mouseleave', restoreProcessed);
+  compareBtn.addEventListener('touchstart', e=>{
+    e.preventDefault();
+    if(!loaded) return;
+    ctx.putImageData(new ImageData(new Uint8ClampedArray(origPixels), workW, workH), 0, 0);
+  });
+  compareBtn.addEventListener('touchend', restoreProcessed);
+
+  downloadBtn.addEventListener('click', ()=>{
+    if(!loaded) return;
+    const link = document.createElement('a');
+    link.download = 'lifted.png';
+    link.href = stage.toDataURL('image/png');
+    link.click();
+  });
+})();
+</script>
+</body>
+</html>

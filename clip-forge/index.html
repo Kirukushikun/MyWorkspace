@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipForge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=League+Gothic&family=League+Spartan:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#1A1A1D;
+    --panel:#161617;
+    --panel-alt:#222226;
+    --border:rgba(255,255,255,0.08);
+    --text:#ffffff;
+    --text-dim:rgba(255,255,255,0.45);
+    --accent:#C3073F;
+    --accent-soft:rgba(195,7,63,0.15);
+    --green:#34d399;
+    --radius:10px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    background:var(--bg);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='1' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E");
+    background-size:28px 28px;
+    color:var(--text);
+    font-family:'Roboto',system-ui,sans-serif;
+    min-height:100vh;
+    padding:36px 24px 64px;
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+
+  .app{ max-width:760px; margin:0 auto; }
+
+  header{ display:flex; align-items:baseline; gap:10px; margin-bottom:18px; }
+  header h1{ font-family:'League Gothic',sans-serif; font-size:32px; font-weight:400; letter-spacing:2px; margin:0; }
+  header .badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--accent);
+    border:1px solid var(--accent);
+    background:var(--accent-soft);
+    padding:3px 9px;
+    border-radius:20px;
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+  }
+
+  #dropZone{
+    border:1.5px dashed var(--border);
+    border-radius:12px;
+    padding:60px 30px;
+    text-align:center;
+    cursor:pointer;
+  }
+  #dropZone:hover{ border-color:var(--accent); }
+  #dropZone.drag-over{ border-color:var(--accent); background:var(--accent-soft); }
+  #dropZone .icon{ font-size:30px; margin-bottom:10px; }
+  #dropZone strong{ display:block; font-weight:500; font-size:15px; margin-bottom:6px; }
+  #dropZone strong a{ color:var(--accent); text-decoration:underline; cursor:pointer; }
+  #dropZone small{ color:var(--text-dim); font-size:12.5px; }
+  #fileInput{ display:none; }
+
+  #workspace{ display:none; }
+
+  .file-chip{
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--panel-alt);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:5px 12px 5px 10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    margin-bottom:14px;
+  }
+  .file-chip .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); }
+
+  video#player{
+    width:100%;
+    display:block;
+    border-radius:10px;
+    background:#000;
+    margin-bottom:18px;
+    max-height:380px;
+  }
+
+  .tl-label{
+    font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--text-dim); margin-bottom:8px;
+  }
+
+  .timeline{
+    position:relative;
+    height:64px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--panel-alt);
+    overflow:hidden;
+    cursor:pointer;
+    touch-action:none;
+  }
+  .timeline canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .timeline .analyzing{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); font-size:12px; font-family:'JetBrains Mono',monospace;
+  }
+  .selection{
+    position:absolute; top:0; bottom:0;
+    background:var(--accent-soft);
+    border-left:2px solid var(--accent);
+    border-right:2px solid var(--accent);
+    pointer-events:none;
+  }
+  .handle{
+    position:absolute; top:0; bottom:0; width:16px; margin-left:-8px;
+    cursor:ew-resize; touch-action:none; z-index:2;
+  }
+  .handle::after{
+    content:""; position:absolute; top:50%; left:50%;
+    width:4px; height:26px; transform:translate(-50%,-50%);
+    background:var(--accent); border-radius:3px;
+  }
+  .handle:hover::after, .handle.active::after{ filter:brightness(1.3); }
+  .playhead{
+    position:absolute; top:0; bottom:0; width:2px;
+    background:#fff; opacity:0.9; pointer-events:none; display:none; z-index:1;
+  }
+
+  .ticks{
+    display:flex; justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; color:var(--text-dim);
+    margin-top:6px; margin-bottom:20px;
+  }
+
+  .metrics{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:18px; }
+  .metric{
+    background:var(--panel-alt);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 14px;
+  }
+  .metric label{
+    display:block; font-size:10.5px; font-weight:500; letter-spacing:0.07em;
+    text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; cursor:default;
+  }
+  .metric .value-row{ display:flex; align-items:baseline; gap:5px; }
+  .metric input{
+    background:none; border:none; color:var(--text);
+    font-family:'Inter',sans-serif; font-size:19px; font-weight:600;
+    width:64px; padding:0; outline:none;
+  }
+  .metric input::-webkit-outer-spin-button, .metric input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .metric input[type=number]{ -moz-appearance:textfield; }
+  .metric span.fixed{ font-family:'Inter',sans-serif; font-size:19px; font-weight:600; color:var(--accent); }
+  .metric .unit{ font-size:12px; color:var(--text-dim); }
+
+  .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+  .btn{
+    padding:9px 16px; border-radius:8px; border:1px solid var(--border);
+    background:var(--panel-alt); color:var(--text);
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:500;
+    cursor:pointer;
+  }
+  .btn:hover{ border-color:var(--accent); }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .btn.primary:hover{ filter:brightness(1.08); }
+
+  .status{ font-size:12.5px; color:var(--text-dim); margin-top:12px; min-height:16px; }
+  .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>ClipForge</h1>
+    <span class="badge">browser-only</span>
+  </header>
+
+  <div class="card">
+    <div id="dropZone">
+      <div class="icon">🎬</div>
+      <strong>Drop a video file here or <a id="browseLink">browse files</a></strong>
+      <small>MP4 · WebM · MOV · AVI — processed entirely in your browser</small>
+      <input type="file" id="fileInput" accept="video/*">
+    </div>
+
+    <div id="workspace">
+      <div class="file-chip"><span class="dot"></span><span id="fileName"></span></div>
+
+      <video id="player" controls></video>
+
+      <div class="tl-label">timeline</div>
+      <div class="timeline" id="timeline">
+        <canvas id="waveform"></canvas>
+        <div class="analyzing" id="analyzing">analyzing audio…</div>
+        <div class="selection" id="selection"></div>
+        <div class="playhead" id="playhead"></div>
+        <div class="handle" id="handleStart" tabindex="0" role="slider" aria-label="Clip start"></div>
+        <div class="handle" id="handleEnd" tabindex="0" role="slider" aria-label="Clip end"></div>
+      </div>
+      <div class="ticks">
+        <span id="tickStart">0:00.0</span>
+        <span id="tickMid">0:00.0</span>
+        <span id="tickEnd">0:00.0</span>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <label for="startInput">start</label>
+          <div class="value-row"><input type="number" id="startInput" step="0.1" min="0"><span class="unit">sec</span></div>
+        </div>
+        <div class="metric">
+          <label for="endInput">end</label>
+          <div class="value-row"><input type="number" id="endInput" step="0.1" min="0"><span class="unit">sec</span></div>
+        </div>
+        <div class="metric">
+          <label>clip length</label>
+          <div class="value-row"><span class="fixed" id="lengthVal">0.0</span><span class="unit">sec</span></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="previewBtn">▶ Preview</button>
+        <button class="btn primary" id="exportBtn">Export clip ↗</button>
+        <button class="btn" id="changeBtn">Change file</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const dropZone = document.getElementById('dropZone');
+  const browseLink = document.getElementById('browseLink');
+  const fileInput = document.getElementById('fileInput');
+  const workspace = document.getElementById('workspace');
+  const fileNameEl = document.getElementById('fileName');
+  const video = document.getElementById('player');
+
+  const timeline = document.getElementById('timeline');
+  const waveformCanvas = document.getElementById('waveform');
+  const waveformCtx = waveformCanvas.getContext('2d');
+  const analyzingEl = document.getElementById('analyzing');
+  const selectionEl = document.getElementById('selection');
+  const playheadEl = document.getElementById('playhead');
+  const handleStart = document.getElementById('handleStart');
+  const handleEnd = document.getElementById('handleEnd');
+
+  const tickStart = document.getElementById('tickStart');
+  const tickMid = document.getElementById('tickMid');
+  const tickEnd = document.getElementById('tickEnd');
+
+  const startInput = document.getElementById('startInput');
+  const endInput = document.getElementById('endInput');
+  const lengthVal = document.getElementById('lengthVal');
+
+  const previewBtn = document.getElementById('previewBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const changeBtn = document.getElementById('changeBtn');
+  const statusEl = document.getElementById('status');
+
+  const MIN_GAP = 0.1;
+  let duration = 0;
+  let startTime = 0;
+  let endTime = 0;
+  let objectUrl = null;
+  let peaks = null;
+  let dragging = null;
+  let previewing = false;
+  let currentFile = null;
+
+  function openDialog(){ fileInput.click(); }
+  dropZone.addEventListener('click', e=>{ if(e.target !== browseLink){ openDialog(); } });
+  browseLink.addEventListener('click', e=>{ e.stopPropagation(); openDialog(); });
+
+  ['dragover','dragenter'].forEach(evt=>{
+    dropZone.addEventListener(evt, e=>{ e.preventDefault(); dropZone.classList.add('drag-over'); });
+  });
+  ['dragleave','drop'].forEach(evt=>{
+    dropZone.addEventListener(evt, e=>{ e.preventDefault(); dropZone.classList.remove('drag-over'); });
+  });
+  dropZone.addEventListener('drop', e=>{
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(file) loadFile(file);
+  });
+  fileInput.addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if(file) loadFile(file);
+  });
+
+  function loadFile(file){
+    currentFile = file;
+    if(objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    video.src = objectUrl;
+    fileNameEl.textContent = file.name;
+    dropZone.style.display = 'none';
+    workspace.style.display = 'block';
+    statusEl.textContent = '';
+    analyzingEl.style.display = 'flex';
+    waveformCanvas.style.display = 'none';
+    peaks = null;
+  }
+
+  video.addEventListener('loadedmetadata', ()=>{
+    duration = video.duration || 0;
+    startTime = 0;
+    endTime = duration;
+    updateUI();
+    sizeCanvas();
+    buildWaveform(currentFile);
+  });
+
+  async function buildWaveform(file){
+    try{
+      const buffer = await file.arrayBuffer();
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const audioCtx = new AudioCtx();
+      const audioBuffer = await audioCtx.decodeAudioData(buffer.slice(0));
+      const channel = audioBuffer.getChannelData(0);
+      const buckets = 400;
+      const blockSize = Math.max(1, Math.floor(channel.length / buckets));
+      const result = new Float32Array(buckets);
+      for(let i=0; i<buckets; i++){
+        let max = 0;
+        const start = i * blockSize;
+        const end = Math.min(channel.length, start + blockSize);
+        for(let j=start; j<end; j++){
+          const v = Math.abs(channel[j]);
+          if(v > max) max = v;
+        }
+        result[i] = max;
+      }
+      peaks = result;
+      audioCtx.close();
+    } catch(err){
+      peaks = null;
+    }
+    analyzingEl.style.display = 'none';
+    waveformCanvas.style.display = 'block';
+    drawWaveform();
+  }
+
+  function sizeCanvas(){
+    const rect = timeline.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    waveformCanvas.width = Math.max(1, Math.round(rect.width * dpr));
+    waveformCanvas.height = Math.max(1, Math.round(rect.height * dpr));
+    drawWaveform();
+  }
+  window.addEventListener('resize', ()=>{ if(duration) sizeCanvas(); });
+
+  function drawWaveform(){
+    const w = waveformCanvas.width, h = waveformCanvas.height;
+    waveformCtx.clearRect(0, 0, w, h);
+    const mid = h / 2;
+    if(!peaks){
+      waveformCtx.strokeStyle = 'rgba(195,7,63,0.4)';
+      waveformCtx.lineWidth = 2;
+      waveformCtx.beginPath();
+      waveformCtx.moveTo(0, mid);
+      waveformCtx.lineTo(w, mid);
+      waveformCtx.stroke();
+      return;
+    }
+    const barW = w / peaks.length;
+    waveformCtx.fillStyle = 'rgba(195,7,63,0.6)';
+    for(let i=0; i<peaks.length; i++){
+      const amp = Math.max(0.02, peaks[i]);
+      const barH = amp * h * 0.9;
+      waveformCtx.fillRect(i * barW, mid - barH / 2, Math.max(1, barW - 1), barH);
+    }
+  }
+
+  function formatTime(t){
+    if(!isFinite(t)) t = 0;
+    const m = Math.floor(t / 60);
+    const s = (t - m * 60);
+    return m + ':' + s.toFixed(1).padStart(4, '0');
+  }
+
+  function updateUI(){
+    if(duration <= 0) return;
+    const startPct = (startTime / duration) * 100;
+    const endPct = (endTime / duration) * 100;
+    selectionEl.style.left = startPct + '%';
+    selectionEl.style.width = (endPct - startPct) + '%';
+    handleStart.style.left = startPct + '%';
+    handleEnd.style.left = endPct + '%';
+    startInput.value = startTime.toFixed(1);
+    endInput.value = endTime.toFixed(1);
+    lengthVal.textContent = (endTime - startTime).toFixed(1);
+    tickStart.textContent = formatTime(0);
+    tickMid.textContent = formatTime(duration / 2);
+    tickEnd.textContent = formatTime(duration);
+  }
+
+  function xToTime(clientX){
+    const rect = timeline.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    return ratio * duration;
+  }
+
+  function startDrag(which){
+    return function(e){
+      e.preventDefault();
+      dragging = which;
+      (which === 'start' ? handleStart : handleEnd).classList.add('active');
+      if(e.pointerId !== undefined && e.target.setPointerCapture){
+        e.target.setPointerCapture(e.pointerId);
+      }
+    };
+  }
+  handleStart.addEventListener('pointerdown', startDrag('start'));
+  handleEnd.addEventListener('pointerdown', startDrag('end'));
+
+  function onMove(e){
+    if(!dragging || duration <= 0) return;
+    const t = xToTime(e.clientX);
+    if(dragging === 'start'){
+      startTime = Math.min(Math.max(0, t), endTime - MIN_GAP);
+    } else {
+      endTime = Math.max(Math.min(duration, t), startTime + MIN_GAP);
+    }
+    updateUI();
+    video.currentTime = dragging === 'start' ? startTime : endTime;
+  }
+  function onUp(){
+    if(dragging){
+      handleStart.classList.remove('active');
+      handleEnd.classList.remove('active');
+    }
+    dragging = null;
+  }
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+
+  timeline.addEventListener('click', e=>{
+    if(e.target === handleStart || e.target === handleEnd) return;
+    if(duration <= 0) return;
+    video.currentTime = xToTime(e.clientX);
+  });
+
+  startInput.addEventListener('change', ()=>{
+    let v = parseFloat(startInput.value);
+    if(isNaN(v)) v = 0;
+    startTime = Math.min(Math.max(0, v), endTime - MIN_GAP);
+    updateUI();
+  });
+  endInput.addEventListener('change', ()=>{
+    let v = parseFloat(endInput.value);
+    if(isNaN(v)) v = duration;
+    endTime = Math.max(Math.min(duration, v), startTime + MIN_GAP);
+    updateUI();
+  });
+
+  previewBtn.addEventListener('click', ()=>{
+    if(duration <= 0) return;
+    if(previewing){ video.pause(); return; }
+    video.currentTime = startTime;
+    video.play();
+  });
+  video.addEventListener('play', ()=>{ previewing = true; previewBtn.textContent = '❙❙ Pause'; });
+  video.addEventListener('pause', ()=>{ previewing = false; previewBtn.textContent = '▶ Preview'; playheadEl.style.display = 'none'; });
+  video.addEventListener('timeupdate', ()=>{
+    if(previewing){
+      if(video.currentTime >= endTime){
+        video.pause();
+        video.currentTime = startTime;
+        return;
+      }
+      playheadEl.style.display = 'block';
+      playheadEl.style.left = ((video.currentTime / duration) * 100) + '%';
+    }
+  });
+
+  function setBusy(busy){
+    previewBtn.disabled = busy;
+    changeBtn.disabled = busy;
+    startInput.disabled = busy;
+    endInput.disabled = busy;
+    timeline.style.pointerEvents = busy ? 'none' : 'auto';
+  }
+
+  function exportRealtime(){
+    return new Promise((resolve, reject)=>{
+      const canCapture = typeof video.captureStream === 'function' || typeof video.mozCaptureStream === 'function';
+      if(!canCapture){ reject(new Error('captureStream unsupported')); return; }
+      video.pause();
+      statusEl.textContent = 'Re-encoding in real time (' + (endTime - startTime).toFixed(1) + 's clip)…';
+      const stream = video.captureStream ? video.captureStream() : video.mozCaptureStream();
+      let mimeType = 'video/webm;codecs=vp9,opus';
+      if(!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm;codecs=vp8,opus';
+      if(!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+      const recorder = new MediaRecorder(stream, { mimeType });
+      const chunks = [];
+      const prevVolume = video.volume;
+      video.volume = 0;
+
+      recorder.ondataavailable = e=>{ if(e.data.size > 0) chunks.push(e.data); };
+      recorder.onstop = ()=>{
+        video.volume = prevVolume;
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const base = (currentFile.name || 'clip').replace(/\.[^.]+$/, '');
+        a.download = base + '-trimmed.webm';
+        a.click();
+        URL.revokeObjectURL(url);
+        statusEl.textContent = 'Exported ' + a.download;
+        resolve();
+      };
+
+      function onSeeked(){
+        video.removeEventListener('seeked', onSeeked);
+        recorder.start();
+        video.play().catch(reject);
+      }
+      function onTick(){
+        if(video.currentTime >= endTime || video.ended){
+          video.removeEventListener('timeupdate', onTick);
+          video.pause();
+          recorder.stop();
+        }
+      }
+      video.addEventListener('seeked', onSeeked);
+      video.addEventListener('timeupdate', onTick);
+      video.currentTime = startTime;
+    });
+  }
+
+  exportBtn.addEventListener('click', async ()=>{
+    if(duration <= 0) return;
+    setBusy(true);
+    exportBtn.disabled = true;
+    exportBtn.textContent = 'Exporting…';
+    try{
+      await exportRealtime();
+    } catch(err){
+      statusEl.textContent = 'Export failed — ' + (err.message || 'this browser does not support video capture.');
+    }
+    exportBtn.disabled = false;
+    exportBtn.textContent = 'Export clip ↗';
+    setBusy(false);
+  });
+
+  changeBtn.addEventListener('click', ()=>{
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    if(objectUrl){ URL.revokeObjectURL(objectUrl); objectUrl = null; }
+    currentFile = null;
+    duration = 0;
+    peaks = null;
+    fileInput.value = '';
+    workspace.style.display = 'none';
+    dropZone.style.display = 'block';
+    statusEl.textContent = '';
+  });
+})();
+</script>
+</body>
+</html>
