@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Broadcast Control Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:       #EC8A16;
+    --gold-lt:    #D4720C;
+    --gold-dim:   rgba(236,138,22,0.10);
+    --gold-line:  rgba(236,138,22,0.30);
+    --gold-glow:  rgba(236,138,22,0.15);
+    --bg:         #16130F;
+    --bg2:        #1E1A14;
+    --surface:    #252018;
+    --surface2:   #2E2820;
+    --border:     rgba(255,255,255,0.07);
+    --border-gold:rgba(236,138,22,0.20);
+    --text:       #F4F0E8;
+    --text-2:     #A09880;
+    --text-3:     #5C5548;
+    --green:      #22c55e;
+    --green-dim:  rgba(34,197,94,0.10);
+    --green-line: rgba(34,197,94,0.25);
+    --red:        #ef4444;
+    --red-dim:    rgba(239,68,68,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; min-height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-line); border-radius: 2px; }
+
+  /* ── TOP HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 0 28px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-lt), var(--gold), transparent);
+  }
+  .header-left {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .header-icon {
+    width: 32px; height: 32px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-line);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .header-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .header-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-left: 4px;
+  }
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-line);
+    border-radius: 5px;
+  }
+  .live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: breathe 1.5s ease-in-out infinite;
+  }
+  .live-badge span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  @keyframes breathe {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.3; transform:scale(0.65); }
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 24px 28px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 720px) {
+    .layout { grid-template-columns: 1fr; padding: 16px; }
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card.full-width { grid-column: 1 / -1; }
+
+  .card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg2);
+  }
+  .card-header-bar {
+    width: 3px; height: 16px;
+    background: var(--gold);
+    border-radius: 2px; flex-shrink: 0;
+  }
+  .card-header-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: var(--text-2);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    flex: 1;
+  }
+  .card-header-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .card-body { padding: 18px; }
+
+  /* ── FORM ELEMENTS ── */
+  label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="datetime-local"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--gold-line);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+  select option { background: var(--bg2); }
+
+  .form-row {
+    margin-bottom: 14px;
+  }
+  .form-row:last-child { margin-bottom: 0; }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 16px;
+    border-radius: 7px;
+    border: none; cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: #0D0B07;
+  }
+  .btn-primary:hover {
+    background: var(--gold-lt);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(236,138,22,0.3);
+  }
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold-line);
+    color: var(--gold);
+  }
+  .btn-danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+  .btn-danger:hover {
+    background: rgba(239,68,68,0.18);
+  }
+  .btn-green {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid var(--green-line);
+  }
+  .btn-green:hover {
+    background: rgba(34,197,94,0.18);
+  }
+  .btn-full { width: 100%; justify-content: center; }
+  .btn-sm { padding: 6px 11px; font-size: 10px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--gold-line);
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none;
+  }
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .toast-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+  }
+
+  /* ── MATCH CARDS ── */
+  .match-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .match-item:last-child { margin-bottom: 0; }
+  .match-item-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .match-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .status-select {
+    width: auto;
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .match-teams-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .match-score-center {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+  }
+  .score-inputs {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .score-input {
+    width: 52px !important;
+    text-align: center;
+    font-family: 'Syne', sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--gold) !important;
+    padding: 6px 4px !important;
+  }
+  .score-sep-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 800;
+    color: var(--text-3);
+  }
+  .winner-row {
+    display: flex; gap: 8px; margin-top: 10px; 
+  }
+  .winner-btn {
+    flex: 1; padding: 5px 8px;
+    font-size: 10px; letter-spacing: 2px;
+    border-radius: 5px; cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-3);
+    transition: all 0.15s;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .winner-btn.selected-left {
+    background: var(--green-dim);
+    border-color: var(--green-line);
+    color: var(--green);
+  }
+  .winner-btn.selected-right {
+    background: var(--green-dim);
+    border-color: var(--green-line);
+    color: var(--green);
+  }
+
+  /* ── TICKER ITEMS ── */
+  .ticker-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .ticker-list-item {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ticker-list-item input { flex: 1; }
+  .ticker-drag-handle {
+    color: var(--text-3);
+    cursor: grab; font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* ── STATUS INDICATOR ── */
+  .sync-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: var(--green-dim);
+    border: 1px solid var(--green-line);
+    border-radius: 6px;
+    margin-top: 12px;
+  }
+  .sync-row span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* ── COUNTDOWN PRESETS ── */
+  .preset-row {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .preset-btn {
+    padding: 5px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-2);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .preset-btn:hover {
+    border-color: var(--gold-line);
+    color: var(--gold);
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">⚡</div>
+    <div>
+      <div class="header-title">IC<em>Studio</em></div>
+    </div>
+    <div class="header-sub">/ Sportsfest 2026</div>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    <span>LIVE</span>
+  </div>
+</div>
+
+<!-- ── MAIN LAYOUT ── -->
+<div class="layout">
+
+  <!-- ══ COUNTDOWN ══ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-bar"></div>
+      <div class="card-header-title">Countdown Timer</div>
+      <div class="card-header-badge">idle + overlay</div>
+    </div>
+    <div class="card-body">
+      <div class="section-label">Quick Presets</div>
+      <div class="preset-row">
+        <div class="preset-btn" onclick="setCountdownMins(5)">5 min</div>
+        <div class="preset-btn" onclick="setCountdownMins(10)">10 min</div>
+        <div class="preset-btn" onclick="setCountdownMins(15)">15 min</div>
+        <div class="preset-btn" onclick="setCountdownMins(30)">30 min</div>
+        <div class="preset-btn" onclick="setCountdownMins(60)">1 hr</div>
+      </div>
+      <div class="form-row">
+        <label>Custom — Minutes from now</label>
+        <input type="number" id="countdownMins" value="30" min="0" max="999" placeholder="Minutes">
+      </div>
+      <div class="form-row">
+        <label>Or set exact date & time</label>
+        <input type="datetime-local" id="countdownDatetime">
+      </div>
+      <div class="form-grid-2" style="gap:8px; margin-top:14px;">
+        <button class="btn btn-primary" onclick="applyCountdown()">▶ Apply</button>
+        <button class="btn btn-danger" onclick="resetCountdown()">✕ Reset</button>
+      </div>
+      <div id="countdown-sync" class="sync-row" style="display:none;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span id="countdown-sync-text">Synced</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EVENT INFO ══ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-bar"></div>
+      <div class="card-header-title">Event Info</div>
+      <div class="card-header-badge">all overlays</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <label>Event Label (top bar)</label>
+        <input type="text" id="eventLabel" value="Brookside Sportfest 2026">
+      </div>
+      <div class="form-row">
+        <label>Event Name</label>
+        <input type="text" id="eventName" value="Mobile Legends Tournament">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Date Display</label>
+          <input type="text" id="eventDate" value="Feb 12">
+        </div>
+        <div class="form-row">
+          <label>Day Progress</label>
+          <input type="text" id="eventDaySub" value="Day 1 of 12">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="applyEventInfo()" style="margin-top:6px;">▶ Push to Overlays</button>
+    </div>
+  </div>
+
+  <!-- ══ TICKER ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <div class="card-header-bar"></div>
+      <div class="card-header-title">Ticker Messages</div>
+      <div class="card-header-badge">idle + footer</div>
+    </div>
+    <div class="card-body">
+      <div class="section-label">Messages (one per line, use *text* for gold highlight)</div>
+      <div class="ticker-list" id="tickerList"></div>
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <button class="btn btn-ghost btn-sm" onclick="addTickerItem()">+ Add Message</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetTickerDefaults()">↺ Reset Defaults</button>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="applyTicker()">▶ Push Ticker to Overlays</button>
+      <div id="ticker-sync" class="sync-row" style="display:none;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span>Ticker synced to all overlays</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MATCHES ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <div class="card-header-bar"></div>
+      <div class="card-header-title">Match Results & Status</div>
+      <div class="card-header-badge">idle overlay sidebar</div>
+    </div>
+    <div class="card-body">
+      <div id="matchList"></div>
+      <div style="display:flex; gap:8px; margin-top:4px;">
+        <button class="btn btn-ghost btn-sm" onclick="addMatch()">+ Add Match</button>
+      </div>
+      <div class="divider"></div>
+      <button class="btn btn-primary btn-full" onclick="applyMatches()">▶ Push Matches to Overlays</button>
+      <div id="match-sync" class="sync-row" style="display:none;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span>Match data synced</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HEADER OVERLAY ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <div class="card-header-bar"></div>
+      <div class="card-header-title">In-Game Header / Footer</div>
+      <div class="card-header-badge">header.html + footer.html</div>
+    </div>
+    <div class="card-body">
+      <div class="section-label">Team Info</div>
+      <div class="form-grid-2" style="margin-bottom:14px;">
+        <div>
+          <div class="section-label" style="margin-bottom:8px;">🔴 Team Left</div>
+          <div class="form-row">
+            <label>Full Name</label>
+            <input type="text" id="teamLeftName" value="Badass Feral Swine">
+          </div>
+          <div class="form-row">
+            <label>Short Tag</label>
+            <input type="text" id="teamLeftTag" value="BFC">
+          </div>
+          <div class="form-row">
+            <label>Logo Text / Emoji</label>
+            <input type="text" id="teamLeftLogo" value="BFC">
+          </div>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:8px;">🔵 Team Right</div>
+          <div class="form-row">
+            <label>Full Name</label>
+            <input type="text" id="teamRightName" value="Tropang Potchi">
+          </div>
+          <div class="form-row">
+            <label>Short Tag</label>
+            <input type="text" id="teamRightTag" value="PFC">
+          </div>
+          <div class="form-row">
+            <label>Logo Text / Emoji</label>
+            <input type="text" id="teamRightLogo" value="TP">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Score & Game Info</div>
+      <div class="form-grid-3" style="margin-bottom:14px;">
+        <div class="form-row">
+          <label>Score Left</label>
+          <input type="number" id="scoreLeft" value="0" min="0">
+        </div>
+        <div class="form-row">
+          <label>Score Right</label>
+          <input type="number" id="scoreRight" value="0" min="0">
+        </div>
+        <div class="form-row">
+          <label>Round Label</label>
+          <input type="text" id="roundLabel" value="R16">
+        </div>
+      </div>
+      <div class="form-grid-2" style="margin-bottom:14px;">
+        <div class="form-row">
+          <label>Tournament Name</label>
+          <input type="text" id="tournamentName" value="Sportfest 2026">
+        </div>
+        <div class="form-row">
+          <label>Footer Ticker Extra</label>
+          <input type="text" id="footerExtra" value="15 ⚡ Dragon">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Timer — Reset to (seconds)</label>
+        <div class="form-grid-2">
+          <input type="number" id="timerReset" value="616" min="0">
+          <button class="btn btn-ghost" onclick="applyTimerReset()">↺ Reset Timer</button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <button class="btn btn-primary btn-full" onclick="applyHeaderFooter()">▶ Push to Header & Footer</button>
+      <div id="hf-sync" class="sync-row" style="display:none;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span>Header & Footer synced</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toast-msg">Pushed to overlays</span>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// STORAGE HELPERS
+// ════════════════════════════════════════════════════════════
+function store(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+function retrieve(key, fallback = null) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  } catch { return fallback; }
+}
+
+// ════════════════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════════════════
+function showToast(msg = 'Pushed to overlays') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function showSync(id) {
+  const el = document.getElementById(id);
+  el.style.display = 'flex';
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+
+// ════════════════════════════════════════════════════════════
+// COUNTDOWN
+// ════════════════════════════════════════════════════════════
+function setCountdownMins(mins) {
+  document.getElementById('countdownMins').value = mins;
+}
+
+function applyCountdown() {
+  let targetTime;
+  const dtVal = document.getElementById('countdownDatetime').value;
+  const minsVal = parseInt(document.getElementById('countdownMins').value) || 30;
+
+  if (dtVal) {
+    targetTime = new Date(dtVal).getTime();
+  } else {
+    targetTime = Date.now() + (minsVal * 60 * 1000);
+  }
+
+  store('overlay_countdown', { targetTime, updatedAt: Date.now() });
+  const mins = Math.floor((targetTime - Date.now()) / 60000);
+  const secs = Math.floor(((targetTime - Date.now()) % 60000) / 1000);
+  document.getElementById('countdown-sync-text').textContent =
+    `Synced — ${mins}m ${secs}s remaining`;
+  showSync('countdown-sync');
+  showToast('⏱ Countdown synced!');
+}
+
+function resetCountdown() {
+  store('overlay_countdown', { targetTime: null, updatedAt: Date.now() });
+  showToast('Countdown reset');
+}
+
+// ════════════════════════════════════════════════════════════
+// EVENT INFO
+// ════════════════════════════════════════════════════════════
+function applyEventInfo() {
+  store('overlay_event', {
+    label: document.getElementById('eventLabel').value,
+    name:  document.getElementById('eventName').value,
+    date:  document.getElementById('eventDate').value,
+    daySub: document.getElementById('eventDaySub').value,
+    updatedAt: Date.now()
+  });
+  showToast('📋 Event info synced!');
+}
+
+// ════════════════════════════════════════════════════════════
+// TICKER
+// ════════════════════════════════════════════════════════════
+const DEFAULT_TICKER = [
+  "🏅 Sportsfest *ML Tournament* is officially underway — good luck to all teams!",
+  "📋 Schedules and results will be posted here *as events progress*",
+  "🎽 *Stay tuned for updates*",
+  "📢 Announcements and live scores will appear here *throughout the day*",
+  "🏆 May the best team win — *standings updating soon*"
+];
+
+function renderTickerList() {
+  const list = retrieve('control_ticker_items', DEFAULT_TICKER);
+  const container = document.getElementById('tickerList');
+  container.innerHTML = '';
+  list.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'ticker-list-item';
+    row.innerHTML = `
+      <span class="ticker-drag-handle">⠿</span>
+      <input type="text" value="${item.replace(/"/g,'&quot;')}" id="ticker-item-${i}" oninput="saveTickerDraft()">
+      <button class="btn btn-danger btn-sm" onclick="removeTickerItem(${i})">✕</button>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function saveTickerDraft() {
+  const items = [];
+  document.querySelectorAll('[id^="ticker-item-"]').forEach(el => items.push(el.value));
+  store('control_ticker_items', items);
+}
+
+function addTickerItem() {
+  const items = retrieve('control_ticker_items', DEFAULT_TICKER);
+  items.push('New ticker message');
+  store('control_ticker_items', items);
+  renderTickerList();
+}
+
+function removeTickerItem(index) {
+  const items = retrieve('control_ticker_items', DEFAULT_TICKER);
+  items.splice(index, 1);
+  store('control_ticker_items', items);
+  renderTickerList();
+}
+
+function resetTickerDefaults() {
+  store('control_ticker_items', DEFAULT_TICKER);
+  renderTickerList();
+}
+
+function applyTicker() {
+  saveTickerDraft();
+  const items = retrieve('control_ticker_items', DEFAULT_TICKER);
+  store('overlay_ticker', { items, updatedAt: Date.now() });
+  showSync('ticker-sync');
+  showToast('📢 Ticker synced!');
+}
+
+// ════════════════════════════════════════════════════════════
+// MATCHES
+// ════════════════════════════════════════════════════════════
+const DEFAULT_MATCHES = [
+  { num: '01', stage: 'Play-In', status: 'done', teamA: 'PFC', teamAFull: 'Tropang Potchi', teamB: 'GS', teamBFull: 'SG2 (RAW)', scoreA: 42, scoreB: 38, winner: 'A', date: 'Today' },
+  { num: '02', stage: 'R16',     status: 'live', teamA: 'BFC', teamAFull: 'Badass Feral Swine', teamB: 'PFC', teamBFull: 'Tropang Potchi', scoreA: 0, scoreB: 0, winner: '', date: 'Today' },
+  { num: '03', stage: 'R16',     status: 'upcoming', teamA: 'PFC', teamAFull: 'Broken Heroes', teamB: 'BDL', teamBFull: 'Team Liquid', scoreA: 0, scoreB: 0, winner: '', date: 'Feb 16' },
+];
+
+function renderMatchList() {
+  const matches = retrieve('control_matches', DEFAULT_MATCHES);
+  const container = document.getElementById('matchList');
+  container.innerHTML = '';
+  matches.forEach((m, i) => {
+    const el = document.createElement('div');
+    el.className = 'match-item';
+    el.innerHTML = `
+      <div class="match-item-header">
+        <span class="match-num">Game ${m.num} · ${m.stage}</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" value="${m.date}" style="width:80px;padding:4px 8px;font-size:11px;" placeholder="Date" oninput="updateMatchField(${i},'date',this.value)">
+          <select class="status-select" onchange="updateMatchField(${i},'status',this.value)">
+            <option value="upcoming" ${m.status==='upcoming'?'selected':''}>Upcoming</option>
+            <option value="live" ${m.status==='live'?'selected':''}>Live</option>
+            <option value="done" ${m.status==='done'?'selected':''}>Done</option>
+          </select>
+          <button class="btn btn-danger btn-sm" onclick="removeMatch(${i})">✕</button>
+        </div>
+      </div>
+      <div class="match-teams-grid">
+        <div>
+          <div class="form-row" style="margin-bottom:6px;">
+            <label>Tag</label>
+            <input type="text" value="${m.teamA}" oninput="updateMatchField(${i},'teamA',this.value)" style="padding:6px 10px;">
+          </div>
+          <div class="form-row" style="margin-bottom:0;">
+            <label>Full Name</label>
+            <input type="text" value="${m.teamAFull}" oninput="updateMatchField(${i},'teamAFull',this.value)" style="padding:6px 10px;">
+          </div>
+        </div>
+        <div class="match-score-center">
+          <div class="score-inputs">
+            <input type="number" class="score-input" value="${m.scoreA}" min="0" oninput="updateMatchField(${i},'scoreA',parseInt(this.value)||0)">
+            <span class="score-sep-label">–</span>
+            <input type="number" class="score-input" value="${m.scoreB}" min="0" oninput="updateMatchField(${i},'scoreB',parseInt(this.value)||0)">
+          </div>
+          <div class="winner-row">
+            <div class="winner-btn ${m.winner==='A'?'selected-left':''}" onclick="setWinner(${i},'A')"><span>🏆</span> Left</div>
+            <div class="winner-btn ${m.winner==='B'?'selected-right':''}" onclick="setWinner(${i},'B')"><span>🏆</span>Right</div>
+          </div>
+        </div>
+        <div>
+          <div class="form-row" style="margin-bottom:6px;">
+            <label>Tag</label>
+            <input type="text" value="${m.teamB}" oninput="updateMatchField(${i},'teamB',this.value)" style="padding:6px 10px;">
+          </div>
+          <div class="form-row" style="margin-bottom:0;">
+            <label>Full Name</label>
+            <input type="text" value="${m.teamBFull}" oninput="updateMatchField(${i},'teamBFull',this.value)" style="padding:6px 10px;">
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function updateMatchField(index, field, value) {
+  const matches = retrieve('control_matches', DEFAULT_MATCHES);
+  matches[index][field] = value;
+  store('control_matches', matches);
+}
+
+function setWinner(index, side) {
+  const matches = retrieve('control_matches', DEFAULT_MATCHES);
+  matches[index].winner = matches[index].winner === side ? '' : side;
+  store('control_matches', matches);
+  renderMatchList();
+}
+
+function removeMatch(index) {
+  const matches = retrieve('control_matches', DEFAULT_MATCHES);
+  matches.splice(index, 1);
+  store('control_matches', matches);
+  renderMatchList();
+}
+
+function addMatch() {
+  const matches = retrieve('control_matches', DEFAULT_MATCHES);
+  matches.push({
+    num: String(matches.length + 1).padStart(2, '0'),
+    stage: 'R16', status: 'upcoming',
+    teamA: 'TM1', teamAFull: 'Team One',
+    teamB: 'TM2', teamBFull: 'Team Two',
+    scoreA: 0, scoreB: 0, winner: '', date: 'TBD'
+  });
+  store('control_matches', matches);
+  renderMatchList();
+}
+
+function applyMatches() {
+  const matches = retrieve('control_matches', DEFAULT_MATCHES);
+  store('overlay_matches', { matches, updatedAt: Date.now() });
+  showSync('match-sync');
+  showToast('🏆 Match data synced!');
+}
+
+// ════════════════════════════════════════════════════════════
+// HEADER / FOOTER
+// ════════════════════════════════════════════════════════════
+function applyHeaderFooter() {
+  store('overlay_hf', {
+    teamLeft:  { name: document.getElementById('teamLeftName').value,  tag: document.getElementById('teamLeftTag').value,  logo: document.getElementById('teamLeftLogo').value },
+    teamRight: { name: document.getElementById('teamRightName').value, tag: document.getElementById('teamRightTag').value, logo: document.getElementById('teamRightLogo').value },
+    scoreLeft:  parseInt(document.getElementById('scoreLeft').value)  || 0,
+    scoreRight: parseInt(document.getElementById('scoreRight').value) || 0,
+    round:      document.getElementById('roundLabel').value,
+    tournament: document.getElementById('tournamentName').value,
+    footerExtra: document.getElementById('footerExtra').value,
+    updatedAt: Date.now()
+  });
+  showSync('hf-sync');
+  showToast('🎮 Header & Footer synced!');
+}
+
+function applyTimerReset() {
+  const secs = parseInt(document.getElementById('timerReset').value) || 0;
+  store('overlay_timer_reset', { seconds: secs, resetAt: Date.now() });
+  showToast('⏱ Timer reset!');
+}
+
+// ════════════════════════════════════════════════════════════
+// LOAD SAVED STATE INTO FORM
+// ════════════════════════════════════════════════════════════
+function loadSavedState() {
+  const event = retrieve('overlay_event');
+  if (event) {
+    document.getElementById('eventLabel').value  = event.label  || '';
+    document.getElementById('eventName').value   = event.name   || '';
+    document.getElementById('eventDate').value   = event.date   || '';
+    document.getElementById('eventDaySub').value = event.daySub || '';
+  }
+
+  const hf = retrieve('overlay_hf');
+  if (hf) {
+    document.getElementById('teamLeftName').value  = hf.teamLeft?.name  || '';
+    document.getElementById('teamLeftTag').value   = hf.teamLeft?.tag   || '';
+    document.getElementById('teamLeftLogo').value  = hf.teamLeft?.logo  || '';
+    document.getElementById('teamRightName').value = hf.teamRight?.name || '';
+    document.getElementById('teamRightTag').value  = hf.teamRight?.tag  || '';
+    document.getElementById('teamRightLogo').value = hf.teamRight?.logo || '';
+    document.getElementById('scoreLeft').value     = hf.scoreLeft  ?? 0;
+    document.getElementById('scoreRight').value    = hf.scoreRight ?? 0;
+    document.getElementById('roundLabel').value    = hf.round       || '';
+    document.getElementById('tournamentName').value = hf.tournament || '';
+    document.getElementById('footerExtra').value   = hf.footerExtra || '';
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderTickerList();
+  renderMatchList();
+  loadSavedState();
+
+  // Set default datetime to 30 mins from now
+  const dt = new Date(Date.now() + 30 * 60000);
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('countdownDatetime').value =
+    `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+});
+</script>
+</body>
+</html>

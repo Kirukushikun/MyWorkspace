@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sportsfest Overlay</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styling.css">
+</head>
+<body>
+  <div class="frame" id="frame">
+
+    <!-- ── TOP BAR ──────────────────────────────────────────────── -->
+    <div class="top-bar">
+      <div class="org-logo">
+        <img src="./BFC.png" style="width: 90px;" alt="">
+      </div>
+      <div class="top-divider"></div>
+      <div class="event-title-block">
+        <div class="event-label" id="event-label">Brookside Sportfest 2026</div>
+        <div class="event-name" id="event-name">Mobile Legends Tournament</div>
+      </div>
+      <div class="top-right-meta">
+        <div class="meta-pill">
+          <div class="meta-pill-dot"></div>
+          <span>LIVE</span>
+        </div>
+        <div class="date-block">
+          <div class="date-day" id="event-date">Feb 12</div>
+          <div class="date-sub" id="event-day-sub">Day 1 of 12</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BODY ─────────────────────────────────────────────────── -->
+    <div class="body">
+
+      <!-- ── MAIN AREA ────────────────────────────────────────────── -->
+      <div class="main-area">
+        <!-- <video id="mainVideo" autoplay muted loop style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="/Record sample.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video> -->
+        <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+          <img src="./BFC.png" style="width:190px;" alt="">
+          <span style="font-family:inherit;font-size:1.4rem;font-weight:700;letter-spacing:0.1em;">Sportsfest 2026</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <div style="width:7px;height:7px;border-radius:50%;background:currentColor;animation:bounce 1s ease-in-out infinite;"></div>
+            <div style="width:7px;height:7px;border-radius:50%;background:currentColor;animation:bounce 1s ease-in-out 0.2s infinite;"></div>
+            <div style="width:7px;height:7px;border-radius:50%;background:currentColor;animation:bounce 1s ease-in-out 0.4s infinite;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SIDEBAR ───────────────────────────────────────────────── -->
+      <div class="sidebar">
+
+        <!--
+          #match-cards-container now wraps the ENTIRE schedule area.
+          overlay-sync.js rewrites this block with grouped date sections.
+          Static fallback below shows until first sync fires.
+        -->
+        <div class="sidebar-schedule" id="match-cards-container">
+
+          <!-- TODAY section — always present -->
+          <div class="sidebar-heading">
+            <div class="sidebar-heading-line"></div>
+            <div class="sidebar-heading-text">Schedule</div>
+            <div class="sidebar-heading-badge">Today</div>
+          </div>
+
+          <!-- Game 1 -->
+          <div class="matchup-card">
+            <div class="card-meta">
+              <span class="card-game-num">Game 01</span>
+              <span class="card-sport">Play-In</span>
+              <span class="card-status done">DONE</span>
+            </div>
+            <div class="teams-row">
+              <div class="team-block">
+                <div class="team-avatar winner">🔴</div>
+                <div class="team-tag">PFC</div>
+                <div class="team-dept">Tropang Potchi</div>
+              </div>
+              <div class="vs-block">
+                <div class="vs-text">VS</div>
+                <div class="vs-score">42 – 38</div>
+              </div>
+              <div class="team-block right">
+                <div class="team-avatar">🔵</div>
+                <div class="team-tag">GS</div>
+                <div class="team-dept">SG2 (RAW)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 2 -->
+          <div class="matchup-card active">
+            <div class="card-meta">
+              <span class="card-game-num">Game 02</span>
+              <span class="card-sport">R16</span>
+              <span class="card-status live">LIVE</span>
+            </div>
+            <div class="teams-row">
+              <div class="team-block">
+                <div class="team-avatar">🔴</div>
+                <div class="team-tag">BFC</div>
+                <div class="team-dept">Badass Feral Swine</div>
+              </div>
+              <div class="vs-block">
+                <div class="vs-text">VS</div>
+                <div class="vs-time">LIVE</div>
+              </div>
+              <div class="team-block right">
+                <div class="team-avatar">🔵</div>
+                <div class="team-tag">PFC</div>
+                <div class="team-dept">Tropang Potchi</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FUTURE DATE section — only rendered when future matches exist -->
+          <div class="sidebar-heading" style="margin-top: 20px;">
+            <div class="sidebar-heading-line"></div>
+            <div class="sidebar-heading-text">Schedule</div>
+            <div class="sidebar-heading-badge">Feb 16</div>
+          </div>
+
+          <!-- Game 3 -->
+          <div class="matchup-card">
+            <div class="card-meta">
+              <span class="card-game-num">Game 03</span>
+              <span class="card-sport">R16</span>
+              <span class="card-status upcoming">3:00 PM</span>
+            </div>
+            <div class="teams-row">
+              <div class="team-block">
+                <div class="team-avatar">🔴</div>
+                <div class="team-tag">PFC</div>
+                <div class="team-dept">Broken Heroes</div>
+              </div>
+              <div class="vs-block">
+                <div class="vs-text">VS</div>
+                <div class="vs-time">Upcoming</div>
+              </div>
+              <div class="team-block right">
+                <div class="team-avatar">🔵</div>
+                <div class="team-tag">BDL</div>
+                <div class="team-dept">Team Liquid</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /match-cards-container -->
+
+        <!-- ── COUNTDOWN ──────────────────────────────────────────── -->
+        <div class="sponsor-section">
+          <div class="sidebar-heading">
+            <div class="sidebar-heading-line" style="background:var(--gold)"></div>
+            <div class="sidebar-heading-text">Next Match</div>
+          </div>
+          <div class="countdown-container">
+            <div class="countdown-label">Starting in</div>
+            <div class="countdown-display">
+              <div class="countdown-unit">
+                <div class="countdown-number" id="minutes">00</div>
+                <div class="countdown-text">Minutes</div>
+              </div>
+              <div class="countdown-separator">:</div>
+              <div class="countdown-unit">
+                <div class="countdown-number" id="seconds">00</div>
+                <div class="countdown-text">Seconds</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /sidebar -->
+
+    </div>
+    <!-- /body -->
+
+    <div class="watermark">Brookside group of companies · Live Broadcast</div>
+
+    <!-- ── BOTTOM TICKER ──────────────────────────────────────────── -->
+    <div class="bottom-ticker">
+      <div class="ticker-label"><span>Updates</span></div>
+      <div class="ticker-track">
+        <div class="ticker-inner" id="ticker-inner">
+          <span class="ticker-item">🏅 Sportsfest <em>ML Tournament</em> is officially underway — good luck to all teams!</span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">📋 Schedules and results will be posted here <em>as events progress</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">🎽 <em>Stay tuned for updates</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">📢 Announcements and live scores will appear here <em>throughout the day</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">🏆 May the best team win — <em>standings updating soon</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">🏅 Sportsfest <em>ML Tournament</em> is officially underway — good luck to all teams!</span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">📋 Schedules and results will be posted here <em>as events progress</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">🎽 <em>Stay tuned for updates</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">📢 Announcements and live scores will appear here <em>throughout the day</em></span>
+          <span class="ticker-dot"></span>
+          <span class="ticker-item">🏆 May the best team win — <em>standings updating soon</em></span>
+          <span class="ticker-dot"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Fullscreen button -->
+  <button class="fs-btn" id="fsBtn" onclick="toggleFS()">
+    <svg id="fsIcon" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+    <span id="fsTxt">Fullscreen</span>
+  </button>
+
+  <script src="./overlay-sync.js"></script>
+
+  <script>
+    function toggleFS() {
+      const el = document.documentElement;
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      } else {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      }
+    }
+    document.addEventListener('fullscreenchange', updateBtn);
+    document.addEventListener('webkitfullscreenchange', updateBtn);
+    function updateBtn() {
+      const icon = document.getElementById('fsIcon');
+      const txt  = document.getElementById('fsTxt');
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        icon.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
+        txt.textContent = 'Exit';
+      } else {
+        icon.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+        txt.textContent = 'Fullscreen';
+      }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'f' || e.key === 'F') toggleFS();
+    });
+  </script>
+
+</body>
+</html>

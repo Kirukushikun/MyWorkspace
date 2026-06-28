@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinksHub — IC Workspace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=League+Gothic&family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #C3073F;
+      --red-dim: #6F2232;
+      --bg: #1A1A1D;
+      --bg-secondary: #161617;
+      --card-bg: #222226;
+      --text-primary: #ffffff;
+      --text-muted: rgba(255,255,255,0.45);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      padding: 40px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      font-family: "Roboto", sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 15% 30%, rgba(195,7,63,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 70%, rgba(195,7,63,0.05) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='1' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E");
+      background-size: auto, auto, 28px 28px;
+      overflow-x: hidden;
+    }
+
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      width: 100%;
+      max-width: 860px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Header ── */
+    .site-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .site-logo {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+    }
+    .site-tagline {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .hero-title {
+      font-family: "League Spartan", sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      line-height: 1.15;
+    }
+    .hero-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 300;
+    }
+
+    /* ── Filter tabs ── */
+    .tab-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      width: 100%;
+    }
+    .tab {
+      font-family: "Roboto", sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .tab:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .tab.active {
+      background: linear-gradient(90deg, var(--red-dim), var(--red));
+      border-color: transparent;
+      color: white;
+    }
+
+    /* ── Category section ── */
+    .category-block {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeUp 0.4s ease both;
+    }
+    .category-block.hidden { display: none; }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .category-badge {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: white;
+      white-space: nowrap;
+    }
+    .badge-systems  { background: linear-gradient(90deg, var(--red-dim), var(--red)); }
+    .badge-tools    { background: linear-gradient(90deg, #1a5f7a, #2e9cca); }
+    .badge-mockups  { background: linear-gradient(90deg, #5c3a7a, #9b5fcf); }
+    .badge-external { background: linear-gradient(90deg, #333, #666); }
+
+    .category-divider {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* ── Link cards grid ── */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .link-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(195,7,63,0.07), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .link-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 30px rgba(195,7,63,0.2);
+      border-color: rgba(195,7,63,0.4);
+    }
+    .link-card:hover::after { opacity: 1; }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .icon-systems  { background: rgba(195, 7, 63, 0.15); }
+    .icon-tools    { background: rgba(46, 156, 202, 0.15); }
+    .icon-mockups  { background: rgba(155, 95, 207, 0.15); }
+    .icon-external { background: rgba(255,255,255, 0.06); }
+
+    .card-info { flex: 1; min-width: 0; }
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-desc {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-arrow {
+      flex-shrink: 0;
+      color: white;
+      opacity: 0.2;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .link-card:hover .card-arrow {
+      opacity: 0.7;
+      transform: translateX(3px);
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background-color: rgba(78,78,80,0.2); }
+    ::-webkit-scrollbar-thumb { background-color: #4e4e50; }
+
+    @media (max-width: 560px) {
+      .hero-title { font-size: 24px; letter-spacing: 4px; }
+      .links-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="site-header">
+      <img src="portfolio/Resources/IC Logo.png" alt="IC" class="site-logo" />
+      <p class="site-tagline">Personal Workspace</p>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-eyebrow">Quick Access</div>
+      <div class="hero-title">Links &amp; Hub</div>
+      <div class="hero-sub">All my tools and systems — one place.</div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="tab-row">
+      <button class="tab active" onclick="filterCat('all', this)">All</button>
+      <button class="tab" onclick="filterCat('systems', this)">Systems</button>
+      <button class="tab" onclick="filterCat('tools', this)">Tools</button>
+      <button class="tab" onclick="filterCat('mockups', this)">Mockups</button>
+      <button class="tab" onclick="filterCat('external', this)">External</button>
+    </div>
+
+    <!-- ─── SYSTEMS ─── -->
+    <div class="category-block" data-cat="systems" id="cat-systems">
+      <div class="category-header">
+        <span class="category-badge badge-systems">Systems</span>
+        <div class="category-divider"></div>
+      </div>
+      <div class="links-grid">
+        <a class="link-card" href="portfolio/" target="_blank">
+          <div class="card-icon icon-systems">👤</div>
+          <div class="card-info">
+            <div class="card-name">Portfolio</div>
+            <div class="card-desc">Personal portfolio & showcase</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="link-card" href="ic-studio/" target="_blank">
+          <div class="card-icon icon-systems">🖥️</div>
+          <div class="card-info">
+            <div class="card-name">ICStudio</div>
+            <div class="card-desc">IT overlay & control system</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── TOOLS ─── -->
+    <div class="category-block" data-cat="tools" id="cat-tools">
+      <div class="category-header">
+        <span class="category-badge badge-tools">Tools</span>
+        <div class="category-divider"></div>
+      </div>
+      <div class="links-grid">
+        <a class="link-card" href="card-forge/" target="_blank">
+          <div class="card-icon icon-tools">🃏</div>
+          <div class="card-info">
+            <div class="card-name">CardForge</div>
+            <div class="card-desc">Digital business card builder</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="link-card" href="clip-forge/" target="_blank">
+          <div class="card-icon icon-tools">✂️</div>
+          <div class="card-info">
+            <div class="card-name">ClipForge</div>
+            <div class="card-desc">Browser-side video trimmer</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="link-card" href="lift-lens/" target="_blank">
+          <div class="card-icon icon-tools">🔍</div>
+          <div class="card-info">
+            <div class="card-name">LiftLens</div>
+            <div class="card-desc">Background remover</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── MOCKUPS ─── -->
+    <div class="category-block" data-cat="mockups" id="cat-mockups">
+      <div class="category-header">
+        <span class="category-badge badge-mockups">Mockups</span>
+        <div class="category-divider"></div>
+      </div>
+      <div class="links-grid">
+        <a class="link-card" href="#" target="_blank">
+          <div class="card-icon icon-mockups">🎨</div>
+          <div class="card-info">
+            <div class="card-name">Coming Soon</div>
+            <div class="card-desc">UI explorations & prototypes</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── EXTERNAL ─── -->
+    <div class="category-block" data-cat="external" id="cat-external">
+      <div class="category-header">
+        <span class="category-badge badge-external">External</span>
+        <div class="category-divider"></div>
+      </div>
+      <div class="links-grid">
+        <a class="link-card" href="https://github.com" target="_blank">
+          <div class="card-icon icon-external">💻</div>
+          <div class="card-info">
+            <div class="card-name">GitHub</div>
+            <div class="card-desc">Source repos & version control</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="link-card" href="https://figma.com" target="_blank">
+          <div class="card-icon icon-external">🖼️</div>
+          <div class="card-info">
+            <div class="card-name">Figma</div>
+            <div class="card-desc">UI design & wireframes</div>
+          </div>
+          <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="page-footer">IC Workspace &nbsp;·&nbsp; LinksHub</div>
+  </div>
+
+  <script>
+    function filterCat(cat, btn) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.category-block').forEach(block => {
+        if (cat === 'all' || block.dataset.cat === cat) {
+          block.classList.remove('hidden');
+        } else {
+          block.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tournament Header</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styling-hf.css">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+
+    <!-- TEAM LEFT -->
+    <div class="team-left">
+      <div class="team-logo" id="team-left-logo">BFC</div>
+      <div class="team-info">
+        <div class="team-name" id="team-left-name">Badass Feral Swine</div>
+        <div class="team-label" id="team-left-tag">(BFC)</div>
+      </div>
+      <div class="team-stats">
+        <!-- stat items can be re-enabled here when needed -->
+      </div>
+    </div>
+
+    <!-- CENTER PANEL -->
+    <div class="center-panel">
+      <div class="tournament-header">
+        <div class="tournament-name" id="tournament-name">Sportfest 2026</div>
+      </div>
+      <div class="score-display">
+        <span class="score-num" id="score-left">0</span>
+        <span class="score-sep">–</span>
+        <span class="score-num" id="score-right">0</span>
+      </div>
+      <div class="round-label" id="round-label">R16</div>
+    </div>
+
+    <!-- TEAM RIGHT -->
+    <div class="team-right">
+      <div class="team-logo" id="team-right-logo">TP</div>
+      <div class="team-info">
+        <div class="team-name" id="team-right-name">Tropang Potchi</div>
+        <div class="team-label" id="team-right-tag">(PFC)</div>
+      </div>
+      <div class="team-stats">
+        <!-- stat items can be re-enabled here when needed -->
+      </div>
+    </div>
+
+  </div><!-- /top-bar -->
+
+  <!-- TIMER BAR -->
+  <div class="timer-bar">
+    <span class="timer-time" id="timer">10:16</span>
+    <div class="timer-divider"></div>
+    <span class="timer-extra" id="timer-extra">15 ⚡ Dragon</span>
+  </div>
+
+  <!-- ✅ Syncs team data, scores, round, tournament, timer reset from control.html -->
+  <script src="./overlay-sync-hf.js"></script>
+
+</body>
+</html>

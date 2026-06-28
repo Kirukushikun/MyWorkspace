@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\Linkshub.html\" -Pattern 'src=|href=')",
+      "Bash(Select-Object -First 20)",
+      "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\CardForge.html\" -Pattern 'src=|href=')",
+      "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\s1-videotrimmer.html\" -Pattern 'src=|href=')",
+      "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\s2-lift-background-remover.html\" -Pattern 'src=|href=')",
+      "Bash(mkdir -p \"c:/Users/DEV-PC/Desktop/Dump/portfolio-v2\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\DEV-PC\\Desktop\\Dump"
+    ]
+  }
+}
