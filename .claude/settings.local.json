@@ -6,7 +6,8 @@
       "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\CardForge.html\" -Pattern 'src=|href=')",
       "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\s1-videotrimmer.html\" -Pattern 'src=|href=')",
       "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\s2-lift-background-remover.html\" -Pattern 'src=|href=')",
-      "Bash(mkdir -p \"c:/Users/DEV-PC/Desktop/Dump/portfolio-v2\")"
+      "Bash(mkdir -p \"c:/Users/DEV-PC/Desktop/Dump/portfolio-v2\")",
+      "Bash(mkdir \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\thumb-kit\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\DEV-PC\\Desktop\\Dump"
