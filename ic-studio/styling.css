@@ -1,15 +1,15 @@
 :root {
-    --gold:      #EC8A16;
-    --gold-lt:   #D4720C;
-    --gold-dim:  rgba(236,138,22,0.10);
-    --gold-line: rgba(236,138,22,0.30);
-    --bg:        #F4F2EE;
+    --gold:      #C3073F;
+    --gold-lt:   #6F2232;
+    --gold-dim:  rgba(195,7,63,0.08);
+    --gold-line: rgba(195,7,63,0.25);
+    --bg:        #F4F4F6;
     --surface:   #FFFFFF;
-    --surface2:  #F0EDE8;
+    --surface2:  #EBEBEE;
     --border:    rgba(0,0,0,0.08);
-    --text:      #1A1714;
-    --text-2:    #6B6560;
-    --text-3:    #B0AAA3;
+    --text:      #1A1A1D;
+    --text-2:    rgba(26,26,29,0.55);
+    --text-3:    rgba(26,26,29,0.28);
     --white:     #FFFFFF;
 }
 
@@ -22,8 +22,8 @@ html, body {
 }
 
 body {
-    background: #E0DDD8;
-    font-family: 'DM Sans', sans-serif;
+    background: #E4E4E8;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* ── FRAME ──────────────────────────────────────────────────── */
@@ -92,7 +92,7 @@ body {
     justify-content: center;
 }
 .event-label {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 500;
     color: var(--gold);
@@ -102,7 +102,7 @@ body {
     margin-bottom: 4px;
 }
 .event-name {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 22px;
     font-weight: 800;
     color: var(--text);
@@ -136,7 +136,7 @@ body {
     50%      { opacity: 0.4; transform: scale(0.7); }
 }
 .meta-pill span {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--text-2);
     letter-spacing: 1px;
@@ -144,7 +144,7 @@ body {
 
 .date-block { text-align: right; }
 .date-day {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 18px;
     font-weight: 700;
     color: var(--text);
@@ -168,7 +168,7 @@ body {
     flex: 1;
     min-width: 0;
     position: relative;
-    background: #E8E4DE;
+    background: #E8E8EC;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -216,7 +216,7 @@ body {
     flex-shrink: 0;
 }
 .sidebar-heading-text {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 500;
     color: var(--text-2);
@@ -225,7 +225,7 @@ body {
 }
 .sidebar-heading-badge {
     margin-left: auto;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--gold);
     background: var(--gold-dim);
@@ -261,7 +261,7 @@ body {
 
 .matchup-card.active {
     border-color: var(--gold-line);
-    box-shadow: 0 2px 12px rgba(236,138,22,0.12);
+    box-shadow: 0 2px 12px rgba(195,7,63,0.12);
 }
 .matchup-card.active::before {
     content: '';
@@ -279,21 +279,21 @@ body {
     margin-bottom: 10px;
 }
 .card-game-num {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--text-3);
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 .card-sport {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--text-3);
     letter-spacing: 1px;
     text-transform: uppercase;
 }
 .card-status {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -355,7 +355,7 @@ body {
     box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
 }
 .team-tag {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 12px;
     font-weight: 700;
     color: var(--text);
@@ -369,7 +369,7 @@ body {
 }
 .team-dept {
     font-size: 9px;
-    color: #968e85;
+    color: var(--text-3);
     letter-spacing: 0.5px;
     text-align: center;
     white-space: nowrap;
@@ -387,20 +387,20 @@ body {
     flex-shrink: 0;
 }
 .vs-text {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 13px;
     font-weight: 800;
     color: var(--text-3);
     letter-spacing: 1px;
 }
 .vs-time {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--text-3);
     letter-spacing: 1px;
 }
 .vs-score {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--gold-lt);
     letter-spacing: 1px;
@@ -422,7 +422,7 @@ body {
     gap: 14px;
 }
 .countdown-label {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     color: var(--text-3);
     letter-spacing: 2px;
@@ -440,7 +440,7 @@ body {
     gap: 6px;
 }
 .countdown-number {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 34px;
     font-weight: 800;
     color: var(--gold);
@@ -454,14 +454,14 @@ body {
     padding: 9px 7px;
 }
 .countdown-text {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--text-3);
     letter-spacing: 1px;
     text-transform: uppercase;
 }
 .countdown-separator {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 26px;
     font-weight: 700;
     color: var(--text-3);
@@ -474,7 +474,7 @@ body {
     position: absolute;
     bottom: 46px; left: 16px;
     z-index: 8;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--text-3);
     letter-spacing: 2px;
@@ -505,7 +505,7 @@ body {
     gap: 6px;
 }
 .ticker-label span {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 12px;
     font-weight: 800;
     color: #FFFFFF;
@@ -542,7 +542,7 @@ body {
     to   { transform: translateX(-50%); }
 }
 .ticker-item {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 12px;
     font-weight: 500;
     color: var(--text-2);
@@ -571,13 +571,13 @@ body {
     position: fixed;
     bottom: 52px; right: 316px;
     z-index: 200;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.92);
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 6px 10px;
     cursor: pointer;
     display: flex; align-items: center; gap: 6px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--text-2);
     letter-spacing: 1.5px;

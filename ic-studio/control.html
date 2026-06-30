@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Broadcast Control Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=League+Spartan:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --gold:       #EC8A16;
-    --gold-lt:    #D4720C;
-    --gold-dim:   rgba(236,138,22,0.10);
-    --gold-line:  rgba(236,138,22,0.30);
-    --gold-glow:  rgba(236,138,22,0.15);
-    --bg:         #16130F;
-    --bg2:        #1E1A14;
-    --surface:    #252018;
-    --surface2:   #2E2820;
-    --border:     rgba(255,255,255,0.07);
-    --border-gold:rgba(236,138,22,0.20);
-    --text:       #F4F0E8;
-    --text-2:     #A09880;
-    --text-3:     #5C5548;
+    --gold:       #C3073F;
+    --gold-lt:    #6F2232;
+    --gold-dim:   rgba(195,7,63,0.10);
+    --gold-line:  rgba(195,7,63,0.30);
+    --gold-glow:  rgba(195,7,63,0.15);
+    --bg:         #1A1A1D;
+    --bg2:        #161617;
+    --surface:    #222226;
+    --surface2:   #2a2a2f;
+    --border:     rgba(255,255,255,0.08);
+    --border-gold:rgba(195,7,63,0.20);
+    --text:       #ffffff;
+    --text-2:     rgba(255,255,255,0.52);
+    --text-3:     rgba(255,255,255,0.22);
     --green:      #22c55e;
     --green-dim:  rgba(34,197,94,0.10);
     --green-line: rgba(34,197,94,0.25);
@@ -32,7 +32,7 @@
 
   html, body {
     width: 100%; min-height: 100%;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--bg);
     color: var(--text);
   }
@@ -68,7 +68,7 @@
     font-size: 15px;
   }
   .header-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 18px;
     font-weight: 800;
     color: var(--text);
@@ -79,7 +79,7 @@
     color: var(--gold);
   }
   .header-sub {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--text-3);
     letter-spacing: 2px;
@@ -100,7 +100,7 @@
     animation: breathe 1.5s ease-in-out infinite;
   }
   .live-badge span {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--gold);
     letter-spacing: 2px;
@@ -145,7 +145,7 @@
     border-radius: 2px; flex-shrink: 0;
   }
   .card-header-title {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px; font-weight: 500;
     color: var(--text-2);
     letter-spacing: 2.5px;
@@ -153,7 +153,7 @@
     flex: 1;
   }
   .card-header-badge {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--text-3);
     letter-spacing: 1px;
@@ -164,7 +164,7 @@
   /* ── FORM ELEMENTS ── */
   label {
     display: block;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--text-3);
     letter-spacing: 2px;
@@ -181,7 +181,7 @@
     border: 1px solid var(--border);
     border-radius: 7px;
     padding: 10px 13px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 13px;
     color: var(--text);
     outline: none;
@@ -221,7 +221,7 @@
     padding: 9px 16px;
     border-radius: 7px;
     border: none; cursor: pointer;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 1.5px;
@@ -231,12 +231,12 @@
   }
   .btn-primary {
     background: var(--gold);
-    color: #0D0B07;
+    color: #ffffff;
   }
   .btn-primary:hover {
     background: var(--gold-lt);
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(236,138,22,0.3);
+    box-shadow: 0 4px 16px rgba(195,7,63,0.3);
   }
   .btn-ghost {
     background: var(--surface2);
@@ -274,7 +274,7 @@
     background: var(--surface2);
     border: 1px solid var(--gold-line);
     border-radius: 8px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--gold);
     letter-spacing: 1px;
@@ -310,7 +310,7 @@
     margin-bottom: 12px;
   }
   .match-num {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--gold);
     letter-spacing: 2px;
@@ -339,14 +339,14 @@
   .score-input {
     width: 52px !important;
     text-align: center;
-    font-family: 'Syne', sans-serif !important;
+    font-family: 'League Spartan', sans-serif !important;
     font-size: 18px !important;
     font-weight: 700 !important;
     color: var(--gold) !important;
     padding: 6px 4px !important;
   }
   .score-sep-label {
-    font-family: 'Syne', sans-serif;
+    font-family: 'League Spartan', sans-serif;
     font-size: 18px; font-weight: 800;
     color: var(--text-3);
   }
@@ -357,7 +357,7 @@
     flex: 1; padding: 5px 8px;
     font-size: 10px; letter-spacing: 2px;
     border-radius: 5px; cursor: pointer;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     text-transform: uppercase;
     border: 1px solid var(--border);
     background: var(--surface);
@@ -408,7 +408,7 @@
     margin-top: 12px;
   }
   .sync-row span {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--green);
     letter-spacing: 1.5px;
@@ -424,7 +424,7 @@
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 5px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--text-2);
     letter-spacing: 1px;
@@ -438,7 +438,7 @@
 
   /* ── SECTION TITLE ── */
   .section-label {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     color: var(--text-3);
     letter-spacing: 2.5px;
