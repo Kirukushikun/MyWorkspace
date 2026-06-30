@@ -1,0 +1,1 @@
+Every project description is single sentence with an em-dash as the second beat — no filler, no obvious explanations, consistent visual length across the board.

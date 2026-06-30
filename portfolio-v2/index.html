@@ -453,16 +453,24 @@
     color: var(--text);
     background: rgba(195,7,63,0.07);
   }
-  .project-confidential {
+  .project-confidential,
+  .project-unavailable {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 11px 22px;
-    border: 1px solid rgba(195,7,63,0.2); border-radius: 3px;
+    border-radius: 3px;
     font-family: 'League Spartan', sans-serif;
     font-size: 11px; font-weight: 700;
     letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(195,7,63,0.5);
     white-space: nowrap; align-self: center;
     cursor: default; user-select: none;
+  }
+  .project-confidential {
+    border: 1px solid rgba(195,7,63,0.2);
+    color: rgba(195,7,63,0.5);
+  }
+  .project-unavailable {
+    border: 1px solid rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.2);
   }
 
   /* ─── VIEW MORE ─── */
@@ -666,11 +674,49 @@
     /* about */
     .skills-chips { gap: 6px; }
 
-    /* projects */
-    .project-card { grid-template-columns: 36px 1fr; gap: 14px; padding: 24px 0; }
-    .project-name { font-size: 28px; }
-    .project-desc { font-size: 13px; }
-    .view-more-wrap { margin-top: 32px; }
+    /* projects — card layout */
+    .projects-list { border-top: none; }
+    .project-card {
+      display: flex !important;
+      flex-direction: column;
+      padding: 0; gap: 0;
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .project-card:first-child { border-top: 1px solid var(--border); }
+    .project-card::before { display: none; }
+    .project-card:hover { padding-left: 0; }
+    .project-thumb {
+      position: static !important;
+      width: 100% !important;
+      height: 160px !important;
+      opacity: 1 !important;
+      transform: none !important;
+      mask-image: none !important;
+      -webkit-mask-image: none !important;
+      filter: brightness(0.6) contrast(1.1) !important;
+      object-fit: cover !important;
+      object-position: top center !important;
+      display: block !important;
+    }
+    .project-num {
+      font-size: 10px; letter-spacing: 2px;
+      padding: 14px 16px 0;
+      color: var(--text3);
+    }
+    .project-body { padding: 6px 16px 14px; }
+    .project-name { font-size: 24px; }
+    .project-desc { font-size: 13px; max-width: 100%; }
+    .project-link { display: inline-flex; }
+    .project-link,
+    .project-confidential,
+    .project-unavailable { margin: 0 16px 16px; align-self: flex-start; }
+    .projects-more.open { max-height: 5000px; }
+    .view-more-wrap { margin-top: 24px; }
 
     /* tools */
     .tools-grid { grid-template-columns: 1fr; }
@@ -728,7 +774,7 @@
   <div class="hero-content">
     <div class="hero-eyebrow">Fullstack Web Developer</div>
     <h1 class="hero-name">IVERSON<br><span class="ghost">CRAIG</span><br>GUNO</h1>
-    <p class="hero-tagline">Building clean, purposeful web experiences — from pixel-precise UIs to solid backends.</p>
+    <p class="hero-tagline">From prototype to production — designed, built, and deployed by one.</p>
     <div class="hero-actions">
       <a href="#work"    class="btn-primary"><i class="fa-solid fa-arrow-down"></i> View My Work</a>
       <a href="#contact" class="btn-outline">Get In Touch</a>
@@ -752,17 +798,24 @@
       <div class="accent-line"></div>
     </div>
     <div class="about-right" id="aboutRight">
-      <p>I'm a recent graduate from <a href="https://dct.edu.ph/" target="_blank">Dominican College of Tarlac</a> with a <strong>Bachelor's degree in Information Technology</strong>, and a Full-Stack bootcamp alum from <a href="https://www.kodego.ph/" target="_blank">Kodego</a>.</p>
-      <p>Over four years I've built a strong foundation across the full stack — from pixel-precise UIs to database architecture and server-side logic. I'm drawn to projects where <strong>design and engineering both matter</strong>.</p>
-      <p>Outside client work, I maintain a personal suite of browser tools (CardForge, ClipForge, LiftLens, ICStudio) — an ongoing experiment in focused, zero-dependency product design.</p>
+      <p>Graduate of <a href="https://dct.edu.ph/" target="_blank">Dominican College of Tarlac</a> with a <strong>Bachelor's in Information Technology</strong>, and a <a href="https://www.kodego.ph/" target="_blank">KodeGo</a> full stack bootcamp alum. Shortly after graduation, I joined Brookside Group of Companies as their sole web developer.</p>
+      <p>Nine production systems shipped in the span of a year, each going through the full cycle: Figma prototype, UI mockups, development, and live deployment. I manage five hosting environments, navigate servers via SSH, configure Docker containers, and handle DNS through Cloudflare. The stack grew to match the work — Laravel, Livewire, Alpine, Tailwind, React, Inertia, and AI integrations through OpenRouter and Google APIs.</p>
+      <p>Outside company work, I build personal browser tools — CardForge, ClipForge, LiftLens, ICStudio — an ongoing experiment in focused, zero-dependency product design.</p>
+      <p><strong>I don't just write code. I own the whole thing.</strong></p>
       <div class="skills-chips">
         <span class="chip">HTML</span>
         <span class="chip">CSS</span>
         <span class="chip">JavaScript</span>
-        <span class="chip">ReactJS</span>
-        <span class="chip">NodeJS</span>
         <span class="chip">Laravel</span>
+        <span class="chip">Livewire</span>
+        <span class="chip">Alpine.js</span>
+        <span class="chip">Tailwind</span>
+        <span class="chip">React</span>
+        <span class="chip">Inertia.js</span>
         <span class="chip">MySQL</span>
+        <span class="chip">Docker</span>
+        <span class="chip">Cloudflare</span>
+        <span class="chip">Figma</span>
         <span class="chip">Git</span>
       </div>
     </div>
@@ -777,48 +830,50 @@
 
       <div class="project-card">
       <img class="project-thumb" src="thumbnails/LifeCast.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">01</div>
       <div class="project-body">
         <div class="project-name">AGAPE LifeCast</div>
         <div class="project-type project-type--client"><span class="project-type-dot"></span>Client</div>
-        <p class="project-desc">A centralized platform connecting customers with skilled technicians specialized in electronic repairs.</p>
-        <div class="project-tags"><span class="tag">ReactJS</span><span class="tag">NodeJS</span><span class="tag">MySQL</span></div>
+        <p class="project-desc">Operator console for live church presentations — control songs, Bible verses, media, and slide decks from a single screen.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">React</span><span class="tag">Inertia.js</span></div>
       </div>
-      <a href="https://techxpertz.tech/" target="_blank" class="project-link">Visit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <!-- href="https://agapelifecast.com" → restore when deployed -->
+      <div class="project-unavailable"><i class="fa-solid fa-circle-minus"></i> Unavailable</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/Basaro.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">02</div>
       <div class="project-body">
         <div class="project-name">Basaro</div>
         <div class="project-type project-type--client"><span class="project-type-dot"></span>Client</div>
-        <p class="project-desc">A centralized platform connecting customers with skilled technicians specialized in electronic repairs.</p>
-        <div class="project-tags"><span class="tag">ReactJS</span><span class="tag">NodeJS</span><span class="tag">MySQL</span></div>
+        <p class="project-desc">Guides early-grade students through Filipino reading and literacy via 20 structured lessons — each built from instructions, practice, and timed assessment.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">Livewire</span><span class="tag">Tailwind</span><span class="tag">Google API</span></div>
       </div>
-      <a href="https://techxpertz.tech/" target="_blank" class="project-link">Visit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <!-- href="https://basaro.app" → restore when deployed -->
+      <div class="project-unavailable"><i class="fa-solid fa-circle-minus"></i> Unavailable</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/FixedAsset.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">03</div>
       <div class="project-body">
         <div class="project-name">FAM System</div>
         <div class="project-type project-type--company"><span class="project-type-dot"></span>Company</div>
-        <p class="project-desc">A web-based platform for systematically tracking, managing, and monitoring fixed assets across multiple locations within the organization.</p>
-        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">JavaScript</span></div>
+        <p class="project-desc">Manages every physical asset across six Brookside farm locations — from acquisition through transfer and disposal, with audit trails and AI-powered analytics.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">Livewire</span><span class="tag">Tailwind</span><span class="tag">OpenRouter</span></div>
       </div>
       <div class="project-confidential"><i class="fa-solid fa-lock"></i> Confidential</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/PANSystem.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">04</div>
       <div class="project-body">
         <div class="project-name">PANDA System</div>
         <div class="project-type project-type--company"><span class="project-type-dot"></span>Company</div>
-        <p class="project-desc">A web-based system designed to streamline egg production, monitoring, and data management across hatchery operations.</p>
-        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">JavaScript</span></div>
+        <p class="project-desc">Routes personnel action requests — promotions, transfers, resignations — through a structured multi-step digital approval chain with full traceability.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">Livewire</span><span class="tag">Tailwind</span><span class="tag">Alpine.js</span></div>
       </div>
       <div class="project-confidential"><i class="fa-solid fa-lock"></i> Confidential</div>
     </div>
@@ -830,62 +885,65 @@
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/CRISPPortal.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">05</div>
       <div class="project-body">
         <div class="project-name">CRISP Portal</div>
         <div class="project-type project-type--company"><span class="project-type-dot"></span>Company</div>
-        <p class="project-desc">A web-based platform for systematically evaluating and monitoring critical roles and employees within the organization.</p>
-        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">JavaScript</span></div>
+        <p class="project-desc">Evaluates critical roles and employee succession readiness across BGC Group — generating structured assessment reports that guide workforce planning decisions.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">Livewire</span><span class="tag">Tailwind</span><span class="tag">Alpine.js</span></div>
       </div>
       <div class="project-confidential"><i class="fa-solid fa-lock"></i> Confidential</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/HatcherySystem.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">06</div>
       <div class="project-body">
         <div class="project-name">Hatchery System</div>
         <div class="project-type project-type--company"><span class="project-type-dot"></span>Company</div>
-        <p class="project-desc">A web-based system designed to streamline egg production, monitoring, and data management across hatchery operations.</p>
-        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">JavaScript</span></div>
+        <p class="project-desc">Streamlines egg production, batch monitoring, and data management across hatchery operations — real-time tracking with role-based access for operators and managers.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">Livewire</span><span class="tag">MySQL</span><span class="tag">JavaScript</span></div>
       </div>
       <div class="project-confidential"><i class="fa-solid fa-lock"></i> Confidential</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/TechXpertz.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">07</div>
       <div class="project-body">
         <div class="project-name">TechXpertz</div>
         <div class="project-type project-type--personal"><span class="project-type-dot"></span>Personal</div>
-        <p class="project-desc">A centralized platform connecting customers with skilled technicians specialized in electronic repairs.</p>
-        <div class="project-tags"><span class="tag">ReactJS</span><span class="tag">NodeJS</span><span class="tag">MySQL</span></div>
+        <p class="project-desc">Connects customers with skilled technicians specializing in electronic repairs — job booking, service tracking, technician ratings, and built in messaging included.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">Livewire</span><span class="tag">MySQL</span><span class="tag">JavaScript</span></div>
       </div>
-      <a href="https://techxpertz.tech/" target="_blank" class="project-link">Visit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <!-- href="https://techxpertz.tech" → restore when deployed -->
+      <div class="project-unavailable"><i class="fa-solid fa-circle-minus"></i> Unavailable</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/StudySphere.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">08</div>
       <div class="project-body">
         <div class="project-name">StudySphere</div>
         <div class="project-type project-type--personal"><span class="project-type-dot"></span>Personal</div>
-        <p class="project-desc">A comprehensive educational environment offering students a focused space to improve their learning journey.</p>
-        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+        <p class="project-desc">Gives students a structured space to study, take notes, and track academic progress — built with a clean, distraction-free interface for focused sessions.</p>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">HTML</span><span class="tag">JavaScript</span></div>
       </div>
-      <a href="https://studysphere.space/" target="_blank" class="project-link">Visit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <!-- href="https://studysphere.space" → restore when deployed -->
+      <div class="project-unavailable"><i class="fa-solid fa-circle-minus"></i> Unavailable</div>
     </div>
 
     <div class="project-card">
       <img class="project-thumb" src="thumbnails/PhilSpot.png" alt="">
-      <div class="project-num">0x</div>
+      <div class="project-num">09</div>
       <div class="project-body">
         <div class="project-name">PhilSpot</div>
         <div class="project-type project-type--personal"><span class="project-type-dot"></span>Personal</div>
-        <p class="project-desc">A travel guide showcasing the best destinations across the Philippines — beaches, mountains, and hidden gems.</p>
-        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+        <p class="project-desc">Showcases travel destinations across the Philippines — beaches, mountains, and hidden gems curated by region for explorers planning their next adventure.</p>
+        <div class="project-tags"><span class="tag">Bootstrap</span><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
       </div>
-      <a href="https://philspot.fun/" target="_blank" class="project-link">Visit <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <!-- href="https://philspot.fun" → restore when deployed -->
+      <div class="project-unavailable"><i class="fa-solid fa-circle-minus"></i> Unavailable</div>
     </div>
 
   </div>
