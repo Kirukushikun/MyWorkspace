@@ -6,8 +6,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>ShimpoFlip</title>
-<link rel="icon" type="image/x-icon" href="./shimpoflip-icon.ico">
+<title>CardForge</title>
+<link rel="icon" type="image/x-icon" href="./CardForge-icon.ico">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=League+Spartan:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -23,23 +23,23 @@
 }
 
 [data-theme="light"] {
-  --bg: #F4F7FB;
+  --bg: #F7F5F6;
   --surface: #FFFFFF;
-  --surface2: #F0F5FC;
-  --border: #E4EDF8;
-  --text: #1A2332;
-  --text2: #5A6A80;
-  --text3: #9AAABB;
+  --surface2: #F3EFF1;
+  --border: #E8E0E3;
+  --text: #261A1F;
+  --text2: #6E5A60;
+  --text3: #A89BA0;
   --sidebar-bg: #FFFFFF;
   --topbar-bg: rgba(255,255,255,0.9);
-  --shadow: 0 2px 16px rgba(26,35,50,0.07);
-  --shadow-lg: 0 8px 32px rgba(26,35,50,0.12);
-  --active-bg: #D6EEFF;
-  --active-text: #1D5FA8;
-  --hover-bg: #EEF4FB;
-  --input-bg: #F4F7FB;
-  --overlay: rgba(26,35,50,0.45);
-  --flip-back: linear-gradient(145deg,#D6EEFF,#EEF4FB);
+  --shadow: 0 2px 16px rgba(38,26,31,0.07);
+  --shadow-lg: 0 8px 32px rgba(38,26,31,0.12);
+  --active-bg: rgba(195,7,63,0.12);
+  --active-text: #C3073F;
+  --hover-bg: rgba(195,7,63,0.06);
+  --input-bg: #F7F5F6;
+  --overlay: rgba(38,26,31,0.45);
+  --flip-back: linear-gradient(145deg,rgba(195,7,63,0.15),#F3EFF1);
   --success-bg: #ECFDF5; --success: #16A34A;
   --warn-bg: #FFFBEB; --warn: #D97706;
   --danger-bg: #FEF2F2; --danger: #DC2626;
@@ -126,7 +126,7 @@ body {
 .theme-seg { flex:1; padding:8px 0; border:none; border-radius:99px; background:transparent; color:var(--text2); cursor:pointer; font-size:12px; font-weight:600; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:6px; transition:all var(--trans); }
 .theme-seg:hover { color:var(--text); }
 .theme-seg.active { background:var(--baby); color:#fff; box-shadow:0 2px 8px rgba(137,196,244,0.35); }
-[data-theme="light"] .theme-seg.active { color:var(--baby-dark); }
+[data-theme="light"] .theme-seg.active { color: #fff; }
 
 .btn-new-project {
   display:flex; align-items:center; gap:8px;
@@ -621,7 +621,7 @@ body {
     <div id="sidebar-inner">
       <div class="logo">
         <div>
-          <div class="logo-title"><i class="fa-solid fa-clipboard-list"></i> <span>Shimpo</span>Flip</div>
+          <div class="logo-title"><i class="fa-solid fa-clipboard-list"></i> <span>Card</span>Forge</div>
           <span class="logo-sub">Flashcard Studio for Shimpo</span>
         </div>
       </div>
@@ -648,13 +648,13 @@ body {
   <div id="main">
     <div id="topbar">
       <button class="btn-icon" id="menuBtn" style="display:none;" onclick="openDrawer()"><i class="fa-solid fa-bars"></i></button>
-      <h2 id="topbarTitle">ShimpoFlip</h2>
+      <h2 id="topbarTitle">CardForge</h2>
       <div id="topbarActions"></div>
     </div>
     <div id="content">
       <div class="empty-state" id="emptyState">
         <div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div>
-        <h3>Welcome to ShimpoFlip</h3>
+        <h3>Welcome to CardForge</h3>
         <p>Create a project to start building your flashcard decks.</p>
         <button class="btn btn-primary" onclick="openNewProject()" style="margin-top:4px;"><i class="fa-solid fa-plus"></i> New Project</button>
       </div>
@@ -690,7 +690,7 @@ body {
     <div id="drawerPanel">
       <div class="logo">
         <div>
-          <div class="logo-title"><i class="fa-solid fa-clipboard-list"></i> ShimpoFlip</div>
+          <div class="logo-title"><i class="fa-solid fa-clipboard-list"></i> CardForge</div>
           <span class="logo-sub">Flashcard Studio for Shimpo</span>
         </div>
         <button class="btn-icon" onclick="closeDrawer()"><i class="fa-solid fa-xmark"></i></button>
@@ -1102,7 +1102,7 @@ function deleteProject(id,e){
   state.projects=state.projects.filter(p=>p.id!==id);
   if(state.activeProjectId===id){
     state.activeProjectId=state.projects[0]?.id||null;
-    if(!state.activeProjectId){document.getElementById('emptyState').style.display='';document.getElementById('projectView').style.display='none';document.getElementById('topbarTitle').textContent='ShimpoFlip';document.getElementById('topbarActions').innerHTML='';}
+    if(!state.activeProjectId){document.getElementById('emptyState').style.display='';document.getElementById('projectView').style.display='none';document.getElementById('topbarTitle').textContent='CardForge';document.getElementById('topbarActions').innerHTML='';}
   }
   save();renderSidebar();renderDrawerList();if(state.activeProjectId)renderProjectView();
 }
@@ -1214,7 +1214,7 @@ function doPrint(){
     qRows+=`<div class="grid-row">${qCells}</div>`;
     aRows+=`<div class="grid-row">${aCells}</div>`;
   }
-  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${p.name} — ShimpoFlip</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Roboto',sans-serif;background:white;}.page-header{text-align:center;padding:12px;font-size:11px;color:#94A3B8;border-bottom:1px solid #E2EBF5;}.page-header strong{color:#334155;font-size:13px;display:block;margin-bottom:2px;}.grid-row{display:grid;grid-template-columns:repeat(3,1fr);}.cell{border:1px solid #CBD5E1;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;}.cell.answer{background:#EFF6FF;}.cell.empty{background:#F8FAFC;border:1px dashed #E2E8F0;}.cell-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#89C4F4;margin-bottom:8px;}.cell-text{font-size:12px;color:#1E293B;line-height:1.45;}.cell.answer .cell-text{color:#1D4ED8;}.page-break{page-break-before:always;}.no-print{background:#EFF6FF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}</style></head><body><div class="no-print" id="noPrint"><span style="font-size:13px;color:#1D4ED8;font-weight:500;">📋 ${escHtml(p.name)} — Enable two-sided printing, flip on short edge</span><button onclick="window.print()" style="background:#89C4F4;border:none;color:white;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;">Print</button></div><div class="page-header"><strong>${escHtml(p.name)}</strong>Page 1 — Questions · ${p.cards.length} cards</div>${qRows}<div class="page-break"></div><div class="page-header"><strong>${escHtml(p.name)}</strong>Page 2 — Answers · two-sided, flip on short edge</div>${aRows}<script>var _nb=document.getElementById('noPrint');window.addEventListener('beforeprint',function(){if(_nb)_nb.style.display='none';});window.addEventListener('afterprint',function(){if(_nb)_nb.style.display='';});<\/script></body></html>`);
+  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${p.name} — CardForge</title><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Roboto',sans-serif;background:white;}.page-header{text-align:center;padding:12px;font-size:11px;color:#94A3B8;border-bottom:1px solid #E2EBF5;}.page-header strong{color:#334155;font-size:13px;display:block;margin-bottom:2px;}.grid-row{display:grid;grid-template-columns:repeat(3,1fr);}.cell{border:1px solid #CBD5E1;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;}.cell.answer{background:#EFF6FF;}.cell.empty{background:#F8FAFC;border:1px dashed #E2E8F0;}.cell-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#89C4F4;margin-bottom:8px;}.cell-text{font-size:12px;color:#1E293B;line-height:1.45;}.cell.answer .cell-text{color:#1D4ED8;}.page-break{page-break-before:always;}.no-print{background:#EFF6FF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}</style></head><body><div class="no-print" id="noPrint"><span style="font-size:13px;color:#1D4ED8;font-weight:500;">📋 ${escHtml(p.name)} — Enable two-sided printing, flip on short edge</span><button onclick="window.print()" style="background:#89C4F4;border:none;color:white;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Roboto',sans-serif;font-size:13px;font-weight:500;">Print</button></div><div class="page-header"><strong>${escHtml(p.name)}</strong>Page 1 — Questions · ${p.cards.length} cards</div>${qRows}<div class="page-break"></div><div class="page-header"><strong>${escHtml(p.name)}</strong>Page 2 — Answers · two-sided, flip on short edge</div>${aRows}<script>var _nb=document.getElementById('noPrint');window.addEventListener('beforeprint',function(){if(_nb)_nb.style.display='none';});window.addEventListener('afterprint',function(){if(_nb)_nb.style.display='';});<\/script></body></html>`);
   pw.document.close();pw.focus();setTimeout(()=>pw.print(),600);
 }
 

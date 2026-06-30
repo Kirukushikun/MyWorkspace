@@ -593,3 +593,22 @@ body {
     0%, 100% { transform: translateY(0); opacity: 0.4; }
     50%       { transform: translateY(-6px); opacity: 1; }
 }
+
+  .btn-primary {
+    background: var(--gold);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
