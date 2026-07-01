@@ -72,447 +72,846 @@
     }
 
     /* ═══════════════════════════════════════════
-       LAYOUT 01 — Dashboard
+       LAYOUT 01 — Stacked Screenshot Showcase
+       (white canvas, two overlapping screens, one highlighted)
     ═══════════════════════════════════════════ */
-    .l01 { background: #0f1117; }
-    .l01 .topbar {
-      position: absolute; top: 0; left: 0; right: 0; height: 28px;
-      background: #1a1d27;
-      display: flex; align-items: center; padding: 0 14px; gap: 6px;
+    .l01 {
+      background: #f4f3ef;
+      position: relative;
     }
-    .l01 .dot { width: 7px; height: 7px; border-radius: 50%; }
-    .l01 .sidebar {
-      position: absolute; top: 28px; left: 0; bottom: 0; width: 52px;
-      background: #13151f;
-      display: flex; flex-direction: column; align-items: center;
-      padding: 14px 0; gap: 12px;
-    }
-    .l01 .sicon {
-      width: 22px; height: 22px; border-radius: 5px;
-      background: rgba(255,255,255,0.06);
-    }
-    .l01 .sicon.active { background: var(--accent); }
-    .l01 .content {
-      position: absolute; top: 28px; left: 52px; right: 0; bottom: 0;
-      padding: 14px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .l01 .row { display: flex; gap: 10px; }
-    .l01 .stat {
-      flex: 1; height: 44px; border-radius: 6px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .l01 .stat.hi { border-color: rgba(195,7,63,0.3); background: rgba(195,7,63,0.07); }
-    .l01 .chart {
-      flex: 1; height: 68px; border-radius: 6px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      display: flex; align-items: flex-end; padding: 8px; gap: 4px;
-    }
-    .l01 .bar {
-      flex: 1; border-radius: 2px;
-      background: rgba(255,255,255,0.1);
-    }
-    .l01 .bar.hi { background: var(--accent); }
-    .l01 .table {
-      flex: 2; height: 68px; border-radius: 6px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 8px; display: flex; flex-direction: column; gap: 6px;
-    }
-    .l01 .trow {
-      height: 8px; border-radius: 2px;
-      background: rgba(255,255,255,0.07);
-    }
-    .l01 .trow:first-child { background: rgba(255,255,255,0.15); width: 60%; }
-
-    /* ═══════════════════════════════════════════
-       LAYOUT 02 — Terminal / Code
-    ═══════════════════════════════════════════ */
-    .l02 { background: #0d1117; }
-    .l02 .titlebar {
-      position: absolute; top: 0; left: 0; right: 0; height: 26px;
-      background: #1c1f26;
-      display: flex; align-items: center; gap: 6px; padding: 0 12px;
-    }
-    .l02 .wdot { width: 8px; height: 8px; border-radius: 50%; }
-    .l02 .code-area {
-      position: absolute; top: 26px; left: 0; right: 0; bottom: 0;
-      padding: 14px 18px;
-      font-family: 'JetBrains Mono', monospace; font-size: 9px;
-      display: flex; flex-direction: column; gap: 5px;
-    }
-    .l02 .line { display: flex; gap: 10px; align-items: center; }
-    .l02 .ln { color: rgba(255,255,255,0.2); min-width: 14px; }
-    .l02 .kw  { color: #c792ea; }
-    .l02 .fn  { color: #82aaff; }
-    .l02 .str { color: #c3e88d; }
-    .l02 .acc { color: var(--accent); }
-    .l02 .dim { color: rgba(255,255,255,0.25); }
-    .l02 .cursor {
-      display: inline-block; width: 6px; height: 12px;
-      background: var(--accent); animation: blink 1s step-end infinite;
-      vertical-align: middle;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    /* ═══════════════════════════════════════════
-       LAYOUT 03 — Split Gradient
-    ═══════════════════════════════════════════ */
-    .l03 { background: var(--surface); }
-    .l03 .left-panel {
-      position: absolute; left: 0; top: 0; bottom: 0; width: 45%;
-      background: linear-gradient(160deg, #C3073F 0%, #3d0117 100%);
-      display: flex; flex-direction: column;
-      justify-content: flex-end; padding: 20px 16px;
-    }
-    .l03 .initials {
-      font-family: 'League Gothic', sans-serif;
-      font-size: 52px; line-height: 1; color: rgba(255,255,255,0.15);
-      position: absolute; top: 12px; left: 12px;
-    }
-    .l03 .proj-title {
-      font-family: 'League Gothic', sans-serif;
-      font-size: 18px; text-transform: uppercase; letter-spacing: 1px;
-    }
-    .l03 .proj-sub {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8px; color: rgba(255,255,255,0.6);
-      letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;
-    }
-    .l03 .right-panel {
-      position: absolute; right: 0; top: 0; bottom: 0; width: 55%;
-      background: #13141a;
-      padding: 16px; display: flex; flex-direction: column; gap: 8px;
-      justify-content: center;
-    }
-    .l03 .ui-row {
-      height: 9px; border-radius: 2px;
-      background: rgba(255,255,255,0.06);
-    }
-    .l03 .ui-row.w40 { width: 40%; }
-    .l03 .ui-row.w70 { width: 70%; }
-    .l03 .ui-row.w55 { width: 55%; }
-    .l03 .ui-row.w85 { width: 85%; }
-    .l03 .ui-block {
-      height: 32px; border-radius: 4px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      margin-top: 4px;
-    }
-
-    /* ═══════════════════════════════════════════
-       LAYOUT 04 — Glitch
-    ═══════════════════════════════════════════ */
-    .l04 { background: #0e0e10; display: flex; align-items: center; justify-content: center; }
-    .l04 .glitch-wrap { position: relative; }
-    .l04 .glitch-text {
-      font-family: 'League Gothic', sans-serif;
-      font-size: 52px; letter-spacing: 4px; text-transform: uppercase;
-      position: relative; z-index: 2; color: #fff;
-    }
-    .l04 .glitch-a {
-      position: absolute; inset: 0;
-      font-family: 'League Gothic', sans-serif;
-      font-size: 52px; letter-spacing: 4px; text-transform: uppercase;
-      color: var(--accent); z-index: 1;
-      transform: translate(4px, 3px);
-      clip-path: inset(30% 0 40% 0);
-    }
-    .l04 .glitch-b {
-      position: absolute; inset: 0;
-      font-family: 'League Gothic', sans-serif;
-      font-size: 52px; letter-spacing: 4px; text-transform: uppercase;
-      color: var(--cyan); z-index: 0;
-      transform: translate(-5px, -3px);
-      clip-path: inset(55% 0 10% 0);
-    }
-    .l04 .scanlines {
-      position: absolute; inset: 0; z-index: 3; pointer-events: none;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px, transparent 2px,
-        rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 4px
-      );
-    }
-
-    /* ═══════════════════════════════════════════
-       LAYOUT 05 — Map / Location
-    ═══════════════════════════════════════════ */
-    .l05 { background: #0a1628; overflow: hidden; }
-    .l05 .map-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(6,182,212,0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(6,182,212,0.07) 1px, transparent 1px);
-      background-size: 28px 28px;
-    }
-    .l05 .map-glow {
+    .l01 .frame {
       position: absolute;
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%);
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      border-radius: 5px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(20,20,15,0.14);
     }
-    .l05 .pin {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -100%);
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 0 4px rgba(6,182,212,0.25), 0 0 0 8px rgba(6,182,212,0.1);
+    .l01 .frame .chrome {
+      height: 12%;
+      display: flex; align-items: center;
+      gap: 4px; padding: 0 8px;
+      border-bottom: 1px solid rgba(20,20,15,0.08);
     }
-    .l05 .route {
-      position: absolute; top: 30%; left: 20%;
-      width: 60%; height: 40%; opacity: 0.3;
-      border: 1px dashed var(--cyan); border-radius: 50%;
+    .l01 .frame .chrome-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(20,20,15,0.12);
     }
-    .l05 .label {
-      position: absolute; bottom: 16px; left: 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-      color: var(--cyan);
+    .l01 .frame .chrome-line {
+      height: 5px; border-radius: 3px;
+      background: rgba(20,20,15,0.07);
     }
 
+    .l01 .frame.back {
+      top: 5%; right: 5%;
+      width: 56%; height: 83%;
+      z-index: 1;
+      opacity: 0.9;
+      filter: saturate(0.7);
+    }
+    .l01 .frame.back .chrome-line { width: 30%; }
+    .l01 .frame.back .body { padding: 8%; display: flex; flex-direction: column; gap: 10%; }
+    .l01 .frame.back .body .row { height: 10%; border-radius: 3px; background: rgba(20,20,15,0.05); }
+    .l01 .frame.back .body .row.w70 { width: 70%; }
+
+    .l01 .frame.front {
+      top: 15%; left: 6%;
+      width: 62%; height: 80%;
+      z-index: 2;
+      border: 1.5px solid var(--accent);
+      box-shadow: 0 14px 30px rgba(195,7,63,0.18), 0 4px 14px rgba(20,20,15,0.12);
+    }
+    .l01 .frame.front .chrome-line { width: 34%; }
+    .l01 .frame.front .chrome-dot:first-child { background: var(--accent); }
+    .l01 .frame.front .body { padding: 8%; display: flex; flex-direction: column; gap: 9%; }
+    .l01 .frame.front .body .row { height: 9%; border-radius: 3px; background: rgba(20,20,15,0.06); }
+    .l01 .frame.front .body .row.w45 { width: 45%; background: var(--accent); opacity: 0.85; }
+    .l01 .frame.front .body .row.w80 { width: 80%; }
+    .l01 .frame.front .body .block { flex: 1; border-radius: 4px; background: rgba(20,20,15,0.04); }
+
     /* ═══════════════════════════════════════════
-       LAYOUT 06 — Form / Auth
+       LAYOUT 02 — Stacked Screenshot Showcase (mirrored)
+       (white canvas, back top-left, front bottom-right)
     ═══════════════════════════════════════════ */
-    .l06 { background: #111318; display: flex; align-items: center; justify-content: center; }
-    .l06 .form-card {
-      width: 65%; background: #1a1d27;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px; padding: 18px 20px;
-      display: flex; flex-direction: column; gap: 10px;
+    .l02 {
+      background: white;
+      position: relative;
     }
-    .l06 .form-logo {
-      font-family: 'League Gothic', sans-serif;
-      font-size: 20px; letter-spacing: 2px;
-      color: var(--accent); margin-bottom: 4px;
+    .l02 .frame {
+      position: absolute;
+      border-radius: 5px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(100,0,20,0.3);
     }
-    .l06 .field {
-      height: 28px; border-radius: 4px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex; align-items: center; padding: 0 10px;
-      gap: 8px;
+    .l02 .frame .chrome {
+      height: 12%;
+      display: flex; align-items: center;
+      gap: 4px; padding: 0 8px;
+      border-bottom: 1px solid rgba(20,20,15,0.08);
     }
-    .l06 .field-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); }
-    .l06 .field-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
-    .l06 .field.focus { border-color: rgba(195,7,63,0.4); }
-    .l06 .field.focus .field-dot { background: var(--accent); }
-    .l06 .btn-row {
-      height: 28px; border-radius: 4px;
+    .l02 .frame .chrome-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(20,20,15,0.12);
+    }
+    .l02 .frame .chrome-line {
+      height: 5px; border-radius: 3px;
+      background: rgba(20,20,15,0.07);
+    }
+
+    .l02 .frame.back {
+      top: 4%; left: 5%;
+      width: 55%; height: 84%;
+      z-index: 1;
+      opacity: 0.72;
+      filter: saturate(0.5);
+    }
+    .l02 .frame.back .chrome-line { width: 30%; }
+    .l02 .frame.back .body { padding: 8%; display: flex; flex-direction: column; gap: 10%; }
+    .l02 .frame.back .body .row { height: 10%; border-radius: 3px; background: rgba(20,20,15,0.05); }
+    .l02 .frame.back .body .row.w70 { width: 70%; }
+    
+    .l02 .frame.front {
+      top: 15%; right: 6%;
+      width: 62%; height: 80%;
+      z-index: 2;
+      border: 1.5px solid var(--cyan);
+      box-shadow: 0 14px 30px rgba(6,182,212,0.28), 0 4px 14px rgba(100,0,20,0.22);
+    }
+    .l02 .frame.front .chrome-line { width: 34%; }
+    .l02 .frame.front .chrome-dot:first-child { background: var(--cyan); }
+    .l02 .frame.front .body { padding: 8%; display: flex; flex-direction: column; gap: 9%; }
+    .l02 .frame.front .body .row { height: 9%; border-radius: 3px; background: rgba(20,20,15,0.06); }
+    .l02 .frame.front .body .row.w45 { width: 45%; background: var(--cyan); opacity: 0.85; }
+    .l02 .frame.front .body .row.w80 { width: 80%; }
+    .l02 .frame.front .body .block { flex: 1; border-radius: 4px; background: rgba(20,20,15,0.04); }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 03 — Triptych Showcase
+       (two side screens flank a taller, highlighted center screen)
+    ═══════════════════════════════════════════ */
+    .l03 {
       background: var(--accent);
-      margin-top: 2px;
+      position: relative;
+    }
+    .l03 .frame {
+      position: absolute;
+      border-radius: 5px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(100,0,20,0.3);
+    }
+    .l03 .frame .chrome {
+      height: 10%;
+      display: flex; align-items: center;
+      gap: 4px; padding: 0 8px;
+      border-bottom: 1px solid rgba(20,20,15,0.08);
+    }
+    .l03 .frame .chrome-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(20,20,15,0.12);
+    }
+    .l03 .frame .chrome-line {
+      height: 5px; border-radius: 3px;
+      background: rgba(20,20,15,0.07);
     }
 
-    /* ═══════════════════════════════════════════
-       LAYOUT 07 — Data / Analytics
-    ═══════════════════════════════════════════ */
-    .l07 { background: #0c0e14; padding: 18px; }
-    .l07 .top {
-      display: flex; justify-content: space-between;
-      align-items: flex-start; margin-bottom: 14px;
+    .l03 .frame.side {
+      top: 16%; bottom: -6%;
+      width: 25%;
+      z-index: 1;
+      background: rgb(202, 196, 196);
+      box-shadow: 0 6px 16px rgba(100,0,20,0.25);
     }
-    .l07 .metric {
-      font-family: 'League Gothic', sans-serif;
-      font-size: 32px; color: var(--text); line-height: 1;
+    .l03 .frame.side .chrome { border-bottom-color: rgba(20,20,15,0.12); }
+    .l03 .frame.side.left  { left: 10%; }
+    .l03 .frame.side.right { right: 10%; }
+    .l03 .frame.side .body { padding: 12%; display: flex; flex-direction: column; gap: 12%; }
+    .l03 .frame.side .body .row { height: 8%; border-radius: 3px; background: rgba(20,20,15,0.1); }
+
+    .l03 .frame.center {
+      top: 20px; bottom: -6%;
+      left: 50%; transform: translateX(-50%);
+      width: 45%;
+      z-index: 2;
+      border: 1.5px solid;
+      box-shadow: 0 16px 32px rgba(248, 129, 145, 0.3), 0 4px 14px rgba(100,0,20,0.22);
     }
-    .l07 .metric-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8px; color: var(--text2); letter-spacing: 1.5px;
-      text-transform: uppercase; margin-top: 3px;
-    }
-    .l07 .badge {
-      font-family: 'JetBrains Mono', monospace; font-size: 8px;
-      color: var(--green); padding: 2px 7px;
-      border: 1px solid rgba(74,222,128,0.3); border-radius: 20px;
-    }
-    .l07 .sparkline {
-      height: 52px; display: flex; align-items: flex-end; gap: 3px;
-      margin-bottom: 14px;
-    }
-    .l07 .sp { border-radius: 2px 2px 0 0; flex: 1; background: rgba(195,7,63,0.25); }
-    .l07 .sp.hi { background: var(--accent); }
-    .l07 .dots-grid {
-      display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px;
-    }
-    .l07 .dot-item {
-      width: 100%; aspect-ratio: 1; border-radius: 50%;
-      background: rgba(255,255,255,0.07);
-    }
-    .l07 .dot-item.on { background: var(--violet); }
-    .l07 .dot-item.mid { background: rgba(129,140,248,0.35); }
+    .l03 .frame.center .chrome-line { width: 34%; }
+    .l03 .frame.center .chrome-dot:first-child { background: var(--accent); }
+    .l03 .frame.center .body { padding: 8%; display: flex; flex-direction: column; gap: 9%; }
+    .l03 .frame.center .body .row { height: 8%; border-radius: 3px; background: rgba(20,20,15,0.06); }
+    .l03 .frame.center .body .row.w45 { width: 45%; background: var(--accent); opacity: 0.85; }
+    .l03 .frame.center .body .row.w80 { width: 80%; }
+    .l03 .frame.center .body .block { flex: 1; border-radius: 4px; background: rgba(20,20,15,0.04); }
 
     /* ═══════════════════════════════════════════
-       LAYOUT 08 — E-Commerce / Cards
+       LAYOUT 04 — Cover Slide / Document Fan
+       (colored panel with fading stacked docs + heading panel)
     ═══════════════════════════════════════════ */
-    .l08 { background: #111318; padding: 14px; }
-    .l08 .top-bar {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 12px;
+    .l04 {
+      display: flex;
+      background: #ffffff;
     }
-    .l08 .search {
-      height: 20px; flex: 1; border-radius: 3px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.07);
+    .l04 .color-panel {
+      width: 62%; flex-shrink: 0;
+      background: var(--accent);
+      position: relative;
+      overflow: hidden;
     }
-    .l08 .cart {
-      width: 20px; height: 20px; border-radius: 3px;
-      background: var(--accent); margin-left: 8px; flex-shrink: 0;
+    .l04 .doc {
+      position: absolute;
+      border-radius: 10px 10px 0 0;
+      background: #f4f3ef;
     }
-    .l08 .product-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    .l04 .doc.d4 { left: 27%; top: 25%; width: 66%; bottom: -6%; opacity: 0.28; }
+    .l04 .doc.d3 { left: 22%; top: 20%;  width: 68%; bottom: -6%; opacity: 0.48; }
+    .l04 .doc.d2 { left: 17%; top: 15%;  width: 70%; bottom: -6%; opacity: 0.72; }
+    .l04 .doc.d1 {
+      left: 9%;
+      top: 10%;
+      width: 74%;
+      bottom: -6%;
+      opacity: 1;
+      box-shadow: -6px 0 18px rgba(0, 0, 0, 0.15);
     }
-    .l08 .product {
-      border-radius: 6px; overflow: hidden;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .l08 .product-img {
-      height: 44px;
-    }
-    .l08 .product-info { padding: 6px; }
-    .l08 .p-line { height: 5px; border-radius: 1px; background: rgba(255,255,255,0.12); margin-bottom: 4px; }
-    .l08 .p-line.short { width: 55%; background: var(--accent); opacity: 0.7; }
 
-    /* ═══════════════════════════════════════════
-       LAYOUT 09 — Minimal Typography
-    ═══════════════════════════════════════════ */
-    .l09 {
-      background: #0e0e10;
+    .l04 .text-panel {
+      flex: 1;
       display: flex; flex-direction: column;
-      justify-content: flex-end; padding: 24px;
+      justify-content: center;
+      padding: 10% 8%;
+      gap: 3%;
     }
-    .l09 .big-letter {
-      position: absolute; top: -10px; right: -8px;
-      font-family: 'League Gothic', sans-serif;
-      font-size: 160px; line-height: 1;
-      color: rgba(255,255,255,0.04);
-      letter-spacing: -4px; user-select: none;
+    .l04 .logo-badge {
+      display: flex; align-items: center; gap: 5px;
     }
-    .l09 .line-accent {
-      width: 32px; height: 2px; background: var(--accent);
-      margin-bottom: 12px;
+    .l04 .logo-mark { width: 16px; height: 16px; border-radius: 4px; background: var(--accent); opacity: 0.85; }
+    .l04 .heading { display: flex; flex-direction: column; gap: 10%; }
+    .l04 .h-line {
+      height: 11%; border-radius: 3px;
+      background: rgba(20,20,15,0.82);
     }
-    .l09 .big-name {
-      font-family: 'League Gothic', sans-serif;
-      font-size: 36px; text-transform: uppercase;
-      letter-spacing: 2px; line-height: 1; z-index: 1;
+
+    .l04 .caption-1 {
+      width: 100%; height: 10px; border-radius: 2px;
+      background: rgba(20,20,15,0.2);
     }
-    .l09 .sub-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; color: var(--text2);
-      letter-spacing: 3px; text-transform: uppercase;
-      margin-top: 6px; z-index: 1;
+    .l04 .caption-2 {
+      margin-bottom: auto;
+      width: 80%; height: 10px; border-radius: 2px;
+      background: rgba(20,20,15,0.2);
     }
-    .l09 .tags { display: flex; gap: 6px; margin-top: 12px; z-index: 1; }
-    .l09 .t {
-      font-family: 'JetBrains Mono', monospace; font-size: 8px;
-      padding: 2px 8px; border-radius: 2px;
-      background: rgba(255,255,255,0.06); color: var(--text2);
+
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 05 — Portal Page
+       (navy background, centered logo/title, stacked white cards)
+    ═══════════════════════════════════════════ */
+    .l05 {
+      background: #1A1A1D;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 6% 8% 4%;
+      gap: 5%;
+    }
+    .l05 .logo-mark {
+      width: 26px; height: 8px; border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #6F2232);
+      margin-bottom: 4%;
+    }
+    .l05 .page-title {
+      width: 46%; height: 12%;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.92);
+      margin-bottom: 2%;
+    }
+
+    .l05 .card {
+      width: 100%;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+
+    .l05 .card.doc {
+      flex: 1.5;
+      padding: 6% 6%;
+      display: flex; flex-direction: column; gap: 6%;
+    }
+    .l05 .doc-heading {
+      align-self: center;
+      width: 44%; height: 9px; border-radius: 2px;
+      background: rgba(20,20,15,0.75);
+    }
+    .l05 .doc-para { display: flex; flex-direction: column; gap: 10%; }
+    .l05 .doc-line { height: 5px; border-radius: 1px; background: rgba(20,20,15,0.15); }
+    .l05 .doc-line.w95 { width: 95%; }
+    .l05 .doc-line.w85 { width: 85%; }
+    .l05 .doc-line.w60 { width: 60%; }
+    .l05 .doc-sub {
+      width: 18%; height: 7px; border-radius: 2px;
+      background: rgba(20,20,15,0.6);
+      margin-top: 2%;
+    }
+    .l05 .doc-list { display: flex; flex-direction: column; gap: 8%; }
+    .l05 .doc-item { display: flex; flex-direction: column; gap: 6%; }
+    .l05 .doc-item .doc-line.short { width: 40%; background: rgba(20,20,15,0.28); }
+
+    .l05 .card.form {
+      flex: 1;
+      padding: 8% 6%;
+      display: flex; flex-direction: column; gap: 8%;
+    }
+    .l05 .form-heading {
+      width: 26%; height: 8px; border-radius: 2px;
+      background: rgba(20,20,15,0.7);
+    }
+    .l05 .form-fields { display: flex; gap: 6%; }
+    .l05 .field-group { flex: 1; display: flex; flex-direction: column; gap: 12%; }
+    .l05 .field-label { width: 60%; height: 4px; border-radius: 1px; background: rgba(20,20,15,0.35); }
+    .l05 .field-box {
+      height: 16px; border-radius: 3px;
+      border: 1px solid rgba(20,20,15,0.2);
+      background: #fbfbfa;
     }
 
     /* ═══════════════════════════════════════════
-       LAYOUT 10 — Mobile App
+       LAYOUT 06 — Tilted Document Stack
+       (teal background, header, 3 rotated cascading cards)
     ═══════════════════════════════════════════ */
-    .l10 { background: #0f1117; display: flex; align-items: center; justify-content: center; gap: 16px; }
-    .l10 .phone {
-      width: 68px; height: 120px; border-radius: 14px;
-      border: 2px solid rgba(255,255,255,0.12);
-      background: #1a1d27; overflow: hidden;
-      display: flex; flex-direction: column; flex-shrink: 0;
+    .l06 {
+      background: var(--accent);
+      position: relative;
+      overflow: hidden;
     }
-    .l10 .phone-bar {
-      height: 16px; background: rgba(255,255,255,0.05);
+    .l06 .header {
+      position: absolute; top: 7%; left: 5%;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 5;
+    }
+    .l06 .logo-mark {
+      width: 20px; height: 20px; border-radius: 5px;
+      background: rgba(255,255,255,0.9);
+    }
+    .l06 .divider { width: 1px; height: 16px; background: rgba(255,255,255,0.4); }
+    .l06 .title-bar {
+      width: 130px; height: 10px; border-radius: 2px;
+      background: rgba(255,255,255,0.92);
+    }
+
+    .l06 .doc {
+      position: absolute;
+      border-radius: 14px;
+      background: #e9edf0;
+    }
+    .l06 .doc.back {
+      width: 30%; height: 68%;
+      left: 15%; top: 31%;
+      transform: rotate(-9deg);
+      opacity: 0.55;
+      z-index: 1;
+    }
+    .l06 .doc.mid {
+      width: 38%; height: 78%;
+      left: 11%; top: 45%;
+      transform: rotate(-9deg);
+      opacity: 0.8;
+      background: #e3e8ec;
+      z-index: 2;
+    }
+    .l06 .doc.front {
+      width: 85%; height: 128%;
+      left: 20%; top: 25%;
+      transform: rotate(-7deg);
+      transform-origin: top left;
+      background: #eef1f3;
+      box-shadow: -12px 10px 26px rgba(0,0,0,0.18);
+      z-index: 3;
+    }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 07 — Wordmark Header + Split Panels
+       (dark green glow, two large offset screens below)
+    ═══════════════════════════════════════════ */
+    .l07 {
+      background:
+        radial-gradient(ellipse 420px 260px at 12% 10%, rgba(195,7,63,0.22), transparent 65%),
+        linear-gradient(160deg, #1A1A1D 0%, #0f0f11 60%);
+      position: relative;
+      overflow: hidden;
+    }
+    .l07 .header {
+      position: absolute; top: 8%; left: 6%;
+      z-index: 5;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .l07 .wordmark { display: flex; align-items: center; gap: 6px; }
+    .l07 .word-block {
+      height: 14px; border-radius: 2px;
+    }
+    .l07 .word-block.a { width: 48px; background: rgba(255,255,255,0.92); }
+    .l07 .word-block.b { width: 44px; background: var(--accent); }
+    .l07 .tagline { width: 110px; height: 5px; border-radius: 1px; background: rgba(255,255,255,0.35); }
+
+    .l07 .panel {
+      position: absolute;
+      background: #eef1f3;
+    }
+    .l07 .panel.left {
+      left: -4%; top: 27%; width: 40%; bottom: -6%;
+      border-radius: 0 14px 0 0;
+      z-index: 2;
+    }
+    .l07 .panel.right {
+      left: 42%; top: 15%; right: -6%; bottom: -6%;
+      border-radius: 14px 0 0 0;
+      z-index: 3;
+      box-shadow: -10px 0 22px rgba(0,0,0,0.25);
+    }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 08 — Dark Dashboard
+       (dark bg, 3 metric cards with color top-bars, bar chart below)
+    ═══════════════════════════════════════════ */
+    .l08 {
+      background: #1A1A1D;
+      display: flex; flex-direction: column;
+      padding: 8% 7% 0;
+      gap: 5%;
+    }
+    .l08 .topbar {
+      display: flex; align-items: center; gap: 6%;
+    }
+    .l08 .topbar-title { width: 22%; height: 8px; border-radius: 2px; background: rgba(255,255,255,0.85); }
+    .l08 .topbar-sub { width: 14%; height: 6px; border-radius: 2px; background: rgba(255,255,255,0.2); }
+    .l08 .metrics { display: flex; gap: 4%; }
+    .l08 .metric-card {
+      flex: 1;
+      background: #222226;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 8% 8% 10%;
+      display: flex; flex-direction: column; gap: 18%;
+      position: relative; overflow: hidden;
+    }
+    .l08 .metric-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+    }
+    .l08 .metric-card:nth-child(1)::before { background: var(--accent); }
+    .l08 .metric-card:nth-child(2)::before { background: var(--cyan); }
+    .l08 .metric-card:nth-child(3)::before { background: var(--violet); }
+    .l08 .metric-label { width: 65%; height: 5px; border-radius: 1px; background: rgba(255,255,255,0.25); }
+    .l08 .metric-value { width: 45%; height: 10px; border-radius: 2px; background: rgba(255,255,255,0.85); }
+    .l08 .chart-area {
+      flex: 1;
+      background: #222226;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px 6px 0 0;
+      padding: 5% 7% 0;
+      display: flex; flex-direction: column; gap: 6%;
+      overflow: hidden;
+    }
+    .l08 .chart-label { width: 20%; height: 5px; border-radius: 1px; background: rgba(255,255,255,0.3); }
+    .l08 .bars { flex: 1; display: flex; align-items: flex-end; gap: 4%; }
+    .l08 .bar { flex: 1; border-radius: 3px 3px 0 0; }
+    .l08 .bar:nth-child(1) { height: 55%; background: var(--accent); opacity: 0.7; }
+    .l08 .bar:nth-child(2) { height: 78%; background: var(--accent); }
+    .l08 .bar:nth-child(3) { height: 42%; background: var(--accent); opacity: 0.6; }
+    .l08 .bar:nth-child(4) { height: 92%; background: var(--accent); }
+    .l08 .bar:nth-child(5) { height: 62%; background: var(--accent); opacity: 0.75; }
+    .l08 .bar:nth-child(6) { height: 30%; background: rgba(255,255,255,0.1); }
+    .l08 .bar:nth-child(7) { height: 48%; background: rgba(255,255,255,0.1); }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 09 — Diagonal Slash
+       (bold color wedge, logo top-left, content right)
+    ═══════════════════════════════════════════ */
+    .l09 { background: #1A1A1D; position: relative; overflow: hidden; }
+    .l09 .slash {
+      position: absolute; top: 0; left: 0;
+      width: 60%; height: 100%;
+      background: var(--accent);
+      clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%);
+    }
+    .l09 .logo {
+      position: absolute; top: 12%; left: 7%;
+      display: flex; align-items: center; gap: 8px;
+      z-index: 2;
+    }
+    .l09 .logo-mark { width: 16px; height: 16px; border-radius: 4px; background: rgba(255,255,255,0.9); }
+    .l09 .logo-text { width: 52px; height: 7px; border-radius: 2px; background: rgba(255,255,255,0.9); }
+    .l09 .content {
+      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      width: 38%; display: flex; flex-direction: column; gap: 10%;
+      z-index: 2;
+    }
+    .l09 .c-label { width: 55%; height: 5px; border-radius: 1px; background: rgba(255,255,255,0.3); }
+    .l09 .c-title { width: 100%; height: 11px; border-radius: 2px; background: rgba(255,255,255,0.9); }
+    .l09 .c-title.sm { width: 80%; height: 9px; }
+    .l09 .c-sub { width: 85%; height: 4px; border-radius: 1px; background: rgba(255,255,255,0.3); }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 10 — Side Nav App
+       (dark sidebar + white main content area)
+    ═══════════════════════════════════════════ */
+    .l10 { background: #ffffff; display: flex; }
+    .l10 .sidenav {
+      width: 18%; flex-shrink: 0;
+      background: #1A1A1D;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 8% 0; gap: 16%;
+    }
+    .l10 .nav-logo { width: 55%; aspect-ratio: 1; border-radius: 6px; background: var(--accent); }
+    .l10 .nav-icons { display: flex; flex-direction: column; gap: 18%; width: 55%; }
+    .l10 .nav-icon { height: 6px; border-radius: 2px; background: rgba(255,255,255,0.18); }
+    .l10 .nav-icon.active { background: var(--accent); }
+    .l10 .main { flex: 1; display: flex; flex-direction: column; }
+    .l10 .topbar {
+      height: 13%;
+      background: #f8f8f8;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      display: flex; align-items: center; padding: 0 6%; gap: 5%;
+    }
+    .l10 .topbar-title { width: 22%; height: 7px; border-radius: 2px; background: rgba(0,0,0,0.7); }
+    .l10 .topbar-pill { width: 13%; height: 13px; border-radius: 99px; background: rgba(0,0,0,0.07); margin-left: auto; }
+    .l10 .content { flex: 1; padding: 5% 6%; display: flex; flex-direction: column; gap: 4%; }
+    .l10 .content-row { display: flex; gap: 4%; }
+    .l10 .content-card { flex: 1; background: #f2f2f5; border-radius: 5px; height: 28px; }
+    .l10 .content-card.accent { background: rgba(195,7,63,0.08); border: 1px solid rgba(195,7,63,0.18); }
+    .l10 .content-wide { width: 100%; height: 22px; background: #f2f2f5; border-radius: 5px; }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 11 — Phone Mockup Centered
+       (dark bg with crimson glow, centered phone silhouette)
+    ═══════════════════════════════════════════ */
+    .l11 { background: #1A1A1D; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .l11::before {
+      content: ''; position: absolute;
+      top: -30%; left: 50%; transform: translateX(-50%);
+      width: 80%; height: 80%;
+      background: radial-gradient(ellipse, rgba(195,7,63,0.18), transparent 70%);
+    }
+    .l11 .phone {
+      width: 25%; height: 85%; aspect-ratio: 9/19;
+      background: #222226;
+      border-radius: 14px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.55);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      position: relative; z-index: 1;
+    }
+    .l11 .phone-notch {
+      height: 6%; background: #1A1A1D;
       display: flex; align-items: center; justify-content: center;
     }
-    .l10 .notch {
-      width: 18px; height: 4px; border-radius: 4px;
-      background: rgba(255,255,255,0.15);
+    .l11 .notch-pill { width: 24%; height: 40%; border-radius: 99px; background: #333; }
+    .l11 .phone-screen { flex: 1; padding: 6% 8%; display: flex; flex-direction: column; gap: 6%; }
+    .l11 .phone-header { width: 50%; height: 5px; border-radius: 1px; background: rgba(255,255,255,0.8); }
+    .l11 .phone-card {
+      background: rgba(255,255,255,0.06); border-radius: 6px;
+      padding: 8%; display: flex; flex-direction: column; gap: 14%;
     }
-    .l10 .phone-content { flex: 1; padding: 6px; display: flex; flex-direction: column; gap: 5px; }
-    .l10 .ph-row { height: 7px; border-radius: 2px; background: rgba(255,255,255,0.08); }
-    .l10 .ph-row.acc { background: var(--accent); width: 50%; }
-    .l10 .ph-card {
-      flex: 1; border-radius: 5px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-    .l10 .phone.front { transform: scale(1.12); z-index: 1; border-color: rgba(195,7,63,0.4); }
-    .l10 .info { display: flex; flex-direction: column; gap: 6px; }
-    .l10 .info-line { height: 7px; border-radius: 2px; background: rgba(255,255,255,0.1); }
-    .l10 .info-line.w60 { width: 80px; }
-    .l10 .info-line.w40 { width: 55px; background: rgba(195,7,63,0.4); }
+    .l11 .phone-line { height: 4px; border-radius: 1px; background: rgba(255,255,255,0.3); }
+    .l11 .phone-line.accent { background: var(--accent); width: 40%; }
+    .l11 .phone-line.sm { width: 70%; }
+    .l11 .phone-btn { height: 13px; border-radius: 4px; background: var(--accent); margin-top: 4%; opacity: 0.9; }
 
     /* ═══════════════════════════════════════════
-       LAYOUT 11 — Document / Portal
+       LAYOUT 12 — 2×2 Mosaic Grid
+       (four alternating cells, each with icon + title + lines)
     ═══════════════════════════════════════════ */
-    .l11 { background: #0d0f14; padding: 16px; }
-    .l11 .doc-header {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 12px; padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+    .l12 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
     }
-    .l11 .doc-logo {
-      font-family: 'League Gothic', sans-serif; font-size: 18px;
-      color: var(--violet); letter-spacing: 2px;
+    .l12 .cell {
+      padding: 8%; display: flex; flex-direction: column; gap: 10%;
+      position: relative; overflow: hidden;
     }
-    .l11 .doc-pills { display: flex; gap: 5px; }
-    .l11 .pill {
-      height: 16px; padding: 0 8px; border-radius: 20px;
-      font-family: 'JetBrains Mono', monospace; font-size: 7px;
+    .l12 .cell:nth-child(1) { background: #1A1A1D; }
+    .l12 .cell:nth-child(2) { background: var(--accent); }
+    .l12 .cell:nth-child(3) { background: #f4f4f6; }
+    .l12 .cell:nth-child(4) { background: #222226; }
+    .l12 .cell-icon { width: 18%; aspect-ratio: 1; border-radius: 4px; }
+    .l12 .cell:nth-child(1) .cell-icon { background: var(--accent); }
+    .l12 .cell:nth-child(2) .cell-icon { background: rgba(255,255,255,0.35); }
+    .l12 .cell:nth-child(3) .cell-icon { background: rgba(0,0,0,0.12); }
+    .l12 .cell:nth-child(4) .cell-icon { background: var(--cyan); }
+    .l12 .cell-title { height: 7px; width: 55%; border-radius: 2px; }
+    .l12 .cell:nth-child(1) .cell-title { background: rgba(255,255,255,0.85); }
+    .l12 .cell:nth-child(2) .cell-title { background: rgba(255,255,255,0.95); }
+    .l12 .cell:nth-child(3) .cell-title { background: rgba(0,0,0,0.72); }
+    .l12 .cell:nth-child(4) .cell-title { background: rgba(255,255,255,0.8); }
+    .l12 .cell-sub { height: 5px; width: 75%; border-radius: 1px; }
+    .l12 .cell:nth-child(1) .cell-sub { background: rgba(255,255,255,0.22); }
+    .l12 .cell:nth-child(2) .cell-sub { background: rgba(255,255,255,0.5); }
+    .l12 .cell:nth-child(3) .cell-sub { background: rgba(0,0,0,0.18); }
+    .l12 .cell:nth-child(4) .cell-sub { background: rgba(255,255,255,0.28); }
+    .l12 .cell-lines { display: flex; flex-direction: column; gap: 30%; margin-top: auto; }
+    .l12 .cell-line { height: 4px; border-radius: 1px; }
+    .l12 .cell-line.w100 { width: 100%; }
+    .l12 .cell-line.w70  { width: 70%; }
+    .l12 .cell:nth-child(1) .cell-line { background: rgba(255,255,255,0.1); }
+    .l12 .cell:nth-child(2) .cell-line { background: rgba(255,255,255,0.3); }
+    .l12 .cell:nth-child(3) .cell-line { background: rgba(0,0,0,0.08); }
+    .l12 .cell:nth-child(4) .cell-line { background: rgba(255,255,255,0.12); }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 13 — Two Phones Side by Side
+       (dual glow: crimson left, cyan right, slight vertical offset)
+    ═══════════════════════════════════════════ */
+    .l13 {
+      background:
+        radial-gradient(ellipse 50% 70% at 32% 45%, rgba(195,7,63,0.16), transparent 70%),
+        radial-gradient(ellipse 50% 70% at 68% 55%, rgba(6,182,212,0.13), transparent 70%),
+        #0f0f11;
+      position: relative;
+    }
+    .l13 .phone {
+      position: absolute;
+      width: 22%; height: 82%;
+      background: #222226;
+      border-radius: 12px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.55);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .l13 .phone.p1 { left: 20%; top: 6%; }
+    .l13 .phone.p2 { left: 52%; top: 14%; }
+    .l13 .phone-notch {
+      height: 6%; background: #1A1A1D; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .l13 .notch-pill { width: 24%; height: 40%; border-radius: 99px; background: #333; }
+    .l13 .phone-screen { flex: 1; padding: 6% 8%; display: flex; flex-direction: column; gap: 6%; }
+    .l13 .phone-header { width: 50%; height: 4px; border-radius: 1px; background: rgba(255,255,255,0.75); }
+    .l13 .phone-card {
+      background: rgba(255,255,255,0.06); border-radius: 5px;
+      padding: 7%; display: flex; flex-direction: column; gap: 14%;
+    }
+    .l13 .phone-line { height: 3px; border-radius: 1px; background: rgba(255,255,255,0.25); }
+    .l13 .phone-line.sm { width: 65%; }
+    .l13 .phone-line.accent { background: var(--accent); width: 40%; }
+    .l13 .phone-line.cyan  { background: var(--cyan);   width: 40%; }
+    .l13 .phone-btn { height: 11px; border-radius: 3px; margin-top: 4%; opacity: 0.9; }
+    .l13 .p1 .phone-btn { background: var(--accent); }
+    .l13 .p2 .phone-btn { background: var(--cyan); }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 14 — Phone Tilted (Editorial / Product Shot)
+       (phone at angle, floating stat badge, crimson glow)
+    ═══════════════════════════════════════════ */
+    .l14 {
+      background:
+        radial-gradient(ellipse 65% 75% at 55% 55%, rgba(195,7,63,0.16), transparent 65%),
+        #0f0f11;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .l14 .phone {
+      width: 26%; height: 82%;
+      background: #222226;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.14);
+      box-shadow: 18px 28px 52px rgba(0,0,0,0.65), -4px -4px 12px rgba(255,255,255,0.03);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transform: rotate(-11deg);
+      position: relative; z-index: 1;
+    }
+    .l14 .phone-notch {
+      height: 6%; background: #1A1A1D; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .l14 .notch-pill { width: 24%; height: 40%; border-radius: 99px; background: #2e2e32; }
+    .l14 .phone-screen { flex: 1; padding: 6% 8%; display: flex; flex-direction: column; gap: 6%; }
+    .l14 .phone-header { width: 50%; height: 4px; border-radius: 1px; background: rgba(255,255,255,0.75); }
+    .l14 .phone-card {
+      background: rgba(255,255,255,0.06); border-radius: 5px;
+      padding: 7%; display: flex; flex-direction: column; gap: 14%;
+    }
+    .l14 .phone-line { height: 3px; border-radius: 1px; background: rgba(255,255,255,0.25); }
+    .l14 .phone-line.accent { background: var(--accent); width: 40%; }
+    .l14 .phone-line.sm { width: 65%; }
+    .l14 .phone-btn { height: 11px; border-radius: 3px; background: var(--accent); margin-top: 4%; opacity: 0.9; }
+    .l14 .badge {
+      position: absolute; right: 10%; top: 20%;
+      width: 27%;
+      background: rgba(26,26,29,0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 5% 6%;
+      display: flex; flex-direction: column; gap: 12%;
+      z-index: 3;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+    }
+    .l14 .badge-label { height: 4px; width: 55%; border-radius: 1px; background: rgba(255,255,255,0.28); }
+    .l14 .badge-value { height: 9px; width: 42%; border-radius: 2px; background: rgba(255,255,255,0.88); }
+    .l14 .badge-tag { height: 7px; width: 36%; border-radius: 3px; background: var(--accent); opacity: 0.85; }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 15 — Phone + Desktop Responsive Showcase
+       (cream bg, desktop browser right, dark phone overlapping left)
+    ═══════════════════════════════════════════ */
+    .l15 { background: #efefed; position: relative; overflow: hidden; }
+    .l15 .browser {
+      position: absolute;
+      right: -2%; top: 8%; bottom: -4%;
+      width: 66%;
+      background: #ffffff;
+      border-radius: 10px 10px 0 0;
+      box-shadow: -8px 0 24px rgba(20,20,15,0.12);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .l15 .b-chrome {
+      height: 10%; flex-shrink: 0;
+      background: #f0efeb;
+      border-bottom: 1px solid rgba(20,20,15,0.08);
+      display: flex; align-items: center; gap: 4px; padding: 0 7%;
+    }
+    .l15 .b-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(20,20,15,0.12); }
+    .l15 .b-url { flex: 1; height: 5px; border-radius: 3px; background: rgba(20,20,15,0.08); margin-left: 8px; }
+    .l15 .b-body { flex: 1; padding: 6% 8%; display: flex; flex-direction: column; gap: 5%; }
+    .l15 .b-heading { width: 40%; height: 8px; border-radius: 2px; background: rgba(20,20,15,0.72); }
+    .l15 .b-sub { width: 65%; height: 5px; border-radius: 1px; background: rgba(20,20,15,0.18); }
+    .l15 .b-cards { display: flex; gap: 5%; }
+    .l15 .b-card { flex: 1; height: 34px; border-radius: 5px; background: #f2f2f5; }
+    .l15 .b-card.accent { background: rgba(195,7,63,0.07); border: 1px solid rgba(195,7,63,0.16); }
+    .l15 .b-wide { width: 100%; height: 7px; border-radius: 2px; background: rgba(20,20,15,0.06); }
+    .l15 .phone {
+      position: absolute;
+      left: 5%; top: 50%; transform: translateY(-50%);
+      width: 18%; height: 76%;
+      background: #1A1A1D;
+      border-radius: 12px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 40px rgba(20,20,15,0.28), 0 4px 8px rgba(20,20,15,0.14);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      z-index: 2;
+    }
+    .l15 .phone-notch {
+      height: 7%; background: #111113; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .l15 .notch-pill { width: 28%; height: 40%; border-radius: 99px; background: #2a2a2e; }
+    .l15 .phone-screen { flex: 1; padding: 6% 8%; display: flex; flex-direction: column; gap: 7%; background: #222226; }
+    .l15 .p-header { width: 55%; height: 4px; border-radius: 1px; background: rgba(255,255,255,0.7); }
+    .l15 .p-card {
+      background: rgba(255,255,255,0.06); border-radius: 5px;
+      padding: 8%; display: flex; flex-direction: column; gap: 16%;
+    }
+    .l15 .p-line { height: 3px; border-radius: 1px; background: rgba(255,255,255,0.22); }
+    .l15 .p-line.accent { background: var(--accent); width: 45%; }
+    .l15 .p-line.sm { width: 68%; }
+    .l15 .p-btn { height: 10px; border-radius: 3px; background: var(--accent); margin-top: 6%; opacity: 0.85; }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT 16 — Stacked Screenshot Showcase
+       (white canvas, two overlapping screens, one highlighted)
+    ═══════════════════════════════════════════ */
+    .l16 {
+      background: #f4f3ef;
+      position: relative;
+    }
+    .l16 .frame {
+      position: absolute;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(20,20,15,0.14);
+    }
+    .l16 .frame .chrome {
+      height: 12%;
       display: flex; align-items: center;
+      gap: 4px; padding: 0 8px;
+      border-bottom: 1px solid rgba(20,20,15,0.08);
     }
-    .l11 .pill.a { background: rgba(129,140,248,0.15); color: var(--violet); }
-    .l11 .pill.b { background: rgba(255,255,255,0.05); color: var(--text2); }
-    .l11 .doc-rows { display: flex; flex-direction: column; gap: 7px; }
-    .l11 .doc-row {
-      height: 28px; border-radius: 5px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
-      display: flex; align-items: center; padding: 0 10px; gap: 8px;
+    .l16 .frame .chrome-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(20,20,15,0.12);
     }
-    .l11 .doc-row.active {
-      background: rgba(129,140,248,0.07);
-      border-color: rgba(129,140,248,0.2);
-    }
-    .l11 .d-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.1); flex-shrink: 0; }
-    .l11 .d-dot.hi { background: var(--violet); }
-    .l11 .d-line { height: 6px; border-radius: 1px; background: rgba(255,255,255,0.08); flex: 1; }
-    .l11 .d-badge {
-      font-family: 'JetBrains Mono', monospace; font-size: 7px;
-      padding: 1px 6px; border-radius: 2px;
-      background: rgba(195,7,63,0.15); color: var(--accent);
+    .l16 .frame .chrome-line {
+      height: 5px; border-radius: 3px;
+      background: rgba(20,20,15,0.07);
     }
 
+    .l16 .frame.back {
+      top: 0; right: 5%;
+      width: 56%; height: 85%;
+      z-index: 1;
+      opacity: 0.9;
+      filter: saturate(0.7);
+      border-radius: 0 0 5px 5px;
+    }
+
+    .l16 .frame.front {
+      top: 15%; left: 6%;
+      width: 62%; height: 90%;
+      z-index: 2;
+      border: 1.5px solid var(--accent);
+      border-radius: 6px 6px 0 0;
+      box-shadow: 0 14px 30px rgba(195,7,63,0.18), 0 4px 14px rgba(20,20,15,0.12);
+    }
+    .l16 .frame.front .chrome-line { width: 34%; }
+    .l16 .frame.front .chrome-dot:first-child { background: var(--accent); }
+    .l16 .frame.front .body { padding: 8%; display: flex; flex-direction: column; gap: 9%; }
+    .l16 .frame.front .body .row { height: 9%; border-radius: 3px; background: rgba(20,20,15,0.06); }
+    .l16 .frame.front .body .row.w45 { width: 45%; background: var(--accent); opacity: 0.85; }
+    .l16 .frame.front .body .row.w80 { width: 80%; }
+    .l16 .frame.front .body .block { flex: 1; border-radius: 4px; background: rgba(20,20,15,0.04); }
+
     /* ═══════════════════════════════════════════
-       LAYOUT 12 — Inventory / Table
+       LAYOUT 17 — Stacked Screenshot Showcase (mirrored)
+       (white canvas, back top-left, front bottom-right)
     ═══════════════════════════════════════════ */
-    .l12 { background: #0d0f14; padding: 14px; }
-    .l12 .tbl-header {
-      display: flex; gap: 6px; margin-bottom: 8px;
-      padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    .l17 {
+      background: white;
+      position: relative;
     }
-    .l12 .th {
-      flex: 1; height: 8px; border-radius: 1px;
-      background: rgba(255,255,255,0.12);
+    .l17 .frame {
+      position: absolute;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(100,0,20,0.3);
     }
-    .l12 .th.sm { flex: 0.5; }
-    .l12 .tbl-rows { display: flex; flex-direction: column; gap: 6px; }
-    .l12 .tr {
-      display: flex; gap: 6px; align-items: center;
-      height: 22px; padding: 0 6px; border-radius: 4px;
+    .l17 .frame .chrome {
+      height: 12%;
+      display: flex; align-items: center;
+      gap: 4px; padding: 0 8px;
+      border-bottom: 1px solid rgba(20,20,15,0.08);
     }
-    .l12 .tr.stripe { background: rgba(255,255,255,0.025); }
-    .l12 .tr.hi { background: rgba(195,7,63,0.08); border: 1px solid rgba(195,7,63,0.2); }
-    .l12 .td { flex: 1; height: 6px; border-radius: 1px; background: rgba(255,255,255,0.08); }
-    .l12 .td.sm { flex: 0.5; }
-    .l12 .td.acc { background: rgba(195,7,63,0.5); }
-    .l12 .td.grn { background: rgba(74,222,128,0.4); }
-    .l12 .status {
-      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    .l17 .frame .chrome-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(20,20,15,0.12);
     }
+    .l17 .frame .chrome-line {
+      height: 5px; border-radius: 3px;
+      background: rgba(20,20,15,0.07);
+    }
+
+    .l17 .frame.back {
+      top: 0; left: 5%;
+      width: 56%; height: 85%;
+      z-index: 1;
+      opacity: 0.9;
+      filter: saturate(0.5);
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .l17 .frame.front {
+      top: 15%; right: 6%;
+      width: 62%; height: 90%;
+      z-index: 2;
+      border: 1.5px solid var(--cyan);
+      border-radius: 6px 6px 0 0;
+      box-shadow: 0 14px 30px rgba(6,182,212,0.28), 0 4px 14px rgba(100,0,20,0.22);
+    }
+    .l17 .frame.front .chrome-line { width: 34%; }
+    .l17 .frame.front .chrome-dot:first-child { background: var(--cyan); }
+    .l17 .frame.front .body { padding: 8%; display: flex; flex-direction: column; gap: 9%; }
+    .l17 .frame.front .body .row { height: 9%; border-radius: 3px; background: rgba(20,20,15,0.06); }
+    .l17 .frame.front .body .row.w45 { width: 45%; background: var(--cyan); opacity: 0.85; }
+    .l17 .frame.front .body .row.w80 { width: 80%; }
+    .l17 .frame.front .body .block { flex: 1; border-radius: 4px; background: rgba(20,20,15,0.04); }
 
     /* legend */
     .legend {
@@ -543,325 +942,510 @@
 
 <div class="grid">
 
-  <!-- 01 DASHBOARD -->
+  <!-- 01 STACKED SCREENSHOT SHOWCASE -->
   <div class="card">
     <div class="card-label">Layout 01</div>
     <div class="thumb l01">
-      <div class="topbar">
-        <div class="dot" style="background:#ff5f57"></div>
-        <div class="dot" style="background:#febc2e"></div>
-        <div class="dot" style="background:#28c840"></div>
-      </div>
-      <div class="sidebar">
-        <div class="sicon active"></div>
-        <div class="sicon"></div>
-        <div class="sicon"></div>
-        <div class="sicon"></div>
-      </div>
-      <div class="content">
-        <div class="row">
-          <div class="stat hi"></div>
-          <div class="stat"></div>
-          <div class="stat"></div>
+      <div class="frame back">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
         </div>
-        <div class="row">
-          <div class="chart">
-            <div class="bar" style="height:35%"></div>
-            <div class="bar" style="height:55%"></div>
-            <div class="bar hi" style="height:80%"></div>
-            <div class="bar" style="height:60%"></div>
-            <div class="bar" style="height:45%"></div>
-            <div class="bar hi" style="height:90%"></div>
-            <div class="bar" style="height:50%"></div>
-          </div>
-          <div class="table">
-            <div class="trow"></div>
-            <div class="trow" style="width:80%"></div>
-            <div class="trow" style="width:90%"></div>
-            <div class="trow" style="width:65%"></div>
-          </div>
+        <div class="body">
+          <div class="row w70"></div>
+          <div class="row"></div>
+          <div class="row"></div>
+        </div>
+      </div>
+      <div class="frame front">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
+        </div>
+        <div class="body">
+          <div class="row w45"></div>
+          <div class="row w80"></div>
+          <div class="block"></div>
         </div>
       </div>
     </div>
-    <div class="card-name">Dashboard — sidebar nav, stat cards, bar chart + table</div>
+    <div class="card-name">Stacked Showcase — two overlapping screens, front one highlighted</div>
   </div>
 
-  <!-- 02 TERMINAL -->
+  <!-- 02 STACKED SCREENSHOT SHOWCASE (MIRRORED) -->
   <div class="card">
     <div class="card-label">Layout 02</div>
     <div class="thumb l02">
-      <div class="titlebar">
-        <div class="wdot" style="background:#ff5f57"></div>
-        <div class="wdot" style="background:#febc2e"></div>
-        <div class="wdot" style="background:#28c840"></div>
+      <div class="frame back">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
+        </div>
+        <div class="body">
+          <div class="row w70"></div>
+          <div class="row"></div>
+          <div class="row"></div>
+        </div>
       </div>
-      <div class="code-area">
-        <div class="line"><span class="ln">1</span><span class="kw">const</span>&nbsp;<span class="fn">app</span>&nbsp;<span class="dim">=</span>&nbsp;<span class="fn">express</span><span class="dim">()</span></div>
-        <div class="line"><span class="ln">2</span><span class="dim"></span></div>
-        <div class="line"><span class="ln">3</span><span class="fn">app</span><span class="dim">.</span><span class="kw">get</span><span class="dim">(</span><span class="str">'/api'</span><span class="dim">,</span>&nbsp;<span class="fn">async</span>&nbsp;<span class="dim">(req, res)</span>&nbsp;<span class="kw">=></span>&nbsp;<span class="dim">{</span></div>
-        <div class="line"><span class="ln">4</span>&nbsp;&nbsp;<span class="kw">const</span>&nbsp;<span class="fn">data</span>&nbsp;<span class="dim">=</span>&nbsp;<span class="kw">await</span>&nbsp;<span class="fn">db</span><span class="dim">.</span><span class="fn">query</span><span class="dim">()</span></div>
-        <div class="line"><span class="ln">5</span>&nbsp;&nbsp;<span class="fn">res</span><span class="dim">.</span><span class="fn">json</span><span class="dim">({</span>&nbsp;<span class="acc">status</span><span class="dim">:</span>&nbsp;<span class="str">'ok'</span>&nbsp;<span class="dim">})</span></div>
-        <div class="line"><span class="ln">6</span><span class="dim">})</span></div>
-        <div class="line"><span class="ln">7</span><span class="cursor"></span></div>
+      <div class="frame front">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
+        </div>
+        <div class="body">
+          <div class="row w45"></div>
+          <div class="row w80"></div>
+          <div class="block"></div>
+        </div>
       </div>
     </div>
-    <div class="card-name">Terminal / Code — syntax-highlighted code window</div>
+    <div class="card-name">Stacked Showcase, mirrored — back top-left, front bottom-right</div>
   </div>
 
-  <!-- 03 SPLIT -->
+  <!-- 03 TRIPTYCH SHOWCASE -->
   <div class="card">
     <div class="card-label">Layout 03</div>
     <div class="thumb l03">
-      <div class="left-panel">
-        <div class="initials">HS</div>
-        <div class="proj-title">Project<br>Name</div>
-        <div class="proj-sub">Web Application</div>
+      <div class="frame side left">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+        </div>
+        <div class="body">
+          <div class="row"></div>
+          <div class="row"></div>
+        </div>
       </div>
-      <div class="right-panel">
-        <div class="ui-row w40"></div>
-        <div class="ui-block"></div>
-        <div class="ui-row w70"></div>
-        <div class="ui-row w55"></div>
-        <div class="ui-block"></div>
-        <div class="ui-row w85"></div>
+      <div class="frame side right">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+        </div>
+        <div class="body">
+          <div class="row"></div>
+          <div class="row"></div>
+        </div>
+      </div>
+      <div class="frame center">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
+        </div>
+        <div class="body">
+          <div class="row w45"></div>
+          <div class="row w80"></div>
+          <div class="block"></div>
+        </div>
       </div>
     </div>
-    <div class="card-name">Split — color panel left, UI lines right</div>
+    <div class="card-name">Triptych — center screen elevated, flanked symmetrically</div>
   </div>
 
-  <!-- 04 GLITCH -->
+  <!-- 04 COVER SLIDE / DOCUMENT FAN -->
   <div class="card">
     <div class="card-label">Layout 04</div>
     <div class="thumb l04">
-      <div class="glitch-wrap">
-        <div class="glitch-a">PROJECT</div>
-        <div class="glitch-b">PROJECT</div>
-        <div class="glitch-text">PROJECT</div>
+      <div class="color-panel">
+        <div class="doc d4"></div>
+        <div class="doc d3"></div>
+        <div class="doc d2"></div>
+        <div class="doc d1"></div>
       </div>
-      <div class="scanlines"></div>
+      <div class="text-panel">
+        <div class="logo-badge">
+          <div class="logo-mark"></div>
+        </div>
+        <div class="caption-1"></div>
+        <div class="caption-2"></div>
+      </div>
     </div>
-    <div class="card-name">Glitch — crimson + cyan offset text with scanlines</div>
+    <div class="card-name">Cover Slide — fading document stack + heading panel</div>
   </div>
 
-  <!-- 05 MAP -->
+  <!-- 05 PORTAL PAGE -->
   <div class="card">
     <div class="card-label">Layout 05</div>
     <div class="thumb l05">
-      <div class="map-grid"></div>
-      <div class="map-glow"></div>
-      <div class="route"></div>
-      <div class="pin"></div>
-      <div class="label">// location based</div>
+      <div class="logo-mark"></div>
+      <div class="page-title"></div>
+
+      <div class="card doc">
+        <div class="doc-heading"></div>
+        <div class="doc-para">
+          <div class="doc-line w95"></div>
+          <div class="doc-line w85"></div>
+          <div class="doc-line w60"></div>
+        </div>
+        <div class="doc-sub"></div>
+        <div class="doc-list">
+          <div class="doc-item">
+            <div class="doc-line short"></div>
+            <div class="doc-line w95"></div>
+          </div>
+          <div class="doc-item">
+            <div class="doc-line short"></div>
+            <div class="doc-line w85"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card form">
+        <div class="form-heading"></div>
+        <div class="form-fields">
+          <div class="field-group">
+            <div class="field-label"></div>
+            <div class="field-box"></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label"></div>
+            <div class="field-box"></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label"></div>
+            <div class="field-box"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-name">Map / Location — grid + pin + glow, great for travel apps</div>
+    <div class="card-name">Portal Page — logo + title, instructions card, entry form card</div>
   </div>
 
-  <!-- 06 AUTH / FORM -->
+  <!-- 06 TILTED DOCUMENT STACK -->
   <div class="card">
     <div class="card-label">Layout 06</div>
     <div class="thumb l06">
-      <div class="form-card">
-        <div class="form-logo">IC.</div>
-        <div class="field">
-          <div class="field-dot"></div>
-          <div class="field-line"></div>
-        </div>
-        <div class="field focus">
-          <div class="field-dot"></div>
-          <div class="field-line"></div>
-        </div>
-        <div class="btn-row"></div>
+      <div class="doc back"></div>
+      <div class="doc mid"></div>
+      <div class="doc front"></div>
+      <div class="header">
+        <div class="logo-mark"></div>
+        <div class="divider"></div>
+        <div class="title-bar"></div>
       </div>
     </div>
-    <div class="card-name">Auth / Form — login card, good for confidential systems</div>
+    <div class="card-name">Tilted Stack — teal header bar, 3 rotated cascading cards</div>
   </div>
 
-  <!-- 07 DATA -->
+  <!-- 07 WORDMARK HEADER + SPLIT PANELS -->
   <div class="card">
     <div class="card-label">Layout 07</div>
     <div class="thumb l07">
-      <div class="top">
-        <div>
-          <div class="metric">2,847</div>
-          <div class="metric-label">Total Records</div>
+      <div class="panel left"></div>
+      <div class="panel right"></div>
+      <div class="header">
+        <div class="wordmark">
+          <div class="word-block a"></div>
+          <div class="word-block b"></div>
         </div>
-        <div class="badge">↑ 12.4%</div>
-      </div>
-      <div class="sparkline">
-        <div class="sp" style="height:40%"></div>
-        <div class="sp" style="height:55%"></div>
-        <div class="sp" style="height:35%"></div>
-        <div class="sp hi" style="height:75%"></div>
-        <div class="sp" style="height:60%"></div>
-        <div class="sp" style="height:45%"></div>
-        <div class="sp hi" style="height:90%"></div>
-        <div class="sp" style="height:65%"></div>
-        <div class="sp" style="height:50%"></div>
-        <div class="sp hi" style="height:80%"></div>
-      </div>
-      <div class="dots-grid">
-        <div class="dot-item on"></div><div class="dot-item mid"></div><div class="dot-item on"></div>
-        <div class="dot-item"></div><div class="dot-item mid"></div><div class="dot-item on"></div>
-        <div class="dot-item mid"></div><div class="dot-item"></div><div class="dot-item on"></div>
-        <div class="dot-item on"></div><div class="dot-item mid"></div><div class="dot-item"></div>
+        <div class="tagline"></div>
       </div>
     </div>
-    <div class="card-name">Data / Analytics — metric, sparkline, dot matrix</div>
+    <div class="card-name">Wordmark Header — glow backdrop, two offset screen panels</div>
   </div>
 
-  <!-- 08 E-COMMERCE -->
+
+  <!-- 08 DARK DASHBOARD -->
   <div class="card">
     <div class="card-label">Layout 08</div>
     <div class="thumb l08">
-      <div class="top-bar">
-        <div class="search"></div>
-        <div class="cart"></div>
+      <div class="topbar">
+        <div class="topbar-title"></div>
+        <div class="topbar-sub"></div>
       </div>
-      <div class="product-grid">
-        <div class="product">
-          <div class="product-img" style="background:linear-gradient(135deg,#1e2030,#2a2d40)"></div>
-          <div class="product-info">
-            <div class="p-line"></div>
-            <div class="p-line short"></div>
-          </div>
-        </div>
-        <div class="product">
-          <div class="product-img" style="background:linear-gradient(135deg,#1a1d27,#252836)"></div>
-          <div class="product-info">
-            <div class="p-line"></div>
-            <div class="p-line short"></div>
-          </div>
-        </div>
-        <div class="product">
-          <div class="product-img" style="background:linear-gradient(135deg,#1e1a28,#2a2035)"></div>
-          <div class="product-info">
-            <div class="p-line"></div>
-            <div class="p-line short"></div>
-          </div>
+      <div class="metrics">
+        <div class="metric-card"><div class="metric-label"></div><div class="metric-value"></div></div>
+        <div class="metric-card"><div class="metric-label"></div><div class="metric-value"></div></div>
+        <div class="metric-card"><div class="metric-label"></div><div class="metric-value"></div></div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-label"></div>
+        <div class="bars">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
         </div>
       </div>
     </div>
-    <div class="card-name">E-Commerce / Cards — search bar, product grid</div>
+    <div class="card-name">Dark Dashboard — metric cards with color accent bars + bar chart</div>
   </div>
 
-  <!-- 09 MINIMAL TYPOGRAPHY -->
+  <!-- 09 DIAGONAL SLASH -->
   <div class="card">
     <div class="card-label">Layout 09</div>
     <div class="thumb l09">
-      <div class="big-letter">P</div>
-      <div class="line-accent"></div>
-      <div class="big-name">Project<br>Name</div>
-      <div class="sub-name">Web · 2024</div>
-      <div class="tags">
-        <div class="t">Laravel</div>
-        <div class="t">MySQL</div>
+      <div class="slash"></div>
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <div class="logo-text"></div>
+      </div>
+      <div class="content">
+        <div class="c-label"></div>
+        <div class="c-title"></div>
+        <div class="c-title sm"></div>
+        <div class="c-sub"></div>
       </div>
     </div>
-    <div class="card-name">Minimal Typography — big letter ghost, name, stack tags</div>
+    <div class="card-name">Diagonal Slash — color wedge cut, logo top-left, content right</div>
   </div>
 
-  <!-- 10 MOBILE APP -->
+  <!-- 10 SIDE NAV APP -->
   <div class="card">
     <div class="card-label">Layout 10</div>
     <div class="thumb l10">
-      <div class="phone">
-        <div class="phone-bar"><div class="notch"></div></div>
-        <div class="phone-content">
-          <div class="ph-row acc"></div>
-          <div class="ph-row" style="width:80%"></div>
-          <div class="ph-card"></div>
+      <div class="sidenav">
+        <div class="nav-logo"></div>
+        <div class="nav-icons">
+          <div class="nav-icon active"></div>
+          <div class="nav-icon"></div>
+          <div class="nav-icon"></div>
+          <div class="nav-icon"></div>
         </div>
       </div>
-      <div class="phone front">
-        <div class="phone-bar"><div class="notch"></div></div>
-        <div class="phone-content">
-          <div class="ph-row acc"></div>
-          <div class="ph-row" style="width:65%"></div>
-          <div class="ph-card"></div>
-          <div class="ph-row" style="width:75%"></div>
+      <div class="main">
+        <div class="topbar">
+          <div class="topbar-title"></div>
+          <div class="topbar-pill"></div>
         </div>
-      </div>
-      <div class="phone">
-        <div class="phone-bar"><div class="notch"></div></div>
-        <div class="phone-content">
-          <div class="ph-row" style="width:70%"></div>
-          <div class="ph-card"></div>
-          <div class="ph-row acc"></div>
+        <div class="content">
+          <div class="content-row">
+            <div class="content-card accent"></div>
+            <div class="content-card"></div>
+            <div class="content-card"></div>
+          </div>
+          <div class="content-wide"></div>
+          <div class="content-wide"></div>
         </div>
       </div>
     </div>
-    <div class="card-name">Mobile App — three phones, center highlighted</div>
+    <div class="card-name">Side Nav App — dark sidebar, white content area, topbar</div>
   </div>
 
-  <!-- 11 DOCUMENT / PORTAL -->
+  <!-- 11 PHONE MOCKUP CENTERED -->
   <div class="card">
     <div class="card-label">Layout 11</div>
     <div class="thumb l11">
-      <div class="doc-header">
-        <div class="doc-logo">PORTAL</div>
-        <div class="doc-pills">
-          <div class="pill a">Active</div>
-          <div class="pill b">Archive</div>
-        </div>
-      </div>
-      <div class="doc-rows">
-        <div class="doc-row active">
-          <div class="d-dot hi"></div>
-          <div class="d-line"></div>
-          <div class="d-badge">New</div>
-        </div>
-        <div class="doc-row">
-          <div class="d-dot"></div>
-          <div class="d-line" style="width:60%"></div>
-        </div>
-        <div class="doc-row">
-          <div class="d-dot"></div>
-          <div class="d-line" style="width:75%"></div>
-        </div>
-        <div class="doc-row">
-          <div class="d-dot"></div>
-          <div class="d-line" style="width:50%"></div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="phone-header"></div>
+          <div class="phone-card">
+            <div class="phone-line accent"></div>
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+            <div class="phone-btn"></div>
+          </div>
+          <div class="phone-card">
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card-name">Document / Portal — header, filter pills, record list</div>
+    <div class="card-name">Phone Mockup — centered mobile UI on dark bg with glow</div>
   </div>
 
-  <!-- 12 INVENTORY / TABLE -->
+  <!-- 12 2×2 MOSAIC GRID -->
   <div class="card">
     <div class="card-label">Layout 12</div>
     <div class="thumb l12">
-      <div class="tbl-header">
-        <div class="th sm"></div>
-        <div class="th"></div>
-        <div class="th"></div>
-        <div class="th sm"></div>
-        <div class="th sm"></div>
+      <div class="cell">
+        <div class="cell-icon"></div>
+        <div class="cell-title"></div>
+        <div class="cell-sub"></div>
+        <div class="cell-lines"><div class="cell-line w100"></div><div class="cell-line w70"></div></div>
       </div>
-      <div class="tbl-rows">
-        <div class="tr">
-          <div class="status" style="background:#4ADE80"></div>
-          <div class="td"></div><div class="td"></div><div class="td sm acc"></div><div class="td sm"></div>
+      <div class="cell">
+        <div class="cell-icon"></div>
+        <div class="cell-title"></div>
+        <div class="cell-sub"></div>
+        <div class="cell-lines"><div class="cell-line w100"></div><div class="cell-line w70"></div></div>
+      </div>
+      <div class="cell">
+        <div class="cell-icon"></div>
+        <div class="cell-title"></div>
+        <div class="cell-sub"></div>
+        <div class="cell-lines"><div class="cell-line w100"></div><div class="cell-line w70"></div></div>
+      </div>
+      <div class="cell">
+        <div class="cell-icon"></div>
+        <div class="cell-title"></div>
+        <div class="cell-sub"></div>
+        <div class="cell-lines"><div class="cell-line w100"></div><div class="cell-line w70"></div></div>
+      </div>
+    </div>
+    <div class="card-name">2×2 Mosaic — four alternating cells, each with icon, title, and lines</div>
+  </div>
+
+  <!-- 13 TWO PHONES SIDE BY SIDE -->
+  <div class="card">
+    <div class="card-label">Layout 13</div>
+    <div class="thumb l13">
+      <div class="phone p1">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="phone-header"></div>
+          <div class="phone-card">
+            <div class="phone-line accent"></div>
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+            <div class="phone-btn"></div>
+          </div>
+          <div class="phone-card">
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+          </div>
         </div>
-        <div class="tr stripe">
-          <div class="status" style="background:#4ADE80"></div>
-          <div class="td"></div><div class="td"></div><div class="td sm"></div><div class="td sm grn"></div>
-        </div>
-        <div class="tr hi">
-          <div class="status" style="background:var(--accent)"></div>
-          <div class="td"></div><div class="td"></div><div class="td sm acc"></div><div class="td sm"></div>
-        </div>
-        <div class="tr stripe">
-          <div class="status" style="background:rgba(255,255,255,0.2)"></div>
-          <div class="td"></div><div class="td"></div><div class="td sm"></div><div class="td sm"></div>
-        </div>
-        <div class="tr">
-          <div class="status" style="background:#4ADE80"></div>
-          <div class="td"></div><div class="td"></div><div class="td sm grn"></div><div class="td sm"></div>
+      </div>
+      <div class="phone p2">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="phone-header"></div>
+          <div class="phone-card">
+            <div class="phone-line cyan"></div>
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+            <div class="phone-btn"></div>
+          </div>
+          <div class="phone-card">
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card-name">Inventory / Table — striped rows, status dots, highlighted row</div>
+    <div class="card-name">Dual Phone — two screens offset, crimson + cyan glows</div>
+  </div>
+
+  <!-- 14 PHONE TILTED (EDITORIAL) -->
+  <div class="card">
+    <div class="card-label">Layout 14</div>
+    <div class="thumb l14">
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="phone-header"></div>
+          <div class="phone-card">
+            <div class="phone-line accent"></div>
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+            <div class="phone-btn"></div>
+          </div>
+          <div class="phone-card">
+            <div class="phone-line"></div>
+            <div class="phone-line sm"></div>
+          </div>
+        </div>
+      </div>
+      <div class="badge">
+        <div class="badge-label"></div>
+        <div class="badge-value"></div>
+        <div class="badge-tag"></div>
+      </div>
+    </div>
+    <div class="card-name">Tilted Phone — editorial angle, floating stat badge, crimson glow</div>
+  </div>
+
+  <!-- 15 PHONE + DESKTOP RESPONSIVE SHOWCASE -->
+  <div class="card">
+    <div class="card-label">Layout 15</div>
+    <div class="thumb l15">
+      <div class="browser">
+        <div class="b-chrome">
+          <div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div>
+          <div class="b-url"></div>
+        </div>
+        <div class="b-body">
+          <div class="b-heading"></div>
+          <div class="b-sub"></div>
+          <div class="b-cards">
+            <div class="b-card accent"></div>
+            <div class="b-card"></div>
+            <div class="b-card"></div>
+          </div>
+          <div class="b-wide"></div>
+          <div class="b-wide"></div>
+        </div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="p-header"></div>
+          <div class="p-card">
+            <div class="p-line accent"></div>
+            <div class="p-line"></div>
+            <div class="p-btn"></div>
+          </div>
+          <div class="p-card">
+            <div class="p-line"></div>
+            <div class="p-line sm"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-name">Responsive Showcase — dark phone left, desktop browser right</div>
+  </div>
+
+  <!-- 16 STACKED SCREENSHOT SHOWCASE -->
+  <div class="card">
+    <div class="card-label">Layout 16</div>
+    <div class="thumb l16">
+      <div class="frame back">
+        <div class="body">
+          <div class="row w70"></div>
+          <div class="row"></div>
+          <div class="row"></div>
+        </div>
+      </div>
+      <div class="frame front">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
+        </div>
+        <div class="body">
+          <div class="row w45"></div>
+          <div class="row w80"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-name">Stacked Showcase — two overlapping screens, front one highlighted</div>
+  </div>
+
+  <!-- 17 STACKED SCREENSHOT SHOWCASE (MIRRORED) -->
+  <div class="card">
+    <div class="card-label">Layout 17</div>
+    <div class="thumb l17">
+      <div class="frame back">
+        <div class="body">
+          <div class="row w70"></div>
+          <div class="row"></div>
+          <div class="row"></div>
+        </div>
+      </div>
+      <div class="frame front">
+        <div class="chrome">
+          <div class="chrome-dot"></div>
+          <div class="chrome-dot"></div>
+          <div class="chrome-line"></div>
+        </div>
+        <div class="body">
+          <div class="row w45"></div>
+          <div class="row w80"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-name">Stacked Showcase, mirrored — back top-left, front bottom-right</div>
   </div>
 
 </div>
