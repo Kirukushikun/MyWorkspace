@@ -126,6 +126,24 @@
     border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
   .src-add input[type=text]{flex:0 0 200px} .src-add input[type=url]{flex:1;min-width:160px}
   .src-add button{font-size:11px;padding:7px 14px}
+  .img-head{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:16px 0 8px}
+  .img-grid{display:flex;flex-direction:column;gap:8px}
+  .att-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .img-thumb{position:relative;width:88px;height:88px;border-radius:8px;overflow:hidden;background:var(--panel2);border:1px solid var(--line);cursor:pointer}
+  .img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .img-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);border:none;color:#fff;
+    width:18px;height:18px;border-radius:50%;font-size:10px;line-height:1;cursor:pointer;padding:0}
+  .img-del:hover{background:var(--hold)}
+  .img-hint{font-size:11.5px;color:var(--muted);font-style:italic;font-weight:300;margin-bottom:8px}
+  .file-chip{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);
+    border-radius:8px;padding:8px 8px 8px 12px;cursor:pointer;}
+  .file-chip:hover{border-color:rgba(195,7,63,.4)}
+  .file-chip .fc-ic{font-size:16px;flex-shrink:0}
+  .file-chip .fc-name{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+  .file-chip .img-del{position:static;background:none;color:var(--muted);width:auto;height:auto;font-size:12px;flex-shrink:0}
+  .file-chip .img-del:hover{color:var(--hold);background:none}
+  button#folderBtn.connected{border-color:var(--done);color:var(--done)}
+  button#folderBtn.needs-reconnect{border-color:var(--exp);color:var(--exp)}
   .countdown{display:flex;align-items:baseline;gap:8px;margin-top:6px}
   .countdown .cd-num{font-family:'League Gothic',sans-serif;font-size:34px;font-weight:400;color:var(--accent)}
   .countdown .cd-lbl{font-size:12.5px;color:var(--muted);font-weight:300}
@@ -173,9 +191,11 @@
       <div class="sub">Iverson Craig G. Guno · Web Developer → Senior Web Developer · Started Sep 1, 2025</div>
     </div>
     <div class="toolbar">
+      <button id="folderBtn" onclick="onFolderBtnClick()">📁 Connect Folder</button>
       <button onclick="exportJSON()">↓ Export</button>
       <button onclick="document.getElementById('importFile').click()">↑ Import</button>
       <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
+      <input type="file" id="fileUploadInput" multiple style="display:none">
       <button class="primary" onclick="openPrint()">🖨 Print Summary</button>
       <button onclick="resetAll()">↺ Reset</button>
     </div>
@@ -313,20 +333,211 @@ const TARGETS={
 };
 const DEADLINE="2026-12-07";
 
+// ---- Assets folder (File System Access API) ----
+// Lets each activity keep a real subfolder of attachments (images, PDFs, docs,
+// anything) on disk instead of bloating localStorage/export with embedded data.
+let rootDirHandle = null;
+let folderNeedsReconnect = false;
+const thumbURLCache = new Map(); // "actId|filename" -> blob URL, so we don't re-read the same file twice
+
+function idbOpen(){
+  return new Promise((resolve,reject)=>{
+    const req = indexedDB.open('idp_tracker_fs', 1);
+    req.onupgradeneeded = ()=>{ req.result.createObjectStore('handles'); };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbGet(key){
+  const db = await idbOpen();
+  return new Promise((resolve,reject)=>{
+    const req = db.transaction('handles','readonly').objectStore('handles').get(key);
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbSet(key,val){
+  const db = await idbOpen();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction('handles','readwrite');
+    tx.objectStore('handles').put(val,key);
+    tx.oncomplete = ()=>resolve();
+    tx.onerror = ()=>reject(tx.error);
+  });
+}
+
+function updateFolderStatus(){
+  const btn = document.getElementById('folderBtn');
+  if(!btn) return;
+  if(!('showDirectoryPicker' in window)){
+    btn.textContent='📁 Folder (needs Chrome/Edge)'; btn.disabled=true;
+    btn.title='Attachment folders require the File System Access API (Chrome or Edge).';
+    return;
+  }
+  btn.classList.remove('connected','needs-reconnect');
+  if(rootDirHandle && folderNeedsReconnect){
+    btn.textContent='🔌 Reconnect Assets Folder'; btn.classList.add('needs-reconnect');
+  } else if(rootDirHandle){
+    btn.textContent='📁 Folder Connected'; btn.classList.add('connected');
+  } else {
+    btn.textContent='📁 Connect Assets Folder';
+  }
+}
+
+async function restoreFolder(){
+  if(!('showDirectoryPicker' in window)){ updateFolderStatus(); return; }
+  try{
+    const handle = await idbGet('root');
+    if(!handle){ updateFolderStatus(); return; }
+    const perm = await handle.queryPermission({mode:'readwrite'});
+    rootDirHandle = handle;
+    folderNeedsReconnect = perm !== 'granted';
+  }catch(e){ /* handle missing or unreadable, ignore */ }
+  updateFolderStatus();
+  render();
+}
+
+async function connectFolder(){
+  try{
+    const handle = await window.showDirectoryPicker({ mode:'readwrite' });
+    rootDirHandle = handle;
+    folderNeedsReconnect = false;
+    await idbSet('root', handle);
+  }catch(e){ /* user cancelled the picker */ }
+  updateFolderStatus();
+  render();
+}
+
+async function onFolderBtnClick(){
+  if(rootDirHandle && folderNeedsReconnect){
+    try{
+      const perm = await rootDirHandle.requestPermission({mode:'readwrite'});
+      folderNeedsReconnect = perm !== 'granted';
+    }catch(e){}
+    updateFolderStatus();
+    render();
+    return;
+  }
+  await connectFolder();
+}
+
+function slugify(s){
+  return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,48) || 'objective';
+}
+async function getActivityDir(a, create){
+  if(!rootDirHandle) throw new Error('No assets folder connected.');
+  return rootDirHandle.getDirectoryHandle(slugify(a.obj)+'-'+a.id, { create: !!create });
+}
+
+const IMAGE_EXT = /\.(png|jpe?g|gif|webp|bmp|svg)$/i;
+function isImageFile(name){ return IMAGE_EXT.test(name); }
+const FILE_ICONS = {
+  pdf:'📕', doc:'📄', docx:'📄', txt:'📃', md:'📃', rtf:'📃',
+  xls:'📊', xlsx:'📊', csv:'📊',
+  ppt:'📽', pptx:'📽',
+  zip:'🗜', rar:'🗜', '7z':'🗜'
+};
+function fileIcon(name){
+  const ext = name.slice(name.lastIndexOf('.')+1).toLowerCase();
+  return FILE_ICONS[ext] || '📎';
+}
+
+async function loadThumbnailsFor(id){
+  if(!rootDirHandle || folderNeedsReconnect) return;
+  const host = document.getElementById('ig'+id);
+  if(!host) return;
+  const a = state.activities.find(x=>x.id===id);
+  let dir;
+  try{ dir = await getActivityDir(a, false); }catch(e){ return; }
+  for(const thumb of host.querySelectorAll('.img-thumb')){
+    const name = thumb.dataset.name;
+    const key = id+'|'+name;
+    const imgEl = thumb.querySelector('img');
+    if(thumbURLCache.has(key)){ imgEl.src = thumbURLCache.get(key); continue; }
+    try{
+      const fh = await dir.getFileHandle(name);
+      const file = await fh.getFile();
+      const url = URL.createObjectURL(file);
+      thumbURLCache.set(key,url);
+      imgEl.src = url;
+    }catch(e){ /* file went missing on disk; leave blank */ }
+  }
+}
+
+async function openAttachment(id,name){
+  const a = state.activities.find(x=>x.id===id);
+  try{
+    const dir = await getActivityDir(a,false);
+    const fh = await dir.getFileHandle(name);
+    const file = await fh.getFile();
+    const url = URL.createObjectURL(file);
+    window.open(url,'_blank');
+    setTimeout(()=>URL.revokeObjectURL(url), 60000);
+  }catch(e){ alert('Could not open "'+name+'": '+e.message); }
+}
+
+function triggerFileUpload(id){
+  if(!rootDirHandle){ alert('Connect an assets folder first — use the 📁 button in the toolbar.'); return; }
+  if(folderNeedsReconnect){ alert('Click 🔌 Reconnect Assets Folder in the toolbar first.'); return; }
+  document.getElementById('fileUploadInput').dataset.forId = id;
+  document.getElementById('fileUploadInput').click();
+}
+document.getElementById('fileUploadInput').addEventListener('change', async e=>{
+  const input = e.target;
+  const files = Array.from(input.files||[]);
+  const id = Number(input.dataset.forId);
+  input.value='';
+  if(!files.length || Number.isNaN(id)) return;
+  const a = state.activities.find(x=>x.id===id);
+  try{
+    const dir = await getActivityDir(a, true);
+    for(const file of files){
+      let name = file.name;
+      if(a.files.includes(name)){
+        const dot = name.lastIndexOf('.');
+        name = (dot>-1?name.slice(0,dot):name) + '-' + Date.now() + (dot>-1?name.slice(dot):'');
+      }
+      const fh = await dir.getFileHandle(name, { create:true });
+      const writable = await fh.createWritable();
+      await writable.write(file);
+      await writable.close();
+      a.files.push(name);
+    }
+    save(); render();
+    setTimeout(()=>{
+      const b=document.getElementById('nb'+id); if(b)b.classList.add('open');
+      loadThumbnailsFor(id);
+    },0);
+  }catch(err){ alert('Could not save file(s): '+err.message); }
+});
+async function deleteAttachment(id,name){
+  const a = state.activities.find(x=>x.id===id);
+  try{ const dir = await getActivityDir(a,false); await dir.removeEntry(name); }catch(e){ /* already gone */ }
+  a.files = a.files.filter(n=>n!==name);
+  const key=id+'|'+name;
+  if(thumbURLCache.has(key)){ URL.revokeObjectURL(thumbURLCache.get(key)); thumbURLCache.delete(key); }
+  save(); render();
+  setTimeout(()=>{
+    const b=document.getElementById('nb'+id); if(b)b.classList.add('open');
+    loadThumbnailsFor(id);
+  },0);
+}
+
 let state;
 function seedState(){
   return {
     activities: SEED.map((r,i)=>({id:i,area:r[0],obj:r[1],desc:r[2],type:r[3],status:r[4],
-      target:TARGETS[r[0]+'||'+r[3]]||'',notes:'',sources:[]})),
+      target:TARGETS[r[0]+'||'+r[3]]||'',notes:'',sources:[],files:[]})),
     reviews:[], open:{}, history:[]
   };
 }
-// migrate older saved states (single link -> sources array, backfill dates)
+// migrate older saved states (single link -> sources array, backfill dates, images -> files)
 function migrate(){
   if(!state.history)state.history=[];
   state.activities.forEach(a=>{
     if(!a.sources){a.sources=a.link?[{label:'Source',url:a.link}]:[];delete a.link;}
     if(!a.target)a.target=TARGETS[a.area+'||'+a.type]||'';
+    if(!a.files){a.files=a.images||[];delete a.images;}
   });
 }
 function load(){
@@ -536,7 +747,7 @@ function actHTML(a){
             <input type="date" value="${a.target||''}" onchange="setField(${a.id},'target',this.value)">
           </div>
           <div class="ctl-badges">${dueBadge(a)}</div>
-          <button class="notes-toggle" onclick="toggleNotes(${a.id})">📝 Notes & sources${a.notes||(a.sources&&a.sources.length)?' •':''}</button>
+          <button class="notes-toggle" onclick="toggleNotes(${a.id})">📝 Notes & sources${a.notes||(a.sources&&a.sources.length)||(a.files&&a.files.length)?' •':''}</button>
         </div>
         <div class="notes-box" id="nb${a.id}">
           <textarea placeholder="Progress notes, blockers, reflections…" onchange="setField(${a.id},'notes',this.value)">${a.notes||''}</textarea>
@@ -546,6 +757,12 @@ function actHTML(a){
             <input type="text" id="sl${a.id}" placeholder="Label (e.g. Udemy course, docs, PR)">
             <input type="url" id="su${a.id}" placeholder="https://…">
             <button onclick="addSource(${a.id})">+ Add</button>
+          </div>
+          <div class="img-head">📎 Attachments</div>
+          ${!rootDirHandle?'<div class="img-hint">Connect an assets folder (📁 in the toolbar) to attach images, PDFs, or docs here.</div>':''}
+          <div class="img-grid" id="ig${a.id}">${attachmentsHTML(a)}</div>
+          <div class="src-add">
+            <button onclick="triggerFileUpload(${a.id})">📎 Upload file</button>
           </div>
         </div>
       </div>
@@ -569,6 +786,31 @@ function sourcesHTML(a){
     <button class="src-del" onclick="delSource(${a.id},${i})">✕</button>
   </div>`).join('');
 }
+function escAttr(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+function fileChipHTML(a,name){
+  return `<div class="file-chip" title="${escAttr(name)}" onclick="openAttachment(${a.id},'${esc(name)}')">
+    <span class="fc-ic">${fileIcon(name)}</span>
+    <span class="fc-name">${name}</span>
+    <button class="img-del" onclick="event.stopPropagation();deleteAttachment(${a.id},'${esc(name)}')">✕</button>
+  </div>`;
+}
+function imgThumbHTML(a,name){
+  return `<div class="img-thumb" data-name="${escAttr(name)}" onclick="openAttachment(${a.id},'${esc(name)}')">
+    <img alt="">
+    <button class="img-del" onclick="event.stopPropagation();deleteAttachment(${a.id},'${esc(name)}')">✕</button>
+  </div>`;
+}
+function attachmentsHTML(a){
+  if(!a.files||!a.files.length)return '<div class="src-empty">No attachments yet.</div>';
+  // docs/PDFs get their own row above images, since fixed-square thumbnails
+  // and variable-width file chips don't align cleanly in one wrapped row
+  const fileNames=a.files.filter(n=>!isImageFile(n));
+  const imageNames=a.files.filter(n=>isImageFile(n));
+  let out='';
+  if(fileNames.length) out+=`<div class="att-row">${fileNames.map(n=>fileChipHTML(a,n)).join('')}</div>`;
+  if(imageNames.length) out+=`<div class="att-row">${imageNames.map(n=>imgThumbHTML(a,n)).join('')}</div>`;
+  return out;
+}
 function addSource(id){
   const l=document.getElementById('sl'+id).value.trim();
   let u=document.getElementById('su'+id).value.trim();
@@ -584,7 +826,12 @@ function delSource(id,i){const a=state.activities.find(a=>a.id===id);a.sources.s
   setTimeout(()=>{const b=document.getElementById('nb'+id);if(b)b.classList.add('open');},0);}
 function setField(id,f,v){state.activities.find(a=>a.id===id)[f]=v;save();render();}
 function toggleComp(area){state.open[area]=!(state.open[area]===true);save();render();}
-function toggleNotes(id){const b=document.getElementById('nb'+id);b.classList.toggle('open');}
+function toggleNotes(id){
+  const b=document.getElementById('nb'+id);
+  const opening=!b.classList.contains('open');
+  b.classList.toggle('open');
+  if(opening)loadThumbnailsFor(id);
+}
 function toggleAll(open){document.querySelectorAll('.comp').forEach(c=>{});
   [...new Set(state.activities.map(a=>a.area))].forEach(a=>state.open[a]=open);save();render();}
 function esc(s){return s.replace(/'/g,"\\'");}
@@ -721,6 +968,8 @@ function openPrint(){
 }
 
 load();render();
+updateFolderStatus();
+restoreFolder();
 </script>
 </body>
 </html>

@@ -1,0 +1,404 @@
+{
+  "activities": [
+    {
+      "id": 0,
+      "area": "System Architecture & Solution Design",
+      "obj": "Design and document the architecture for a new mid-sized application.",
+      "desc": "Lead the architectural design of a real project module, producing diagrams, technology choices, and trade-off analyses.",
+      "type": "70",
+      "status": "To Kick-off",
+      "target": "2026-09-15",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 1,
+      "area": "System Architecture & Solution Design",
+      "obj": "Learn architectural decision-making from senior architects.",
+      "desc": "Participate in architecture review boards and pair with a senior architect during design sessions.",
+      "type": "20",
+      "status": "To Kick-off",
+      "target": "2026-08-25",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 2,
+      "area": "System Architecture & Solution Design",
+      "obj": "Understand core architectural patterns and principles.",
+      "desc": "Complete a course on software architecture patterns (microservices, event-driven, layered) and read \"Software Architecture: The Hard Parts.\"",
+      "type": "10",
+      "status": "To Kick-off",
+      "target": "2026-08-04",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 3,
+      "area": "Application Security",
+      "obj": "Identify and remediate security vulnerabilities in an existing codebase.",
+      "desc": "Perform a security audit on a live application, fix findings, and implement secure coding fixes.",
+      "type": "70",
+      "status": "To Kick-off",
+      "target": "2026-09-24",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 4,
+      "area": "Application Security",
+      "obj": "Build security awareness through peer collaboration.",
+      "desc": "Join a security-focused community of practice and conduct threat-modeling sessions with the team.",
+      "type": "20",
+      "status": "To Kick-off",
+      "target": "2026-09-03",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 5,
+      "area": "Application Security",
+      "obj": "Master OWASP Top 10 and secure development principles.",
+      "desc": "Complete an OWASP/secure-coding certification course.",
+      "type": "10",
+      "status": "To Kick-off",
+      "target": "2026-08-13",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 6,
+      "area": "Performance Optimization",
+      "obj": "Improve measurable performance of a slow application feature.",
+      "desc": "Profile a real application, identify bottlenecks, and optimize queries, caching, and front-end load times.",
+      "type": "70",
+      "status": "In Progress",
+      "target": "2026-10-02",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 7,
+      "area": "Performance Optimization",
+      "obj": "Exchange optimization techniques with experienced engineers.",
+      "desc": "Shadow a performance engineer and present optimization results in a tech-share session.",
+      "type": "20",
+      "status": "In Progress",
+      "target": "2026-09-11",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 8,
+      "area": "Performance Optimization",
+      "obj": "Learn profiling tools and performance fundamentals.",
+      "desc": "Take a course on web performance (Core Web Vitals, database tuning).",
+      "type": "10",
+      "status": "To Kick-off",
+      "target": "2026-08-21",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 9,
+      "area": "Technical Leadership & Mentoring",
+      "obj": "Lead a small team through a project delivery.",
+      "desc": "Act as tech lead on a feature, owning technical decisions and coordinating the team.",
+      "type": "70",
+      "status": "Completed",
+      "target": "2026-10-11",
+      "notes": "",
+      "sources": [
+        {
+          "label": "Sportsfest live stream system overlay",
+          "url": "https://kirukushikun.github.io/ICStudio/"
+        }
+      ],
+      "files": [
+        "IMG_20260212_155031.jpg"
+      ]
+    },
+    {
+      "id": 10,
+      "area": "Technical Leadership & Mentoring",
+      "obj": "Develop mentoring and coaching skills.",
+      "desc": "Mentor a junior developer and seek feedback from your own manager or a senior leader.",
+      "type": "20",
+      "status": "Completed",
+      "target": "2026-09-20",
+      "notes": "",
+      "sources": [
+        {
+          "label": "DDS System",
+          "url": "https://ddssystem.bfcgroup.ph/"
+        },
+        {
+          "label": "FVPortal",
+          "url": "https://fvportal.bfcgroup.ph/"
+        }
+      ],
+      "files": [
+        "received_1660108531813937.jpeg",
+        "received_1612196553565674.jpeg",
+        "Messenger_creation_863639479801440.jpeg",
+        "FIXED ASSET_MANAGEMENT GUIDELINES - 061826_1.docx",
+        "Asset_Taxonomy.docx"
+      ]
+    },
+    {
+      "id": 11,
+      "area": "Technical Leadership & Mentoring",
+      "obj": "Understand leadership and communication frameworks.",
+      "desc": "Complete a technical leadership or engineering management course.",
+      "type": "10",
+      "status": "To Kick-off",
+      "target": "2026-08-30",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 12,
+      "area": "DevOps & Deployment Management",
+      "obj": "Build and manage a CI/CD pipeline.",
+      "desc": "Set up automated build, test, and deployment pipelines for a real project.",
+      "type": "70",
+      "status": "To Kick-off",
+      "target": "2026-10-19",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 13,
+      "area": "DevOps & Deployment Management",
+      "obj": "Learn deployment practices from DevOps peers.",
+      "desc": "Pair with a DevOps engineer and participate in incident retrospectives.",
+      "type": "20",
+      "status": "To Kick-off",
+      "target": "2026-09-28",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 14,
+      "area": "DevOps & Deployment Management",
+      "obj": "Understand CI/CD and infrastructure-as-code fundamentals.",
+      "desc": "Complete a Docker/Kubernetes or CI/CD certification course.",
+      "type": "10",
+      "status": "To Kick-off",
+      "target": "2026-09-07",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 15,
+      "area": "Project Planning and Estimation",
+      "obj": "Plan and estimate a full project or sprint.",
+      "desc": "Own the estimation and breakdown of work for a real deliverable and track actuals against estimates.",
+      "type": "70",
+      "status": "In Progress",
+      "target": "2026-10-28",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 16,
+      "area": "Project Planning and Estimation",
+      "obj": "Improve estimation accuracy through team input.",
+      "desc": "Facilitate planning poker sessions and review estimation outcomes with the team.",
+      "type": "20",
+      "status": "In Progress",
+      "target": "2026-10-07",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 17,
+      "area": "Project Planning and Estimation",
+      "obj": "Learn estimation techniques and agile planning.",
+      "desc": "Take a course on agile project management or estimation methods.",
+      "type": "10",
+      "status": "To Kick-off",
+      "target": "2026-09-16",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 18,
+      "area": "Testing and Quality Assurance",
+      "obj": "Increase test coverage and quality on a project.",
+      "desc": "Write unit, integration, and end-to-end tests for a real feature and set up automated testing.",
+      "type": "70",
+      "status": "In Progress",
+      "target": "2026-11-05",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 19,
+      "area": "Testing and Quality Assurance",
+      "obj": "Learn testing strategies from QA peers.",
+      "desc": "Collaborate with QA engineers on test plans and review each other's test cases.",
+      "type": "20",
+      "status": "In Progress",
+      "target": "2026-10-15",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 20,
+      "area": "Testing and Quality Assurance",
+      "obj": "Understand testing methodologies and frameworks.",
+      "desc": "Complete a course on test automation (Jest, Cypress, Playwright).",
+      "type": "10",
+      "status": "In Progress",
+      "target": "2026-09-24",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 21,
+      "area": "API Design and Integration",
+      "obj": "Design and build a production-ready API.",
+      "desc": "Create a RESTful or GraphQL API with proper versioning, documentation, and error handling for a real project.",
+      "type": "70",
+      "status": "In Progress",
+      "target": "2026-11-14",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 22,
+      "area": "API Design and Integration",
+      "obj": "Refine API design through peer review.",
+      "desc": "Conduct API design reviews and collaborate with consuming teams on contracts.",
+      "type": "20",
+      "status": "In Progress",
+      "target": "2026-10-24",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 23,
+      "area": "API Design and Integration",
+      "obj": "Learn API design best practices and standards.",
+      "desc": "Take a course on REST/GraphQL design and OpenAPI specification.",
+      "type": "10",
+      "status": "In Progress",
+      "target": "2026-10-03",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 24,
+      "area": "Database Design and Administration",
+      "obj": "Design and optimize a database schema.",
+      "desc": "Model a database for a real application, write migrations, and tune indexes and queries.",
+      "type": "70",
+      "status": "In Progress",
+      "target": "2026-11-22",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 25,
+      "area": "Database Design and Administration",
+      "obj": "Learn database management from experienced DBAs.",
+      "desc": "Pair with a DBA on schema reviews and discuss scaling strategies.",
+      "type": "20",
+      "status": "In Progress",
+      "target": "2026-11-01",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 26,
+      "area": "Database Design and Administration",
+      "obj": "Understand relational and NoSQL fundamentals.",
+      "desc": "Complete a course on database design and SQL performance tuning.",
+      "type": "10",
+      "status": "In Progress",
+      "target": "2026-10-11",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 27,
+      "area": "Cloud Technologies",
+      "obj": "Deploy and manage an application on a cloud platform.",
+      "desc": "Provision and configure cloud infrastructure (compute, storage, networking) for a live workload.",
+      "type": "70",
+      "status": "In Progress",
+      "target": "2026-12-01",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 28,
+      "area": "Cloud Technologies",
+      "obj": "Build cloud expertise through community learning.",
+      "desc": "Join a cloud user group and pair with a cloud engineer on architecture decisions.",
+      "type": "20",
+      "status": "In Progress",
+      "target": "2026-11-10",
+      "notes": "",
+      "sources": [],
+      "files": []
+    },
+    {
+      "id": 29,
+      "area": "Cloud Technologies",
+      "obj": "Earn foundational cloud knowledge.",
+      "desc": "Complete a cloud certification (AWS Solutions Architect Associate, Azure Fundamentals).",
+      "type": "10",
+      "status": "In Progress",
+      "target": "2026-10-20",
+      "notes": "",
+      "sources": [],
+      "files": []
+    }
+  ],
+  "reviews": [],
+  "open": {
+    "System Architecture & Solution Design": false,
+    "Application Security": false,
+    "Technical Leadership & Mentoring": false,
+    "DevOps & Deployment Management": true,
+    "Project Planning and Estimation": false,
+    "Testing and Quality Assurance": false,
+    "API Design and Integration": false,
+    "Database Design and Administration": false,
+    "Performance Optimization": false
+  },
+  "history": [
+    {
+      "date": "2026-07-08",
+      "pct": 36
+    }
+  ]
+}

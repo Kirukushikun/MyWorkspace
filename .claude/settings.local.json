@@ -8,7 +8,9 @@
       "Bash(Select-String -Path \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\s2-lift-background-remover.html\" -Pattern 'src=|href=')",
       "Bash(mkdir -p \"c:/Users/DEV-PC/Desktop/Dump/portfolio-v2\")",
       "Bash(mkdir \"c:\\\\Users\\\\DEV-PC\\\\Desktop\\\\Dump\\\\thumb-kit\")",
-      "Bash(node -e \"require\\('fs'\\).readFileSync\\('index.html','utf8'\\)\")"
+      "Bash(node -e \"require\\('fs'\\).readFileSync\\('index.html','utf8'\\)\")",
+      "Bash(node test_idp_refs.js)",
+      "Bash(node test_idp_folder.js)"
     ],
     "additionalDirectories": [
       "c:\\Users\\DEV-PC\\Desktop\\Dump"
