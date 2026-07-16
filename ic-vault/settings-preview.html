@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ICVault — Settings (Frameless Preview)</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=League+Spartan:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --red: #C3073F;
+    --red-dim: #6F2232;
+    --bg: #1A1A1D;
+    --bg-secondary: #161617;
+    --text-primary: #ffffff;
+    --text-muted: rgba(255,255,255,0.42);
+    --border: rgba(255,255,255,0.07);
+    --green: #2e9c6b;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    font-family: "Roboto", sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 15% 20%, rgba(195,7,63,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 80%, rgba(195,7,63,0.04) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='1' fill='white' fill-opacity='0.07'/%3E%3C/svg%3E");
+    background-size: auto, auto, 28px 28px;
+    color: var(--text-primary);
+    display: flex;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 999px; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px; flex-shrink: 0;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 26px 16px; gap: 28px;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand-mark { font-family: "League Spartan", sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 1px; padding: 0 8px; }
+  .brand-mark span { color: var(--red); }
+  .brand-tag { font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); padding: 0 8px; margin-top: 2px; }
+  .nav-list { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    font-size: 12.5px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; border: 1px solid transparent;
+  }
+  .nav-item.active {
+    color: var(--text-primary);
+    background: linear-gradient(90deg, rgba(195,7,63,0.16), rgba(195,7,63,0.03));
+    border-color: rgba(195,7,63,0.28);
+  }
+  .sidebar-footer { margin-top: auto; padding: 12px 8px 0; border-top: 1px solid var(--border); font-size: 10px; color: rgba(255,255,255,0.18); letter-spacing: 0.08em; }
+
+  /* ── Main ── */
+  .main { flex: 1; padding: 44px 56px 80px; margin: 0 auto; max-width: 980px; }
+
+  .view-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+  .view-title { font-family: "League Spartan", sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .view-sub { font-size: 12.5px; color: var(--text-muted); font-weight: 300; margin-bottom: 44px; }
+
+  /* ── Frameless section ── */
+  .fs-section { margin-bottom: 40px; }
+  .fs-label {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(255,255,255,0.28); margin-bottom: 22px;
+  }
+  .fs-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── Setting rows ── */
+  .fs-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .fs-row:last-child { border-bottom: none; }
+  .fs-icon {
+    font-size: 16px; width: 28px; text-align: center;
+    flex-shrink: 0; opacity: 0.75;
+  }
+  .fs-info { flex: 1; min-width: 0; }
+  .fs-name { font-size: 13.5px; font-weight: 500; margin-bottom: 2px; }
+  .fs-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+  /* Toggle */
+  .toggle-switch { position: relative; display: inline-block; width: 40px; height: 24px; flex-shrink: 0; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: rgba(255,255,255,0.09); border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: background 0.22s ease;
+  }
+  .toggle-slider::before {
+    content: ''; position: absolute;
+    width: 16px; height: 16px; border-radius: 50%;
+    left: 3px; top: 3px; background: rgba(255,255,255,0.45);
+    transition: transform 0.22s ease, background 0.22s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  .toggle-switch input:checked + .toggle-slider { background: var(--red); border-color: rgba(195,7,63,0.4); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); background: #fff; }
+
+  /* Account */
+  .account-row {
+    display: flex; align-items: center; gap: 16px;
+    padding-bottom: 22px; margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .avatar-ring {
+    width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--red-dim), var(--red));
+    display: flex; align-items: center; justify-content: center;
+    font-family: "League Spartan", sans-serif; font-size: 18px; font-weight: 700;
+    box-shadow: 0 0 0 3px rgba(195,7,63,0.2);
+  }
+  .account-name-line { font-size: 15px; font-weight: 600; }
+  .account-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .btn-edit-bare {
+    margin-left: auto; background: none; border: none; cursor: pointer;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted); padding: 6px 0;
+    transition: color 0.15s ease; border-bottom: 1px solid transparent;
+  }
+  .btn-edit-bare:hover { color: var(--text-primary); border-bottom-color: rgba(255,255,255,0.2); }
+  .btn-edit-bare.editing { color: #ec5c86; border-bottom-color: rgba(195,7,63,0.4); }
+
+  /* Underline inputs */
+  .cred-rows { display: flex; flex-direction: column; }
+  .cred-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .cred-row:last-of-type { border-bottom: none; }
+  .cred-key {
+    width: 90px; flex-shrink: 0;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .cred-val-wrap { flex: 1; position: relative; }
+  .cred-val {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 1px solid transparent;
+    padding: 4px 0; color: var(--text-primary);
+    font-family: "Roboto", sans-serif; font-size: 13px;
+    transition: border-color 0.2s ease;
+  }
+  .cred-val:disabled { opacity: 0.5; cursor: default; }
+  .cred-val:not(:disabled) { border-bottom-color: rgba(255,255,255,0.12); }
+  .cred-val:not(:disabled):focus { outline: none; border-bottom-color: var(--red); }
+  .cred-val[type="password"] { letter-spacing: 0.2em; }
+  .cred-eye {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: 13px; padding: 0; transition: color 0.15s ease;
+  }
+  .cred-eye:hover { color: var(--text-primary); }
+  .cred-actions-bare {
+    display: none; align-items: center; gap: 14px;
+    padding-top: 16px;
+  }
+  .cred-actions-bare.visible { display: flex; }
+  .btn-save-bare {
+    background: none; border: none; cursor: pointer;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--red); padding: 0;
+    transition: opacity 0.15s ease;
+  }
+  .btn-save-bare:hover { opacity: 0.75; }
+  .btn-cancel-bare {
+    background: none; border: none; cursor: pointer;
+    font-size: 11.5px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); padding: 0;
+    transition: color 0.15s ease;
+  }
+  .btn-cancel-bare:hover { color: var(--text-primary); }
+
+  /* Mode picker */
+  .mode-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-left: 44px; }
+  .mode-pick-btn {
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 999px; cursor: pointer;
+    border: 1.5px solid var(--border); background: transparent; color: var(--text-muted);
+    transition: all 0.18s ease;
+  }
+  .mode-pick-btn.active { background: rgba(195,7,63,0.12); border-color: rgba(195,7,63,0.4); color: #ec5c86; }
+  .mode-pick-btn:not(.active):hover { border-color: rgba(255,255,255,0.18); color: var(--text-primary); }
+
+  /* Stepper */
+  .stepper {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  .step-btn {
+    width: 26px; height: 26px; border-radius: 50%; background: none;
+    border: 1px solid var(--border); color: var(--text-muted); font-size: 15px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .step-btn:hover { border-color: rgba(255,255,255,0.22); color: var(--text-primary); }
+  .step-val { font-size: 14px; font-weight: 600; min-width: 22px; text-align: center; }
+
+  /* Backup */
+  .backup-stats {
+    display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 16px 44px;
+  }
+  .bk-stat {
+    font-size: 11px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .bk-stat strong { color: var(--text-primary); font-weight: 600; }
+  .bk-stat + .bk-stat::before { content: '·'; opacity: 0.3; margin-right: 5px; }
+  .export-btns { display: flex; gap: 20px; flex-wrap: wrap; margin-left: 44px; }
+  .btn-export-bare {
+    background: none; border: none; cursor: pointer;
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    display: flex; align-items: center; gap: 7px; padding: 0;
+    transition: color 0.15s ease;
+  }
+  .btn-export-bare:hover { color: var(--text-primary); }
+  .fmt-chip {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .fmt-json { background: rgba(6,182,212,0.14); color: #38bcd4; }
+  .fmt-csv  { background: rgba(46,156,107,0.14); color: #4fcf95; }
+  .fmt-md   { background: rgba(195,7,63,0.14);   color: #ec5c86; }
+
+  /* Import drop */
+  .import-drop {
+    margin-left: 44px; margin-top: 20px;
+    border: 1.5px dashed rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 22px 20px;
+    text-align: center;
+    cursor: pointer; position: relative;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .import-drop:hover, .import-drop.dragover {
+    border-color: rgba(195,7,63,0.35);
+    background: rgba(195,7,63,0.03);
+  }
+  .import-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .import-drop-text { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .import-drop-sub  { font-size: 11px; color: var(--text-muted); }
+  .fmt-pills { display: flex; justify-content: center; gap: 7px; margin-top: 10px; }
+  .fmt-pill  { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 999px; }
+
+  .import-opts {
+    display: flex; align-items: center; gap: 16px;
+    margin-top: 14px; margin-left: 44px;
+  }
+  .import-opt-label { font-size: 11px; color: var(--text-muted); }
+  .import-radio-group { display: flex; gap: 14px; }
+  .import-radio {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-muted); cursor: pointer;
+  }
+  .import-radio input { display: none; }
+  .radio-dot {
+    width: 13px; height: 13px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s ease;
+  }
+  .import-radio:has(input:checked) { color: var(--text-primary); }
+  .import-radio:has(input:checked) .radio-dot { border-color: var(--red); }
+  .import-radio:has(input:checked) .radio-dot::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+  .btn-import-bare {
+    margin-left: auto; background: none; border: none; cursor: pointer;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--red); opacity: 0.4; pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .btn-import-bare.ready { opacity: 1; pointer-events: auto; }
+  .btn-import-bare.ready:hover { opacity: 0.72; }
+
+  .file-chip {
+    display: none; align-items: center; gap: 10px;
+    margin: 10px 0 0 44px;
+    padding: 8px 14px; border-radius: 8px;
+    background: rgba(195,7,63,0.06); border: 1px solid rgba(195,7,63,0.2);
+    font-size: 12px; width: fit-content;
+  }
+  .file-chip.visible { display: flex; }
+  .file-chip-name { font-weight: 500; }
+  .file-chip-size { color: var(--text-muted); }
+  .file-chip-x { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 0; margin-left: 4px; }
+  .file-chip-x:hover { color: #ec5c86; }
+
+  /* Danger */
+  .danger-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .danger-row:last-child { border-bottom: none; }
+  .btn-danger-bare {
+    flex-shrink: 0; background: none; border: none; cursor: pointer;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    color: rgba(195,7,63,0.6); padding: 0;
+    transition: color 0.15s ease;
+  }
+  .btn-danger-bare:hover { color: #ec5c86; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(16px);
+    background: rgba(26,26,29,0.95); border: 1px solid rgba(46,156,107,0.35);
+    color: #4fcf95; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+    padding: 10px 22px; border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    opacity: 0; transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none; z-index: 99;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div>
+    <div class="brand-mark">IC<span>Vault</span></div>
+    <div class="brand-tag">Knowledge Quiz</div>
+  </div>
+  <div class="nav-list">
+    <div class="nav-item">◆ Dashboard</div>
+    <div class="nav-item">▣ Quiz Session</div>
+    <div class="nav-item">⇩ Import & Logs</div>
+    <div class="nav-item">▤ Library</div>
+    <div class="nav-item active">⚙ Settings</div>
+  </div>
+  <div class="sidebar-footer">ICVault · Settings Preview</div>
+</div>
+
+<div class="main">
+  <div class="view-eyebrow">Configuration</div>
+  <div class="view-title">Settings</div>
+  <div class="view-sub">Manage your account, quiz preferences, and notification rules.</div>
+
+  <!-- Account -->
+  <div class="fs-section">
+    <div class="fs-label">Account</div>
+
+    <div class="account-row">
+      <div class="avatar-ring">IC</div>
+      <div>
+        <div class="account-name-line">Iverson Craig</div>
+        <div class="account-sub">Personal · Full Access</div>
+      </div>
+      <button class="btn-edit-bare" id="edit-btn" onclick="toggleEdit()">Edit</button>
+    </div>
+
+    <div class="cred-rows">
+      <div class="cred-row">
+        <div class="cred-key">Name</div>
+        <div class="cred-val-wrap">
+          <input class="cred-val" id="field-name" type="text" value="Iverson Craig" disabled />
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-key">Email</div>
+        <div class="cred-val-wrap">
+          <input class="cred-val" id="field-email" type="email" value="admin_it@bfcgroup.org" disabled />
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-key">Password</div>
+        <div class="cred-val-wrap">
+          <input class="cred-val" id="field-pass" type="password" value="supersecret" disabled />
+          <button class="cred-eye" onclick="togglePass()">👁</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-actions-bare" id="cred-actions">
+      <button class="btn-save-bare" onclick="saveCredentials()">Save Changes</button>
+      <button class="btn-cancel-bare" onclick="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Quiz Preferences -->
+  <div class="fs-section">
+    <div class="fs-label">Quiz Preferences</div>
+
+    <div class="fs-row" style="flex-direction:column; align-items:flex-start; gap:10px;">
+      <div style="display:flex; align-items:center; gap:16px; width:100%">
+        <div class="fs-icon">⇄</div>
+        <div class="fs-info">
+          <div class="fs-name">Default Mode</div>
+          <div class="fs-desc">Which mode opens when you start a session</div>
+        </div>
+      </div>
+      <div class="mode-picker">
+        <button class="mode-pick-btn active" onclick="pickMode(this)">Shuffle</button>
+        <button class="mode-pick-btn" onclick="pickMode(this)">Multiple Choice</button>
+        <button class="mode-pick-btn" onclick="pickMode(this)">Fill in the Blank</button>
+        <button class="mode-pick-btn" onclick="pickMode(this)">Write the Code</button>
+      </div>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">📋</div>
+      <div class="fs-info">
+        <div class="fs-name">Daily Quota</div>
+        <div class="fs-desc">Number of questions to complete each day</div>
+      </div>
+      <div class="stepper">
+        <button class="step-btn" onclick="stepQ(-1)">−</button>
+        <span class="step-val" id="quota-val">8</span>
+        <button class="step-btn" onclick="stepQ(1)">+</button>
+      </div>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">💡</div>
+      <div class="fs-info">
+        <div class="fs-name">Auto-reveal Answers</div>
+        <div class="fs-desc">Show the correct answer after every submission</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" checked /><span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">🎲</div>
+      <div class="fs-info">
+        <div class="fs-name">Shuffle Question Order</div>
+        <div class="fs-desc">Randomize the sequence instead of serving in order</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" checked /><span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">🏷</div>
+      <div class="fs-info">
+        <div class="fs-name">Show Difficulty Badge</div>
+        <div class="fs-desc">Display Easy / Medium / Hard label on each question</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" checked /><span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">⏱</div>
+      <div class="fs-info">
+        <div class="fs-name">Timed Mode</div>
+        <div class="fs-desc">Each question has a 60-second countdown</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" /><span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="fs-section">
+    <div class="fs-label">Notifications</div>
+
+    <div class="fs-row">
+      <div class="fs-icon">🔥</div>
+      <div class="fs-info">
+        <div class="fs-name">Streak Reminder</div>
+        <div class="fs-desc">Alert when you haven't answered today's quota yet</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" checked /><span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">📊</div>
+      <div class="fs-info">
+        <div class="fs-name">Weekly Summary</div>
+        <div class="fs-desc">Send a recap of recall rate and mastery progress every Monday</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" checked /><span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="fs-row">
+      <div class="fs-icon">🆕</div>
+      <div class="fs-info">
+        <div class="fs-name">New Questions Added</div>
+        <div class="fs-desc">Notify when the import pipeline generates new cards</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" /><span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Backup & Restore -->
+  <div class="fs-section">
+    <div class="fs-label">Backup & Restore</div>
+
+    <div class="fs-row" style="flex-direction:column; align-items:flex-start; gap:0">
+      <div style="display:flex; align-items:center; gap:16px; width:100%">
+        <div class="fs-icon">💾</div>
+        <div class="fs-info">
+          <div class="fs-name">Export Vault</div>
+          <div class="fs-desc">Download your question pool, mastery data, and session history — last backup <span style="color:#4fcf95">3 days ago</span></div>
+        </div>
+      </div>
+      <div class="backup-stats">
+        <span class="bk-stat"><strong>184</strong> questions</span>
+        <span class="bk-stat"><strong>5</strong> categories</span>
+        <span class="bk-stat"><strong>12</strong> sessions</span>
+        <span class="bk-stat"><strong>78%</strong> avg recall</span>
+      </div>
+      <div class="export-btns">
+        <button class="btn-export-bare" onclick="toast('Exported as JSON')">
+          <span class="fmt-chip fmt-json">JSON</span> Full Backup
+        </button>
+        <button class="btn-export-bare" onclick="toast('Exported as CSV')">
+          <span class="fmt-chip fmt-csv">CSV</span> Questions Only
+        </button>
+        <button class="btn-export-bare" onclick="toast('Exported as Markdown')">
+          <span class="fmt-chip fmt-md">.md</span> Obsidian Format
+        </button>
+      </div>
+    </div>
+
+    <div class="fs-row" style="flex-direction:column; align-items:flex-start; gap:0; padding-bottom:0;">
+      <div style="display:flex; align-items:center; gap:16px; width:100%">
+        <div class="fs-icon">📂</div>
+        <div class="fs-info">
+          <div class="fs-name">Import / Restore</div>
+          <div class="fs-desc">Upload a previous vault export or import questions from another format</div>
+        </div>
+      </div>
+
+      <div class="import-drop" id="import-drop" ondragover="ev(event,true)" ondragleave="ev(event,false)" ondrop="drop(event)">
+        <input type="file" accept=".json,.csv,.md" onchange="pickFile(this)" />
+        <div class="import-drop-text">Drop a backup file or click to browse</div>
+        <div class="import-drop-sub">Accepts .json · .csv · .md</div>
+        <div class="fmt-pills">
+          <span class="fmt-pill fmt-json">.json</span>
+          <span class="fmt-pill fmt-csv">.csv</span>
+          <span class="fmt-pill fmt-md">.md</span>
+        </div>
+      </div>
+
+      <div class="file-chip" id="file-chip">
+        <span>📄</span>
+        <span class="file-chip-name" id="fc-name"></span>
+        <span class="file-chip-size" id="fc-size"></span>
+        <button class="file-chip-x" onclick="clearFile()">✕</button>
+      </div>
+
+      <div class="import-opts">
+        <span class="import-opt-label">On conflict:</span>
+        <div class="import-radio-group">
+          <label class="import-radio"><input type="radio" name="imode" value="merge" checked /><span class="radio-dot"></span> Merge</label>
+          <label class="import-radio"><input type="radio" name="imode" value="replace" /><span class="radio-dot"></span> Replace All</label>
+        </div>
+        <button class="btn-import-bare" id="import-btn" onclick="runImport()">Import →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="fs-section">
+    <div class="fs-label">Danger Zone</div>
+
+    <div class="danger-row">
+      <div class="fs-info">
+        <div class="fs-name">Reset Streak</div>
+        <div class="fs-desc">Set your current streak back to zero. This can't be undone.</div>
+      </div>
+      <button class="btn-danger-bare" onclick="toast('Streak reset')">Reset Streak</button>
+    </div>
+    <div class="danger-row">
+      <div class="fs-info">
+        <div class="fs-name">Clear Progress Data</div>
+        <div class="fs-desc">Wipe all mastery scores and session history across every category.</div>
+      </div>
+      <button class="btn-danger-bare" onclick="toast('Progress cleared')">Clear Progress</button>
+    </div>
+    <div class="danger-row">
+      <div class="fs-info">
+        <div class="fs-name">Delete All Questions</div>
+        <div class="fs-desc">Remove every card from the question pool. Your vault will be empty.</div>
+      </div>
+      <button class="btn-danger-bare" onclick="toast('Question pool deleted')">Delete All</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let editing = false;
+  function toggleEdit() {
+    editing = !editing;
+    ['field-name','field-email','field-pass'].forEach(id => document.getElementById(id).disabled = !editing);
+    const btn = document.getElementById('edit-btn');
+    btn.textContent = editing ? 'Editing…' : 'Edit';
+    btn.classList.toggle('editing', editing);
+    document.getElementById('cred-actions').classList.toggle('visible', editing);
+    if (editing) document.getElementById('field-name').focus();
+  }
+  function cancelEdit() {
+    document.getElementById('field-name').value = 'Iverson Craig';
+    document.getElementById('field-email').value = 'admin_it@bfcgroup.org';
+    document.getElementById('field-pass').value = 'supersecret';
+    document.getElementById('field-pass').type = 'password';
+    editing = false;
+    ['field-name','field-email','field-pass'].forEach(id => document.getElementById(id).disabled = true);
+    document.getElementById('edit-btn').textContent = 'Edit';
+    document.getElementById('edit-btn').classList.remove('editing');
+    document.getElementById('cred-actions').classList.remove('visible');
+  }
+  function saveCredentials() { cancelEdit(); toast('Credentials saved'); }
+
+  let passVis = false;
+  function togglePass() {
+    passVis = !passVis;
+    document.getElementById('field-pass').type = passVis ? 'text' : 'password';
+  }
+
+  function pickMode(btn) {
+    document.querySelectorAll('.mode-pick-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    toast('Default mode updated');
+  }
+
+  let qv = 8;
+  function stepQ(d) { qv = Math.max(1, Math.min(30, qv + d)); document.getElementById('quota-val').textContent = qv; }
+
+  function ev(e, on) { e.preventDefault(); document.getElementById('import-drop').classList.toggle('dragover', on); }
+  function drop(e) { e.preventDefault(); ev(e, false); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); }
+  function pickFile(input) { if (input.files[0]) setFile(input.files[0]); }
+  function setFile(f) {
+    document.getElementById('fc-name').textContent = f.name;
+    document.getElementById('fc-size').textContent = f.size < 1048576 ? (f.size/1024).toFixed(1)+' KB' : (f.size/1048576).toFixed(1)+' MB';
+    document.getElementById('file-chip').classList.add('visible');
+    document.getElementById('import-btn').classList.add('ready');
+  }
+  function clearFile() {
+    document.getElementById('file-chip').classList.remove('visible');
+    document.getElementById('import-btn').classList.remove('ready');
+  }
+  function runImport() {
+    const m = document.querySelector('input[name="imode"]:checked').value;
+    clearFile();
+    toast(m === 'merge' ? 'Questions merged into vault' : 'Vault replaced with import');
+  }
+
+  let tt;
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ ' + msg;
+    t.classList.add('show');
+    clearTimeout(tt);
+    tt = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+</script>
+</body>
+</html>
