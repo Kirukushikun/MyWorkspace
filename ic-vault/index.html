@@ -681,9 +681,9 @@
   .cred-input:not(:disabled):focus { outline: none; border-color: var(--red); background: rgba(195,7,63,0.04); }
   .cred-input[type="password"] { letter-spacing: 0.15em; }
   .cred-eye {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
     background: none; border: none; cursor: pointer; color: var(--text-muted);
-    font-size: 14px; padding: 0; line-height: 1;
+    font-size: 13px; padding: 0;
     transition: color 0.15s ease;
   }
   .cred-eye:hover { color: var(--text-primary); }
@@ -708,15 +708,15 @@
   #cred-actions-row { display: none; }
 
   /* Mode picker in settings */
-  .mode-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .mode-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-left: 44px; }
   .mode-pick-btn {
     font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
-    padding: 7px 14px; border-radius: 999px; cursor: pointer;
+    padding: 6px 14px; border-radius: 999px; cursor: pointer;
     border: 1.5px solid var(--border); background: transparent; color: var(--text-muted);
     transition: all 0.18s ease;
   }
-  .mode-pick-btn.active { background: linear-gradient(90deg, var(--red-dim), var(--red)); border-color: transparent; color: white; }
-  .mode-pick-btn:not(.active):hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+  .mode-pick-btn.active { background: rgba(195,7,63,0.12); border-color: rgba(195,7,63,0.4); color: #ec5c86; }
+  .mode-pick-btn:not(.active):hover { border-color: rgba(255,255,255,0.18); color: var(--text-primary); }
 
   /* Quota stepper */
   .quota-stepper {
@@ -760,7 +760,7 @@
     font-size: 10.5px; color: var(--text-muted); margin-left: auto; white-space: nowrap;
   }
   .backup-last span { color: var(--green); }
-  .export-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .export-btns { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 16px 44px; }
   .btn-export {
     display: flex; align-items: center; gap: 8px;
     padding: 10px 18px; border-radius: 10px;
@@ -770,6 +770,9 @@
     transition: all 0.2s ease;
   }
   .btn-export:hover { border-color: rgba(255,255,255,0.22); color: var(--text-primary); background: rgba(255,255,255,0.06); }
+  .btn-export.json:hover { border-color: rgba(6,182,212,0.35); background: rgba(6,182,212,0.05); color: var(--text-primary); }
+  .btn-export.csv:hover  { border-color: rgba(46,156,107,0.35); background: rgba(46,156,107,0.05); color: var(--text-primary); }
+  .btn-export.md:hover   { border-color: rgba(195,7,63,0.35); background: rgba(195,7,63,0.05); color: #ec5c86; }
   .btn-export .fmt-badge {
     font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
     padding: 2px 7px; border-radius: 4px;
@@ -834,14 +837,23 @@
     content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--red);
   }
   .btn-import-run {
-    margin-left: auto; padding: 9px 20px; border-radius: 10px;
-    background: linear-gradient(90deg, var(--red-dim), var(--red)); border: none; color: white;
-    font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-    cursor: pointer; opacity: 0.4; pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    margin-left: auto; flex-shrink: 0; cursor: pointer;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    padding: 9px 20px; border-radius: 9px;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    pointer-events: none; transition: all 0.18s ease;
   }
-  .btn-import-run.ready { opacity: 1; pointer-events: auto; }
-  .btn-import-run.ready:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(195,7,63,0.35); }
+  .btn-import-run.ready {
+    pointer-events: auto; color: #fff;
+    border-color: rgba(195,7,63,0.55);
+    background: rgba(195,7,63,0.18);
+  }
+  .btn-import-run.ready:hover {
+    background: rgba(195,7,63,0.28);
+    border-color: rgba(195,7,63,0.75);
+  }
 
   .import-file-selected {
     display: none; margin: 0 22px 16px;
@@ -862,16 +874,34 @@
   /* Danger zone */
   .danger-row {
     display: flex; align-items: center; gap: 16px;
-    padding: 16px 22px; border-bottom: 1px solid var(--border);
+    padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
   }
   .danger-row:last-child { border-bottom: none; }
   .btn-danger {
-    flex-shrink: 0; padding: 9px 18px; border-radius: 9px; font-size: 11px; font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
-    background: rgba(195,7,63,0.08); border: 1.5px solid rgba(195,7,63,0.3); color: #ec5c86;
-    transition: all 0.2s ease;
+    flex-shrink: 0; cursor: pointer;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 9px 18px; border-radius: 9px;
+    border: 1.5px solid rgba(195,7,63,0.3);
+    background: rgba(195,7,63,0.08);
+    color: rgba(195,7,63,0.75);
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
   }
-  .btn-danger:hover { background: rgba(195,7,63,0.16); border-color: rgba(195,7,63,0.55); box-shadow: 0 4px 14px rgba(195,7,63,0.2); }
+  .btn-danger:hover {
+    border-color: rgba(195,7,63,0.65);
+    background: rgba(195,7,63,0.18);
+    color: #ec5c86;
+  }
+  .btn-danger.destructive {
+    border-color: rgba(195,7,63,0.45);
+    background: rgba(195,7,63,0.13);
+    color: #ec5c86;
+  }
+  .btn-danger.destructive:hover {
+    border-color: var(--red);
+    background: rgba(195,7,63,0.28);
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(195,7,63,0.3);
+  }
 
   /* Saved toast */
   .settings-toast {
@@ -1399,13 +1429,13 @@ e.g. this middleware runs before the controller, not after"></textarea>
               <div class="backup-stat"><strong>78%</strong> avg recall</div>
             </div>
             <div class="export-btns">
-              <button class="btn-export" onclick="showToast('Exported as JSON')">
+              <button class="btn-export json" onclick="showToast('Exported as JSON')">
                 <span class="fmt-badge fmt-json">JSON</span> Full Vault Backup
               </button>
-              <button class="btn-export" onclick="showToast('Exported as CSV')">
+              <button class="btn-export csv" onclick="showToast('Exported as CSV')">
                 <span class="fmt-badge fmt-csv">CSV</span> Questions Only
               </button>
-              <button class="btn-export" onclick="showToast('Exported as Markdown')">
+              <button class="btn-export md" onclick="showToast('Exported as Markdown')">
                 <span class="fmt-badge fmt-md">.md</span> Obsidian Format
               </button>
             </div>
@@ -1476,7 +1506,7 @@ e.g. this middleware runs before the controller, not after"></textarea>
               <div class="setting-name">Delete All Questions</div>
               <div class="setting-desc">Remove every card from the question pool. Your vault will be empty.</div>
             </div>
-            <button class="btn-danger" onclick="showToast('Question pool deleted')">Delete All</button>
+            <button class="btn-danger destructive" onclick="showToast('Question pool deleted')">Delete All</button>
           </div>
         </div>
       </div>

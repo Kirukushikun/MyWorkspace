@@ -1,0 +1,839 @@
+<!-- Reference -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIMS — Brookside Group</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #21262d;
+    --border2: #30363d;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --accent: #2f81f7;
+    --accent-glow: rgba(47,129,247,0.15);
+    --green: #3fb950;
+    --green-bg: rgba(63,185,80,0.1);
+    --orange: #e3b341;
+    --orange-bg: rgba(227,179,65,0.1);
+    --red: #f85149;
+    --red-bg: rgba(248,81,73,0.1);
+    --purple: #a371f7;
+    --purple-bg: rgba(163,113,247,0.1);
+    --sidebar-w: 240px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #2f81f7, #a371f7);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: #fff;
+    flex-shrink: 0;
+  }
+
+  .logo-text { line-height: 1.2; }
+  .logo-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
+  .logo-text span { font-size: 11px; color: var(--muted); font-weight: 400; }
+
+  .nav-section { padding: 12px 0; }
+  .nav-label {
+    padding: 6px 20px;
+    font-size: 10px; font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 2px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 20px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13.5px; font-weight: 400;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .nav-item.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-left-color: var(--accent);
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    opacity: 0.7;
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: 60px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 28px;
+    gap: 16px;
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .topbar-title {
+    font-size: 15px; font-weight: 600;
+    flex: 1;
+  }
+
+  .topbar-badge {
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid rgba(47,129,247,0.3);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .notif-btn {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted);
+    position: relative;
+    transition: all 0.15s;
+  }
+  .notif-btn:hover { color: var(--text); border-color: var(--border2); }
+  .notif-dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 6px; height: 6px;
+    background: var(--red); border-radius: 50%;
+    border: 1.5px solid var(--surface);
+  }
+
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #2f81f7, #a371f7);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    cursor: pointer;
+  }
+
+  .user-info { line-height: 1.2; }
+  .user-info strong { display: block; font-size: 13px; font-weight: 500; }
+  .user-info span { font-size: 11px; color: var(--muted); }
+
+  /* ── CONTENT ── */
+  .content { padding: 28px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* ── STAT CARDS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 14px 14px 0 0;
+  }
+  .stat-card.blue::before { background: var(--accent); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.orange::before { background: var(--orange); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.purple::before { background: var(--purple); }
+
+  .stat-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+  .stat-header { display: flex; align-items: center; justify-content: space-between; }
+  .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .stat-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .stat-icon.blue { background: var(--accent-glow); }
+  .stat-icon.green { background: var(--green-bg); }
+  .stat-icon.orange { background: var(--orange-bg); }
+  .stat-icon.red { background: var(--red-bg); }
+  .stat-icon.purple { background: var(--purple-bg); }
+
+  .stat-value { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .stat-value.blue { color: var(--accent); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.orange { color: var(--orange); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.purple { color: var(--purple); }
+
+  .stat-sub { font-size: 12px; color: var(--muted); }
+
+  /* ── SECTION ROW ── */
+  .row { display: grid; gap: 16px; }
+  .row-3 { grid-template-columns: 1fr 1.2fr 1.4fr; }
+  .row-2 { grid-template-columns: 1fr 1fr; }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .panel-title-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+
+  .panel-body { padding: 18px 22px; }
+
+  /* ── ITEMS LIST ── */
+  .items-list { display: flex; flex-direction: column; gap: 0; }
+  .items-list-section { margin-bottom: 8px; }
+
+  .list-heading {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 12px 0 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .list-heading::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  .arrow-up { color: var(--green); }
+  .arrow-down { color: var(--orange); }
+
+  .list-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 10px; border-radius: 8px;
+    transition: background 0.12s;
+  }
+  .list-item:hover { background: rgba(255,255,255,0.03); }
+
+  .list-rank {
+    width: 20px; height: 20px; border-radius: 6px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .list-name { flex: 1; font-size: 13px; font-weight: 400; color: var(--text); }
+
+  .list-bar-wrap { width: 60px; height: 4px; background: var(--surface2); border-radius: 2px; }
+  .list-bar { height: 100%; border-radius: 2px; }
+  .bar-fast { background: var(--green); }
+  .bar-slow { background: var(--orange); }
+
+  /* ── CHART ── */
+  .chart-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+
+  .donut-center {
+    position: absolute;
+    text-align: center; pointer-events: none;
+  }
+  .donut-center strong { display: block; font-size: 22px; font-weight: 700; }
+  .donut-center span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .legend { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { border-bottom: 1px solid var(--border); }
+  th {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 10px 14px; text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 14px;
+    font-size: 13px; color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background 0.1s; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .td-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--muted);
+  }
+
+  .td-date { color: var(--muted); font-size: 12px; font-family: 'DM Mono', monospace; }
+
+  .user-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px 3px 6px;
+    font-size: 12px;
+  }
+  .user-chip-av {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: linear-gradient(135deg, #2f81f7, #a371f7);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+  }
+
+  .status-chip {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+  }
+  .status-chip.done { background: var(--green-bg); color: var(--green); }
+  .status-chip.pending { background: var(--orange-bg); color: var(--orange); }
+
+  .table-footer {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--muted); font-size: 12px;
+  }
+
+  .pagination { display: flex; gap: 4px; }
+  .page-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; cursor: pointer; color: var(--muted);
+    transition: all 0.12s;
+  }
+  .page-btn:hover { border-color: var(--border2); color: var(--text); }
+  .page-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .stat-card { animation: fadeUp 0.4s ease both; }
+  .stat-card:nth-child(1) { animation-delay: 0.05s; }
+  .stat-card:nth-child(2) { animation-delay: 0.1s; }
+  .stat-card:nth-child(3) { animation-delay: 0.15s; }
+  .stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+  .panel { animation: fadeUp 0.4s ease both; animation-delay: 0.25s; }
+
+  /* ── SVG ICONS ── */
+  svg { display: block; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">BG</div>
+    <div class="logo-text">
+      <strong>Brookside</strong>
+      <span>Group of Companies</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h3A1.5 1.5 0 0 1 6 1.5v3A1.5 1.5 0 0 1 4.5 6h-3A1.5 1.5 0 0 1 0 4.5v-3zM1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM0 10.5A1.5 1.5 0 0 1 1.5 9h3A1.5 1.5 0 0 1 6 10.5v3A1.5 1.5 0 0 1 4.5 15h-3A1.5 1.5 0 0 1 0 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM9 1.5A1.5 1.5 0 0 1 10.5 0h3A1.5 1.5 0 0 1 15 1.5v3A1.5 1.5 0 0 1 13.5 6h-3A1.5 1.5 0 0 1 9 4.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM9 10.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg>
+      Dashboard
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Inventory</div>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.35a1.5 1.5 0 0 1-.872 1.36l-7.129 2.852a.5.5 0 0 1-.372 0L.872 13.21A1.5 1.5 0 0 1 0 11.85V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/></svg>
+      Inventory
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663A3.5 3.5 0 0 1 3.5 11.5zm.5-3.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+      Farm Inventory
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5zm-4 1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6z"/></svg>
+      Category
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm5.5.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM7 7.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z"/></svg>
+      SubCategory
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z"/></svg>
+      Product
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/><path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3z"/></svg>
+      Items
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Operations</div>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2zm3.708 6.208L1 11.105V5.383l4.708 2.825zM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2zm12.583 6.021a.5.5 0 0 0-.083.208l-.5 2.5a.5.5 0 0 0 .586.585l2.5-.5a.5.5 0 0 0 .208-.083l1.5-1.5a.5.5 0 0 0 0-.707l-2-2a.5.5 0 0 0-.707 0l-1.504 1.497z"/></svg>
+      Re-Order
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/><path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/></svg>
+      Bin Location
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/></svg>
+      Request Supply
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7z"/></svg>
+      Withdrawal Series
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/><path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/></svg>
+      Cole Plus Trans.
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+      Approval Statuses
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.64.716 4.302.84c-1.405.142-2.706.586-3.578.991A.5.5 0 0 0 .5 2.3v11a.5.5 0 0 0 .645.48c.95-.313 2.244-.672 3.37-.788 1.181-.12 2.08.069 2.607.645.352.382.87.582 1.378.582.507 0 1.026-.2 1.378-.582.527-.576 1.426-.765 2.607-.645 1.126.116 2.42.475 3.37.788A.5.5 0 0 0 15.5 13.3v-11a.5.5 0 0 0-.422-.492c-.872-.405-2.173-.85-3.578-.991C10.36.716 8.985.936 8 1.783z"/></svg>
+      Manage Requests
+    </a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <span class="topbar-title">Dashboard</span>
+    <div class="topbar-badge">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6z"/></svg>
+      Inventory
+    </div>
+    <div class="notif-btn">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/></svg>
+      <span class="notif-dot"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="avatar">IG</div>
+      <div class="user-info">
+        <strong>Iverson Guno</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- STATS ROW 1 -->
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-header">
+          <span class="stat-label">Total Suppliers</span>
+          <div class="stat-icon blue">🚚</div>
+        </div>
+        <div class="stat-value blue">60</div>
+        <div class="stat-sub">Active vendor relationships</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-header">
+          <span class="stat-label">Total Categories</span>
+          <div class="stat-icon orange">🗂️</div>
+        </div>
+        <div class="stat-value orange">411</div>
+        <div class="stat-sub">Product classification groups</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-header">
+          <span class="stat-label">Sub Categories</span>
+          <div class="stat-icon red">📂</div>
+        </div>
+        <div class="stat-value red">281</div>
+        <div class="stat-sub">Nested category entries</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-header">
+          <span class="stat-label">Total Products</span>
+          <div class="stat-icon green">📦</div>
+        </div>
+        <div class="stat-value green">101</div>
+        <div class="stat-sub">SKUs in system</div>
+      </div>
+    </div>
+
+    <!-- STATS ROW 2 -->
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-header">
+          <span class="stat-label">Total Items</span>
+          <div class="stat-icon blue">📋</div>
+        </div>
+        <div class="stat-value blue">51</div>
+        <div class="stat-sub">Line items tracked</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-header">
+          <span class="stat-label">Total Requests</span>
+          <div class="stat-icon orange">📨</div>
+        </div>
+        <div class="stat-value orange">1</div>
+        <div class="stat-sub">Pending supply requests</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-header">
+          <span class="stat-label">Total Denied</span>
+          <div class="stat-icon red">❌</div>
+        </div>
+        <div class="stat-value red">0</div>
+        <div class="stat-sub">No denied requests</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-header">
+          <span class="stat-label">Total Approved</span>
+          <div class="stat-icon green">✅</div>
+        </div>
+        <div class="stat-value green">0</div>
+        <div class="stat-sub">Approved this period</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="row row-3">
+
+      <!-- Fast/Slow Moving -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="panel-title-dot" style="background:var(--green)"></span>
+            Item Movement
+          </div>
+        </div>
+        <div class="panel-body" style="padding-top:8px;">
+
+          <div class="items-list">
+            <div class="list-heading"><span class="arrow-up">↑</span> Fast-Moving</div>
+            <div class="list-item">
+              <div class="list-rank">1</div>
+              <div class="list-name">dignissimos</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-fast" style="width:100%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">2</div>
+              <div class="list-name">quia</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-fast" style="width:82%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">3</div>
+              <div class="list-name">velit</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-fast" style="width:68%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">4</div>
+              <div class="list-name">dignissimos</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-fast" style="width:55%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">5</div>
+              <div class="list-name">ducimus</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-fast" style="width:40%"></div></div>
+            </div>
+
+            <div class="list-heading" style="margin-top:8px;"><span class="arrow-down">↓</span> Slow-Moving</div>
+            <div class="list-item">
+              <div class="list-rank">1</div>
+              <div class="list-name">dignissimos</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-slow" style="width:100%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">2</div>
+              <div class="list-name">nobis</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-slow" style="width:78%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">3</div>
+              <div class="list-name">veritatis</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-slow" style="width:60%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">4</div>
+              <div class="list-name">nemo</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-slow" style="width:45%"></div></div>
+            </div>
+            <div class="list-item">
+              <div class="list-rank">5</div>
+              <div class="list-name">sequi</div>
+              <div class="list-bar-wrap"><div class="list-bar bar-slow" style="width:28%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donut Chart -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="panel-title-dot" style="background:var(--accent)"></span>
+            Re-Order Statuses
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap" style="height:200px;">
+            <canvas id="donutChart" width="200" height="200" style="max-width:200px;max-height:200px;"></canvas>
+            <div class="donut-center">
+              <strong>51</strong>
+              <span>Items</span>
+            </div>
+          </div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#3fb950"></div>Abundant</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#2f81f7"></div>Sufficient</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e3b341"></div>Warning Level</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f85149"></div>Critical Level</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7d8590"></div>Out of Stock</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#21262d"></div>Reorder Not Set</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radar Chart -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="panel-title-dot" style="background:var(--purple)"></span>
+            Request Status Distribution
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap" style="height:300px;">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span class="panel-title-dot" style="background:var(--orange)"></span>
+          Recent Transactions
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" placeholder="Search…" style="
+            background:var(--surface2); border:1px solid var(--border);
+            border-radius:8px; padding:6px 12px; color:var(--text);
+            font-size:12px; font-family:inherit; outline:none; width:160px;
+            transition:border-color 0.15s;
+          " onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>No.</th>
+              <th>Date</th>
+              <th>Issued By</th>
+              <th>Issued To</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-num">01</td>
+              <td class="td-num">TXN-001</td>
+              <td class="td-date">Sep 19, 2025 · 10:43 AM</td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><span class="status-chip done">Completed</span></td>
+            </tr>
+            <tr>
+              <td class="td-num">02</td>
+              <td class="td-num">TXN-002</td>
+              <td class="td-date">Sep 19, 2025 · 10:43 AM</td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><span class="status-chip done">Completed</span></td>
+            </tr>
+            <tr>
+              <td class="td-num">03</td>
+              <td class="td-num">TXN-003</td>
+              <td class="td-date">Sep 19, 2025 · 10:17 AM</td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><span class="status-chip pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td class="td-num">04</td>
+              <td class="td-num">TXN-004</td>
+              <td class="td-date">Sep 19, 2025 · 10:14 AM</td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><span class="status-chip done">Completed</span></td>
+            </tr>
+            <tr>
+              <td class="td-num">05</td>
+              <td class="td-num">TXN-005</td>
+              <td class="td-date">Sep 19, 2025 · 10:11 AM</td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><span class="status-chip done">Completed</span></td>
+            </tr>
+            <tr>
+              <td class="td-num">06</td>
+              <td class="td-num">TXN-006</td>
+              <td class="td-date">Sep 18, 2025 · 1:55 PM</td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><div class="user-chip"><div class="user-chip-av">GD</div>Ghel Dantes</div></td>
+              <td><span class="status-chip done">Completed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <span>Showing 1–6 of 6 entries</span>
+        <div class="pagination">
+          <div class="page-btn">←</div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// Donut Chart
+const donutCtx = document.getElementById('donutChart').getContext('2d');
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Abundant','Sufficient','Warning','Critical','Out of Stock','Not Set'],
+    datasets: [{
+      data: [32, 8, 5, 3, 2, 1],
+      backgroundColor: ['#3fb950','#2f81f7','#e3b341','#f85149','#7d8590','#21262d'],
+      borderWidth: 0,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    cutout: '72%',
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: (c) => ` ${c.label}: ${c.raw} items`
+    }}},
+    animation: { animateRotate: true, duration: 800 },
+  }
+});
+
+// Radar Chart
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Checked Out','For Release','In-Transit','Received','Approved','Denied'],
+    datasets: [{
+      label: 'Requests',
+      data: [1, 0, 0, 1, 0, 0],
+      backgroundColor: 'rgba(163,113,247,0.15)',
+      borderColor: '#a371f7',
+      borderWidth: 2,
+      pointBackgroundColor: '#a371f7',
+      pointRadius: 4,
+    }]
+  },
+  options: {
+    scales: {
+      r: {
+        min: 0, max: 2,
+        ticks: { stepSize: 1, color: '#7d8590', font: { size: 10 }, backdropColor: 'transparent' },
+        grid: { color: '#21262d' },
+        angleLines: { color: '#21262d' },
+        pointLabels: { color: '#7d8590', font: { size: 11, family: 'DM Sans' } },
+      }
+    },
+    plugins: { legend: { display: false } },
+  }
+});
+</script>
+</body>
+</html>

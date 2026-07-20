@@ -220,17 +220,26 @@
   }
   .bk-stat strong { color: var(--text-primary); font-weight: 600; }
   .bk-stat + .bk-stat::before { content: '·'; opacity: 0.3; margin-right: 5px; }
-  .export-btns { display: flex; gap: 20px; flex-wrap: wrap; margin-left: 44px; }
-  .btn-export-bare {
-    background: none; border: none; cursor: pointer;
+  .export-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-left: 44px; }
+  .btn-export {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 16px; border-radius: 9px; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
     font-size: 12px; font-weight: 600; color: var(--text-muted);
-    display: flex; align-items: center; gap: 7px; padding: 0;
-    transition: color 0.15s ease;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
-  .btn-export-bare:hover { color: var(--text-primary); }
+  .btn-export:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+  }
+  .btn-export.json:hover { border-color: rgba(6,182,212,0.35); background: rgba(6,182,212,0.05); }
+  .btn-export.csv:hover  { border-color: rgba(46,156,107,0.35); background: rgba(46,156,107,0.05); }
+  .btn-export.md:hover   { border-color: rgba(195,7,63,0.35); background: rgba(195,7,63,0.05); color: #ec5c86; }
   .fmt-chip {
     font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-    padding: 2px 7px; border-radius: 4px;
+    padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
   }
   .fmt-json { background: rgba(6,182,212,0.14); color: #38bcd4; }
   .fmt-csv  { background: rgba(46,156,107,0.14); color: #4fcf95; }
@@ -238,7 +247,8 @@
 
   /* Import drop */
   .import-drop {
-    margin-left: 44px; margin-top: 20px;
+    Display: flex; flex-direction: column; align-items: center; gap: 4px;
+    width: 100%; margin-top: 20px; 
     border: 1.5px dashed rgba(255,255,255,0.1);
     border-radius: 12px;
     padding: 22px 20px;
@@ -250,7 +260,7 @@
     border-color: rgba(195,7,63,0.35);
     background: rgba(195,7,63,0.03);
   }
-  .import-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .import-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; padding: 24px 20px; }
   .import-drop-text { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
   .import-drop-sub  { font-size: 11px; color: var(--text-muted); }
   .fmt-pills { display: flex; justify-content: center; gap: 7px; margin-top: 10px; }
@@ -258,7 +268,7 @@
 
   .import-opts {
     display: flex; align-items: center; gap: 16px;
-    margin-top: 14px; margin-left: 44px;
+    margin-top: 14px;
   }
   .import-opt-label { font-size: 11px; color: var(--text-muted); }
   .import-radio-group { display: flex; gap: 14px; }
@@ -277,13 +287,24 @@
   .import-radio:has(input:checked) .radio-dot { border-color: var(--red); }
   .import-radio:has(input:checked) .radio-dot::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
   .btn-import-bare {
-    margin-left: auto; background: none; border: none; cursor: pointer;
-    font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--red); opacity: 0.4; pointer-events: none;
-    transition: opacity 0.15s ease;
+    margin-left: auto; flex-shrink: 0; cursor: pointer;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    padding: 8px 18px; border-radius: 8px;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    pointer-events: none; transition: all 0.18s ease;
   }
-  .btn-import-bare.ready { opacity: 1; pointer-events: auto; }
-  .btn-import-bare.ready:hover { opacity: 0.72; }
+  .btn-import-bare.ready {
+    pointer-events: auto;
+    color: #fff;
+    border-color: rgba(195,7,63,0.55);
+    background: rgba(195,7,63,0.18);
+  }
+  .btn-import-bare.ready:hover {
+    background: rgba(195,7,63,0.28);
+    border-color: rgba(195,7,63,0.75);
+  }
 
   .file-chip {
     display: none; align-items: center; gap: 10px;
@@ -304,13 +325,31 @@
     padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
   }
   .danger-row:last-child { border-bottom: none; }
-  .btn-danger-bare {
-    flex-shrink: 0; background: none; border: none; cursor: pointer;
-    font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-    color: rgba(195,7,63,0.6); padding: 0;
-    transition: color 0.15s ease;
+  .btn-danger {
+    flex-shrink: 0; cursor: pointer;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 8px 16px; border-radius: 8px;
+    border: 1.5px solid rgba(195,7,63,0.3);
+    background: rgba(195,7,63,0.08);
+    color: rgba(195,7,63,0.75);
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
-  .btn-danger-bare:hover { color: #ec5c86; }
+  .btn-danger:hover {
+    border-color: rgba(195,7,63,0.65);
+    background: rgba(195,7,63,0.18);
+    color: #ec5c86;
+  }
+  .btn-danger.destructive {
+    border-color: rgba(195,7,63,0.45);
+    background: rgba(195,7,63,0.13);
+    color: #ec5c86;
+  }
+  .btn-danger.destructive:hover {
+    border-color: var(--red);
+    background: rgba(195,7,63,0.28);
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(195,7,63,0.3);
+  }
 
   /* Toast */
   .toast {
@@ -523,13 +562,13 @@
         <span class="bk-stat"><strong>78%</strong> avg recall</span>
       </div>
       <div class="export-btns">
-        <button class="btn-export-bare" onclick="toast('Exported as JSON')">
+        <button class="btn-export json" onclick="toast('Exported as JSON')">
           <span class="fmt-chip fmt-json">JSON</span> Full Backup
         </button>
-        <button class="btn-export-bare" onclick="toast('Exported as CSV')">
+        <button class="btn-export csv" onclick="toast('Exported as CSV')">
           <span class="fmt-chip fmt-csv">CSV</span> Questions Only
         </button>
-        <button class="btn-export-bare" onclick="toast('Exported as Markdown')">
+        <button class="btn-export md" onclick="toast('Exported as Markdown')">
           <span class="fmt-chip fmt-md">.md</span> Obsidian Format
         </button>
       </div>
@@ -568,7 +607,7 @@
           <label class="import-radio"><input type="radio" name="imode" value="merge" checked /><span class="radio-dot"></span> Merge</label>
           <label class="import-radio"><input type="radio" name="imode" value="replace" /><span class="radio-dot"></span> Replace All</label>
         </div>
-        <button class="btn-import-bare" id="import-btn" onclick="runImport()">Import →</button>
+        <button class="btn-import-bare" id="import-btn" onclick="runImport()">Import</button>
       </div>
     </div>
   </div>
@@ -582,21 +621,21 @@
         <div class="fs-name">Reset Streak</div>
         <div class="fs-desc">Set your current streak back to zero. This can't be undone.</div>
       </div>
-      <button class="btn-danger-bare" onclick="toast('Streak reset')">Reset Streak</button>
+      <button class="btn-danger" onclick="toast('Streak reset')">Reset Streak</button>
     </div>
     <div class="danger-row">
       <div class="fs-info">
         <div class="fs-name">Clear Progress Data</div>
         <div class="fs-desc">Wipe all mastery scores and session history across every category.</div>
       </div>
-      <button class="btn-danger-bare" onclick="toast('Progress cleared')">Clear Progress</button>
+      <button class="btn-danger" onclick="toast('Progress cleared')">Clear Progress</button>
     </div>
     <div class="danger-row">
       <div class="fs-info">
         <div class="fs-name">Delete All Questions</div>
         <div class="fs-desc">Remove every card from the question pool. Your vault will be empty.</div>
       </div>
-      <button class="btn-danger-bare" onclick="toast('Question pool deleted')">Delete All</button>
+      <button class="btn-danger destructive" onclick="toast('Question pool deleted')">Delete All</button>
     </div>
   </div>
 
